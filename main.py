@@ -40,4 +40,4 @@ print("CODEC "+codc)
 
 payload = fpi.fragmentFile(strF,payload_size)
 
-
+# master(nrf, payload)
