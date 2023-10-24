@@ -5,9 +5,12 @@ import os as sys
 import subprocess
 import glob
 from digitalio import DigitalInOut
+import chardet
+
 
 def fragmentFile(string, length):
     return list(string[0+i: length+i] for i in range(0, len(string), length))
+
 def getUSBpath():
     rpistr = "/media/mtp/"
     proc = subprocess.Popen("ls "+rpistr,shell=True, preexec_fn=sys.setsid, stdout=subprocess.PIPE)
@@ -31,3 +34,30 @@ def checkSwitch(pin):
     switch.switch_to_input
     switch.pull
     return switch
+
+def fileName(path):
+    file = glob.glob(path+'*.txt')[0]
+    return file
+    
+def check_codec(strF):
+    try:
+        result = chardet.detect(strF)
+        encoding = result['encoding']
+
+    except UnicodeDecodeError:
+        print(f"Failed with encoding: {encoding}")
+
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
+
+    return encoding
+    
+
+payload_size = 32
+pth = getUSBpath()
+strF= openFile(pth)
+codc=check_codec(strF)
+
+print(codec)
+
+

@@ -1,11 +1,5 @@
-import time
-import struct
-import board
-import os as sys
-import subprocess
-import glob
-from digitalio import DigitalInOut
-
+import functions_pi as fpi
+import functions_nrf24 as frf
 import spidev
 
 from circuitpython_nrf24l01.rf24 import RF24
@@ -33,3 +27,17 @@ nrf = RF24(SPI_BUS, CSN_PIN, CE_PIN)
 nrf.pa_level = -18
 nrf.data_rate = 1
 address = [b"1Node", b"2Node"]
+
+payload_size = 32
+pth = fpi.getUSBpath()
+
+path_destino = "/home/mtp/MTP/"
+
+strF= fpi.openFile(pth)
+
+codc=fpi.check_codec(strF)
+print("CODEC "+codc)
+
+payload = fpi.fragmentFile(strF,payload_size)
+
+
