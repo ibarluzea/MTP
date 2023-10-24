@@ -10,39 +10,29 @@ import glob
 from digitalio import DigitalInOut
 
 
-msg = "12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123FINAL"
-
 def fragmentFile(string, length):
     return list(string[0+i: length+i] for i in range(0, len(string), length))
 def getUSBpath():
-    #user=get user name to replace mtp or mtp2
-	rpistr = "/media/mtp2/"
-    #rpistr = "/media/mtp/"
-	proc = subprocess.Popen("ls "+rpistr,shell=True, preexec_fn=sys.setsid, stdout=subprocess.PIPE)
-	line = proc.stdout.readline()
-	print(str(line.rstrip()))
-	path = rpistr + line.rstrip().decode("utf-8")+"/"
-	return path
+    rpistr = "/media/mtp/"
+    proc = subprocess.Popen("ls "+rpistr,shell=True, preexec_fn=sys.setsid, stdout=subprocess.PIPE)
+    line = proc.stdout.readline()
+    print(str(line.rstrip()))
+    path = rpistr + line.rstrip().decode("utf-8")+"/"
+    return path
 
 def openFile(path):
-	file = open(glob.glob(path+'*.txt')[0],"rb")
-	strF= file.read()
-	return strF
- 
+    file = open(glob.glob(path+'*.txt')[0],"rb")
+    strF= file.read()
+    return strF
+
 def writeFile(path, buff):
     file = open(path+"result.txt","w")
     file.write(buff)
     file.close()
 
-payload_size = 32
-pth = getUSBpath()
-strF = openFile(pth)
-payload = fragmentFile(strF,payload_size)
 
-#print(nrf.is_lna_enabled())
-limit=100
-
-
+# if running this on a ATSAMD21 M0 based board
+# from circuitpython_nrf24l01.rf24_lite import RF24
 from circuitpython_nrf24l01.rf24 import RF24
 # invalid default values for scoping
 SPI_BUS, CSN_PIN, CE_PIN = (None, None, None)
@@ -73,16 +63,16 @@ nrf = RF24(SPI_BUS, CSN_PIN, CE_PIN)
 
 # set the Power Amplifier level to -12 dBm since this test example is
 # usually run with nRF24L01 transceivers in close proximity
-
 nrf.pa_level = -18
 nrf.data_rate = 1
 
 # addresses needs to be in a buffer protocol object (bytearray)
 address = [b"1Node", b"2Node"]
-nrf.print_details()
+
 # to use different addresses on a pair of radios, we need a variable to
 # uniquely identify which address this radio will use to transmit
 # 0 uses address[0] to transmit, 1 uses address[1] to transmit
+nrf.print_details()
 radio_number = bool(
     int(input("Which radio is this? Enter '0' or '1'. Defaults to '0' ") or 0)
 )
@@ -104,18 +94,32 @@ nrf.open_rx_pipe(1, address[not radio_number])  # using pipe 1
 
 def master():  # count = 5 will only transmit 5 packets
     """Transmits an incrementing integer every second"""
+    payload_size = 32
+    pth = getUSBpath()
+    strF = openFile(pth)
+    payload = fragmentFile(strF,payload_size)
     nrf.listen = False  # ensures the nRF24L01 is in TX mode
     count=len(payload)
+    zero_timer = time.monotonic_ns()
+    result = False
+#     print(nrf.is_lna_enabled())
     for i in range(count):
         # use struct.pack to structure your data
         # into a usable payload
+        limit = 100
         print(type(payload[i]))
         print(payload[i])
-        buffer = struct.pack("32s", bytearray(payload[i],"utf-8"))
+        buffer = payload[i]
         # "<f" means a single little endian (4 byte) float value.
-        start_timer = time.monotonic_ns()  # start timer
-        result = nrf.send(buffer)
+        #start_timer = time.monotonic_ns()  # start timer
+        result = nrf.send(buffer, False, 10)
+        
+        while not result and  limit:
+            result = nrf.send(buffer, False, 10)
+            time.sleep(0.5)
+            limit -= 1
         end_timer = time.monotonic_ns()  # end timer
+        
         if not result:
             print("send() failed or timed out")
         else:
@@ -123,8 +127,7 @@ def master():  # count = 5 will only transmit 5 packets
                 "Transmission successful! Time to Transmit:",
                 "{} us. Sent: {}".format((end_timer - start_timer) / 1000, payload[i]),
             )
-           
-        time.sleep(1)
+        print("Transmission rate: ", (((len(payload)*52)*8)/((end_timer-zero_timer)/1e9)))
         
         
 
@@ -143,7 +146,7 @@ def slave(timeout=10):
             buffer = nrf.read()  # also clears nrf.irq_dr status flag
             # expecting a little endian float, thus the format string "<f"
             # buffer[:4] truncates padded 0s if dynamic payloads are disabled
-            msg= buffer.decode("utf-8")
+            msg += buffer.decode("utf-8")
             # print details about the received packet
             print(
                 "Received {} bytes on pipe {}: {}".format(
@@ -154,7 +157,8 @@ def slave(timeout=10):
 
     # recommended behavior is to keep in TX mode while idle
     nrf.listen = False  # put the nRF24L01 is in TX mode
-
+    path = "/home/mtp/MTP/"
+    writeFile(path, msg)
 
 def set_role():
     """Set the role using stdin stream. Timeout arg for slave() can be
@@ -193,3 +197,4 @@ if __name__ == "__main__":
         nrf.power = False
 else:
     print("    Run slave() on receiver\n    Run master() on transmitter")
+
