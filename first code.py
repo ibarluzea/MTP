@@ -15,7 +15,9 @@ msg = "1234567890123456789012345678901234567890123456789012345678901234567890123
 def fragmentFile(string, length):
     return list(string[0+i: length+i] for i in range(0, len(string), length))
 def getUSBpath():
+    #user=get user name to replace mtp or mtp2
 	rpistr = "/media/mtp2/"
+    #rpistr = "/media/mtp/"
 	proc = subprocess.Popen("ls "+rpistr,shell=True, preexec_fn=sys.setsid, stdout=subprocess.PIPE)
 	line = proc.stdout.readline()
 	print(str(line.rstrip()))
@@ -26,13 +28,21 @@ def openFile(path):
 	file = open(glob.glob(path+'*.txt')[0],"rb")
 	strF= file.read()
 	return strF
+ 
+def writeFile(path, buff):
+    file = open(path+"result.txt","w")
+    file.write(buff)
+    file.close()
 
 payload_size = 32
 pth = getUSBpath()
 strF = openFile(pth)
 payload = fragmentFile(strF,payload_size)
-# if running this on a ATSAMD21 M0 based board
-# from circuitpython_nrf24l01.rf24_lite import RF24
+
+#print(nrf.is_lna_enabled())
+limit=100
+
+
 from circuitpython_nrf24l01.rf24 import RF24
 # invalid default values for scoping
 SPI_BUS, CSN_PIN, CE_PIN = (None, None, None)
@@ -63,11 +73,13 @@ nrf = RF24(SPI_BUS, CSN_PIN, CE_PIN)
 
 # set the Power Amplifier level to -12 dBm since this test example is
 # usually run with nRF24L01 transceivers in close proximity
-nrf.pa_level = -12
+
+nrf.pa_level = -18
+nrf.data_rate = 1
 
 # addresses needs to be in a buffer protocol object (bytearray)
 address = [b"1Node", b"2Node"]
-
+nrf.print_details()
 # to use different addresses on a pair of radios, we need a variable to
 # uniquely identify which address this radio will use to transmit
 # 0 uses address[0] to transmit, 1 uses address[1] to transmit
