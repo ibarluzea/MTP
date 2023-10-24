@@ -52,6 +52,9 @@ def check_codec(strF):
 
     return encoding
     
+#  This following code is to check the functions without calling the
+#	functions outside, to be sure they all work well.
+# 	TO BE COMMENTED BEFORE FINISHING
 
 payload_size = 32
 pth = getUSBpath()
