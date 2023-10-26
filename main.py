@@ -47,9 +47,10 @@ timeout = 10
 try:
     pth = getUSBpath()
     path_destino = "/home/mtp/MTP/"
+    #This make it very slow, we are reading 1MB,  TOCHECK
     strF= openFile(pth)
     codc=check_codec(strF)
-    print("CODEC "+codc)
+    #print("CODEC "+codc)
 
     payload = fragmentFile(strF,payload_size)
 except:

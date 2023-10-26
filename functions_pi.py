@@ -35,21 +35,22 @@ def checkSwitch(pin):
     switch.pull
     return switch
 
-def fileName(path):
-    file = glob.glob(path+'*.txt')[0]
-    return file
+
     
-def check_codec(strF):
+def check_codec(path):
     try:
+        file = open(glob.glob(path+'*.txt')[0],"rb")
+        strF= file.read(30)
+        
         result = chardet.detect(strF)
         encoding = result['encoding']
 
     except UnicodeDecodeError:
-        print(f"Failed with encoding: {encoding}")
-
+        print("Failed with encoding: {}".format(encoding))
+        return 
     except Exception as e:
         print(f"An unexpected error occurred: {e}")
-
+        return 
     return encoding
     
 #  This following code is to check the functions without calling the
@@ -58,9 +59,8 @@ def check_codec(strF):
 
 payload_size = 32
 pth = getUSBpath()
-strF= openFile(pth)
-codc=check_codec(strF)
-
-print(codec)
+codc=check_codec(pth)
+# 
+print(codc)
 
 
