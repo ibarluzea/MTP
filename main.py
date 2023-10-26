@@ -25,7 +25,7 @@ except ImportError:  # on CircuitPython only
 nrf = RF24(SPI_BUS, CSN_PIN, CE_PIN)
 
 nrf.pa_level = -18
-nrf.data_rate = 1
+nrf.data_rate = 2
 
 
 # radio_number = bool(
@@ -47,7 +47,7 @@ timeout = 10
 try:
     pth = getUSBpath()
     path_destino = "/home/mtp/MTP/"
-    #This make it very slow, we are reading 1MB,  TOCHECK
+    
     strF= openFile(pth)
     codc=check_codec(pth) #now we use path for codec to read more quickly.
     print("CODEC "+codc)
