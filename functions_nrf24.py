@@ -27,27 +27,31 @@ def master(nrf, payload):  # count = 5 will only transmit 5 packets
     for i in range(count):
         # use struct.pack to structure your data
         # into a usable payload
-        limit = 100
-        print(type(payload[i]))
-        print(payload[i])
+        limit = 10
+        #print(type(payload[i]))
+        #print(payload[i])
         buffer = payload[i]
         # "<f" means a single little endian (4 byte) float value.
         start_timer = time.monotonic_ns()  # start timer
-        result = nrf.send(buffer, False, 10)
         
-        while not result and limit: 
-            result = nrf.send(buffer, False, 10)
+        result = nrf.send(buffer, False, 10)
+        ii=1
+        while not result and limit:
+            
+            ii+=1
+            result = nrf.send(buffer, False, 0)
             time.sleep(0.5)
             limit -= 1
         end_timer = time.monotonic_ns()  # end timer
         
         if not result:
             print("send() failed or timed out")
-        else:
-            print(
-                "Transmission successful! Time to Transmit:",
-                "{} us. Sent: {}".format((end_timer - start_timer) / 1000, payload[i]),
-            )
+#         else:
+#             print(
+#                 "Transmission successful! Time to Transmit:",
+#                 "{} us. Sent: {}".format((end_timer - start_timer) / 1000, payload[i]),
+#             )
+    print('Fallo en la transmision'+str(ii))
     print("Transmission rate: ", (((len(payload)*32)*8)/((end_timer-zero_timer)/1e9)))
     print(nrf.print_details(False))
     
@@ -76,7 +80,7 @@ def slave(nrf, timeout, codec):
             # buffer[:4] truncates padded 0s if dynamic payloads are disabled
             
            # Here there is another option
-            msg += buffer#.decode("utf-8")
+            msg =buffer#.decode("utf-8")
             #msg.extend(buffer)
             # print details about the received packet
             print(
@@ -88,7 +92,7 @@ def slave(nrf, timeout, codec):
 
     # recommended behavior is to keep in TX mode while idle
     nrf.listen = False  # put the nRF24L01 is in TX mode
-    writeFile("/home/mtp/MTP/",msg)
+    writeFile("/home/mtp/",msg)
         
 def set_role(nrf, payload, timeout, codec):
     """Set the role using stdin stream. Timeout arg for slave() can be
