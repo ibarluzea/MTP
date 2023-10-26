@@ -25,7 +25,7 @@ def openFile(path):
     return strF
 
 def writeFile(path, buff):
-    file = open(path+"result.txt","w")
+    file = open(path+"result.txt","wb")
     file.write(buff)
     file.close()
     
@@ -57,10 +57,10 @@ def check_codec(path):
 #	functions outside, to be sure they all work well.
 # 	TO BE COMMENTED BEFORE FINISHING
 
-payload_size = 32
-pth = getUSBpath()
-codc=check_codec(pth)
-# 
-print(codc)
+# payload_size = 32
+# pth = getUSBpath()
+# codc=check_codec(pth)
+# # 
+# print(codc)
 
 
