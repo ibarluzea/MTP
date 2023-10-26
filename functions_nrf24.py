@@ -50,12 +50,12 @@ def master(nrf, payload):  # count = 5 will only transmit 5 packets
             )
     print("Transmission rate: ", (((len(payload)*32)*8)/((end_timer-zero_timer)/1e9)))
     print(nrf.print_details(False))
+    
+    
+    
 def slave(nrf, timeout, codec):
     """Polls the radio and prints the received value. This method expires
     after 6 seconds of no received transmission"""
-    
-    
-    
     address = [b"snd", b"rcv"]
     # set TX address of RX node into the TX pipe
     nrf.open_tx_pipe(address[1])  # always uses pipe 0
