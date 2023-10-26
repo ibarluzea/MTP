@@ -1,5 +1,5 @@
-import functions_pi as fpi
-import functions_nrf24 as frf
+from functions_pi import *
+from functions_nrf24 import *
 import spidev
 
 from circuitpython_nrf24l01.rf24 import RF24
@@ -26,18 +26,54 @@ nrf = RF24(SPI_BUS, CSN_PIN, CE_PIN)
 
 nrf.pa_level = -18
 nrf.data_rate = 1
-address = [b"1Node", b"2Node"]
+
+
+# radio_number = bool(
+#     int(input("Which radio is this? Enter '0' or '1'. Defaults to '0' ") or 0)
+# )
+# 
+# # set TX address of RX node into the TX pipe
+# nrf.open_tx_pipe(address[radio_number])  # always uses pipe 0
+# 
+# # set RX address of TX node into an RX pipe
+# nrf.open_rx_pipe(1, address[not radio_number])  # using pipe 1
+
 
 payload_size = 32
-pth = fpi.getUSBpath()
 
-path_destino = "/home/mtp/MTP/"
+# Set timeout
+timeout = 10
 
-strF= fpi.openFile(pth)
+try:
+    pth = getUSBpath()
+    path_destino = "/home/mtp/MTP/"
+    strF= openFile(pth)
+    codc=check_codec(strF)
+    print("CODEC "+codc)
 
-codc=fpi.check_codec(strF)
-print("CODEC "+codc)
+    payload = fragmentFile(strF,payload_size)
+except:
+    codc = None
+    payload = None
+    print("No usb detected")
 
-payload = fpi.fragmentFile(strF,payload_size)
 
 # master(nrf, payload)
+# slave(nrf, timeout, codec)
+
+
+
+
+print("    nRF24L01 Simple test")
+
+if __name__ == "__main__":
+    try:
+        while set_role(nrf,payload, timeout, codc):
+            pass  # continue example until 'Q' is entered
+    except KeyboardInterrupt:
+        print(" Keyboard Interrupt detected. Powering down radio...")
+        nrf.power = False
+else:
+    print("    Run slave() on receiver\n    Run master() on transmitter")
+
+
