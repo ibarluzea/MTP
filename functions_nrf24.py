@@ -80,7 +80,7 @@ def slave(nrf, timeout, codec):
             # buffer[:4] truncates padded 0s if dynamic payloads are disabled
             
            # Here there is another option
-            msg =buffer#.decode("utf-8")
+            msg +=buffer#.decode("utf-8")
             #msg.extend(buffer)
             # print details about the received packet
             print(
@@ -93,7 +93,8 @@ def slave(nrf, timeout, codec):
     # recommended behavior is to keep in TX mode while idle
     nrf.listen = False  # put the nRF24L01 is in TX mode
     #to optimize, now we open and close the file every 32 BYTES
-    writeFile("/home/mtp/",msg)
+    pth = getUSBpath()
+    writeFile(pth,msg)
         
 def set_role(nrf, payload, timeout, codec):
     """Set the role using stdin stream. Timeout arg for slave() can be
