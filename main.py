@@ -22,7 +22,27 @@ except ImportError:  # on CircuitPython only
 
 
 # initialize the nRF24L01 on the spi bus object
-nrf = RF24(SPI_BUS, CSN_PIN, CE_PIN)
+# nrf = RF24(SPI_BUS, CSN_PIN, CE_PIN)
+nrf = None
+attempt = 0
+retry_attempts = 5
+
+while attempt < retry_attempts:
+    try:
+        nrf = RF24(SPI_BUS, CSN_PIN, CE_PIN)
+        print("RF24 initialized on attempt", attempt + 1)
+        break  # Assume success and exit the loop
+
+    except Exception as e:
+        print("Tried to connect")
+        time.sleep(1)
+        attempt += 1
+
+
+if nrf is None:
+    print("Failed to initialize RF24 after", retry_attempts, "attempts.")
+    sys.exit(1)
+
 
 nrf.pa_level = -18
 nrf.data_rate = 2
