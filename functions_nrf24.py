@@ -7,6 +7,7 @@ import glob
 from digitalio import DigitalInOut
 import chardet
 from functions_pi import *
+from lzw import decompress
 
 
 def master(nrf, payload):  # count = 5 will only transmit 5 packets
@@ -93,6 +94,7 @@ def slave(nrf, timeout, codec):
     # recommended behavior is to keep in TX mode while idle
     nrf.listen = False  # put the nRF24L01 is in TX mode
     #to optimize, now we open and close the file every 32 BYTES
+    msg = decompress(msg)
     pth = getUSBpath()
     writeFile(pth,msg)
         
