@@ -53,7 +53,7 @@ def master(nrf, payload):  # count = 5 will only transmit 5 packets
 #                 "{} us. Sent: {}".format((end_timer - start_timer) / 1000, payload[i]),
 #             )
     print('Fallo en la transmision'+str(ii))
-    print("Transmission rate: ", (((len(payload)*32)*8)/((end_timer-zero_timer)/1e9)))
+    print("Transmission rate: ", (((len(payload)*42)*8)/((end_timer-zero_timer)/1e9)))
     print(nrf.print_details(False))
     
     
