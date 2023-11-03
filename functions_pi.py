@@ -33,7 +33,7 @@ def openFile(path):
     return strF
 
 def writeFile(path, buff):
-    file = open(path+"result.txt","wb")
+    file = open(path+"result.txt","w")
     file.write(buff)
     file.close()
     
