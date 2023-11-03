@@ -1,4 +1,4 @@
-def lzw_compress(msg):
+def compress(msg):
 
     dictionary = {}
     output = []
@@ -22,7 +22,7 @@ def lzw_compress(msg):
     serialized_data = [num.to_bytes(2, byteorder='big') for num in output]
     return serialized_data
 
-def lzw_decompress(compressed_data):
+def decompress(compressed_data):
 
     compressed_data = [int.from_bytes(byte,byteorder='big') for byte in compressed_data]
 
