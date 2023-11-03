@@ -1,12 +1,13 @@
-def compress(msg):
+def lzw_compress(msg):
 
     dictionary = {}
     output = []
     buffer = ""
 # Creant el diccionari per UNICODE (amb ascii es de 256) --> NO ESTAN TOTS ELS CARACTERS, PERO ESQUE HI HAN MES DE 100000.
-    for i in range(65536):
+    for i in range(1000):
       dictionary[chr(i)] = i
-    next_code = 65536
+    next_code = 1000
+
 
     for i in msg:
         buffer += i # Miro el seguent caracter i del msg.
@@ -17,14 +18,18 @@ def compress(msg):
             buffer = i
 
     output.append(dictionary[buffer]) # String que conforma el output: Llista dels index del diccionari que envio.
-    return output
+    print(f'Output: {output}')
+    serialized_data = [num.to_bytes(2, byteorder='big') for num in output]
+    return serialized_data
 
-def decompress(compressed_data):
+def lzw_decompress(compressed_data):
 
-    dictionary = {i: chr(i) for i in range(65536)} # Es pot fer també així i queda més compacte, same que el compressor.
+    compressed_data = [int.from_bytes(byte,byteorder='big') for byte in compressed_data]
+
+    dictionary = {i: chr(i) for i in range(1000)} # Es pot fer també així i queda més compacte, same que el compressor.
     output = []
     buffer = ""
-    next_code = 65536
+    next_code = 1000
 
     for j in compressed_data:
         if j not in dictionary:
@@ -38,4 +43,3 @@ def decompress(compressed_data):
         buffer = entry
 
     return ''.join(output)
-
