@@ -1,5 +1,6 @@
 from functions_pi import *
 from functions_nrf24 import *
+from lzw import *
 import spidev
 
 from circuitpython_nrf24l01.rf24 import RF24
@@ -59,7 +60,7 @@ nrf.data_rate = 2
 # nrf.open_rx_pipe(1, address[not radio_number])  # using pipe 1
 
 
-payload_size = 32
+payload_size = 16
 
 # Set timeout
 timeout = 10
@@ -72,7 +73,8 @@ try:
     codc=check_codec(pth) #now we use path for codec to read more quickly.
     print("CODEC "+codc)
 
-    payload = fragmentFile(strF,payload_size)
+    strF_compressed = compress(strF)
+    payload = fragmentFile(strF_compressed,payload_size)
 except:
     codc = None
     payload = None
