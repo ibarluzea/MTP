@@ -44,26 +44,18 @@ if nrf is None:
     print("Failed to initialize RF24 after", retry_attempts, "attempts.")
     sys.exit(1)
 
-
+# Some nrf values
 nrf.pa_level = -18
 nrf.data_rate = 2
-
-
-# radio_number = bool(
-#     int(input("Which radio is this? Enter '0' or '1'. Defaults to '0' ") or 0)
-# )
-# 
-# # set TX address of RX node into the TX pipe
-# nrf.open_tx_pipe(address[radio_number])  # always uses pipe 0
-# 
-# # set RX address of TX node into an RX pipe
-# nrf.open_rx_pipe(1, address[not radio_number])  # using pipe 1
-
-
 payload_size = 16
-
 # Set timeout
 timeout = 10
+
+# Setting up LEDS and switches
+# led_yellow, led_red, led_green,
+# sw_send, sw_txrx, sw_nm, sw_off
+setup_inout()
+
 
 try:
     pth = getUSBpath()

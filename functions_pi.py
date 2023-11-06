@@ -37,13 +37,10 @@ def writeFile(path, buff):
     file.write(buff)
     file.close()
     
-def checkSwitch(pin):
-    switch = DigitalInOut(board.GP20)
+def checkSwitch(switch):
     switch.switch_to_input
     switch.pull
     return switch
-
-
     
 def check_codec(path):
     try:
@@ -60,6 +57,35 @@ def check_codec(path):
         print(f"An unexpected error occurred: {e}")
         return 
     return encoding
+
+
+
+def setup_inout():
+    led_yellow = digitalio.DigitalInOut(board.D12) #yellow LED for USB signalling 
+    led_yellow.direction = digitalio.Direction.OUTPUT
+
+    led_red = digitalio.DigitalInOut(board.D20) #red LED
+    led_red.direction = digitalio.Direction.OUTPUT
+
+    led_green = digitalio.DigitalInOut(board.D16) #green LED for sending finished 
+    led_green.direction = digitalio.Direction.OUTPUT
+
+    sw_send = DigitalInOut(board.D5)
+    sw_send.switch_to_input
+    sw_send.pull
+
+    sw_txrx = DigitalInOut(board.D6)
+    sw_txrx.switch_to_input
+    sw_txrx.pull
+
+    sw_nm = DigitalInOut(board.D26)
+    sw_nm.switch_to_input
+    sw_nm.pull
+
+    sw_off = DigitalInOut(board.D23)
+    sw_off.switch_to_input
+    sw_off.pull
+        
     
 #  This following code is to check the functions without calling the
 #	functions outside, to be sure they all work well.
