@@ -66,7 +66,9 @@ try:
     print("CODEC "+codc)
 
     #strF_compressed = compress(strF)
-    payload = fragmentFile(strF_compressed,payload_size)
+    #payload = fragmentFile(strF_compressed,payload_size)
+    payload = fragmentFile(strF,payload_size)
+
 except:
     codc = None
     payload = None
