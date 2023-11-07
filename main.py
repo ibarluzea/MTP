@@ -54,7 +54,7 @@ timeout = 10
 # Setting up LEDS and switches
 # led_yellow, led_red, led_green,
 # sw_send, sw_txrx, sw_nm, sw_off
-setup_inout()
+# setup_inout()
 
 
 try:
@@ -65,7 +65,7 @@ try:
     codc=check_codec(pth) #now we use path for codec to read more quickly.
     print("CODEC "+codc)
 
-    strF_compressed = compress(strF)
+    #strF_compressed = compress(strF)
     payload = fragmentFile(strF_compressed,payload_size)
 except:
     codc = None

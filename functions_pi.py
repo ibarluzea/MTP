@@ -61,13 +61,13 @@ def check_codec(path):
 
 
 def setup_inout():
-    led_yellow = digitalio.DigitalInOut(board.D12) #yellow LED for USB signalling 
-    led_yellow.direction = digitalio.Direction.OUTPUT
+    led_yellow = DigitalInOut(board.D12) #yellow LED for USB signalling 
+    led_yellow.direction = OUTPUT
 
-    led_red = digitalio.DigitalInOut(board.D20) #red LED
-    led_red.direction = digitalio.Direction.OUTPUT
+    led_red = DigitalInOut(board.D20) #red LED
+    led_red.direction = OUTPUT
 
-    led_green = digitalio.DigitalInOut(board.D16) #green LED for sending finished 
+    led_green = DigitalInOut(board.D16) #green LED for sending finished 
     led_green.direction = digitalio.Direction.OUTPUT
 
     sw_send = DigitalInOut(board.D5)
