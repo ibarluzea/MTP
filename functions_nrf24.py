@@ -83,11 +83,9 @@ def slave(nrf, timeout, codec):
             # buffer[:4] truncates padded 0s if dynamic payloads are disabled
             
            # Here there is another option
-            if i == 0:
+            if i == 2:
                 print(buffer)
-            else:
-                print(i)
-            msg[i] = buffer#.decode("utf-8")
+            msg.append(buffer) #.decode("utf-8")
             #msg.extend(buffer)
             # print details about the received packet
             #print(
