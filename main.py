@@ -65,6 +65,7 @@ payload_size = 32
 timeout = 10
 
 try:
+
     pth = getUSBpath()
     path_destino = "/home/mtp/MTP/"
     
@@ -72,7 +73,9 @@ try:
     codc=check_codec(pth) #now we use path for codec to read more quickly.
     print("CODEC "+codc)
 
-    payload = fragmentFile(strF,payload_size)
+    strF_compressed = compress(strF)
+    payload = fragmentFile(strF_compressed,payload_size)
+
 except:
     codc = None
     payload = None
