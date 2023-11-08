@@ -20,12 +20,21 @@ def getUSBpath():
     return path
 
 def openFile(path):
-    file = open(glob.glob(path+'*.txt')[0],"rb")
-    strF= file.read()
+    try:
+        file = open(glob.glob(path+'*.txt')[0],"r", encoding='utf-32')
+        strF= file.read()
+    except:
+        try:
+            file = open(glob.glob(path+'*.txt')[0],"r", encoding='utf-16')
+            strF= file.read()
+            
+        except:
+            file = open(glob.glob(path+'*.txt')[0],"r", encoding='utf-8')
+            strF= file.read()
     return strF
 
-def writeFile(path, buff):
-    file = open(path+"result.txt","wb")
+def writeFile(path, buff, encoding):
+    file = open(path+"result.txt","w")
     file.write(buff)
     file.close()
     
