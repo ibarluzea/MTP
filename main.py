@@ -76,10 +76,11 @@ try:
 except:
     codc = None
     print("No usb detected")
-
-strF_compressed = compress(strF)
-payload = fragmentFile(strF_compressed,payload_size)
-
+try:
+    strF_compressed = compress(strF)
+    payload = fragmentFile(strF_compressed,payload_size)
+except:
+    payload = None
 
 # master(nrf, payload)
 # slave(nrf, timeout, codec)
