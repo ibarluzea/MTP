@@ -1,5 +1,6 @@
 from functions_pi import *
 from functions_nrf24 import *
+from lzw import *
 import spidev
 
 from circuitpython_nrf24l01.rf24 import RF24
