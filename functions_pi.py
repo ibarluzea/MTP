@@ -36,7 +36,7 @@ def openFile(path):
         print("No file opened")
     return strF
 
-def writeFile(path, buff, encoding):
+def writeFile(path, buff):
     file = open(path+"result.txt","w")
     file.write(buff)
     file.close()
