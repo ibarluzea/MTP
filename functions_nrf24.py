@@ -70,8 +70,9 @@ def slave(nrf, timeout, codec):
     # set RX address of TX node into an RX pipe
     nrf.open_rx_pipe(1, address[0])  # using pipe 1
     nrf.listen = True  # put radio into RX mode and power up
-    msg = b""
+    msg = []
     start = time.monotonic()
+    i=0
     while (time.monotonic() - start) < timeout:
         if nrf.available():
             # grab information about the received payload
@@ -82,15 +83,18 @@ def slave(nrf, timeout, codec):
             # buffer[:4] truncates padded 0s if dynamic payloads are disabled
             
            # Here there is another option
-            msg +=buffer#.decode("utf-8")
+            if i == 0:
+                print(buffer)
+            msg[i] = buffer#.decode("utf-8")
             #msg.extend(buffer)
             # print details about the received packet
-            print(
-                "Received {} bytes on pipe {}: {}".format(
-                    payload_size, pipe_number, msg
-                )
-            )
+            #print(
+             #   "Received {} bytes on pipe {}: {}".format(
+              #      payload_size, pipe_number, msg
+               # )
+            #)
             start = time.monotonic()
+            i +=1
 
     # recommended behavior is to keep in TX mode while idle
     nrf.listen = False  # put the nRF24L01 is in TX mode
