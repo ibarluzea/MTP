@@ -72,15 +72,18 @@ try:
     
     strF= openFile(pth)
     codc=check_codec(pth) #now we use path for codec to read more quickly.
-    print("CODEC "+codc)
-except:
-    codc = None
+    print("CODEC: "+codc)
+except OSError:
     print("No usb detected")
+except:
+    print(f"An unexpected error occurred")
+
 try:
     strF_compressed = compress(strF)
     payload = fragmentFile(strF_compressed,payload_size)
 except:
     payload = None
+    print(f"Compression failure")
 
 # master(nrf, payload)
 # slave(nrf, timeout, codec)
@@ -92,6 +95,8 @@ print("    nRF24L01 Simple test")
 
 if __name__ == "__main__":
     try:
+        sim_value=choose_simulation() #to use switches or showing in screen"
+        
         while set_role(nrf,payload, timeout, codc):
             pass  # continue example until 'Q' is entered
     except KeyboardInterrupt:

@@ -59,12 +59,76 @@ def check_codec(path):
 
     except UnicodeDecodeError:
         print("Failed with encoding: {}".format(encoding))
-        return 
+        encoding = None 
     except Exception as e:
         print(f"An unexpected error occurred: {e}")
-        return 
+        encoding = None 
     return encoding
     
+def setup_inout():
+    led_yellow = DigitalInOut(board.D12) #yellow LED for USB signalling 
+    led_yellow.direction = OUTPUT
+
+    led_red = DigitalInOut(board.D20) #red LED
+    led_red.direction = OUTPUT
+
+    led_green = DigitalInOut(board.D16) #green LED for sending finished 
+    led_green.direction = digitalio.Direction.OUTPUT
+
+    sw_send = DigitalInOut(board.D5)
+    sw_send.switch_to_input
+    sw_send.pull
+
+    sw_txrx = DigitalInOut(board.D6)
+    sw_txrx.switch_to_input
+    sw_txrx.pull
+
+    sw_nm = DigitalInOut(board.D26)
+    sw_nm.switch_to_input
+    sw_nm.pull
+
+    sw_off = DigitalInOut(board.D23)
+    sw_off.switch_to_input
+    sw_off.pull
+    
+def led_on(signal, sim=False):
+    if sim:
+        print("led "+signal+" is ON")
+    else
+        signal.value=True
+        time.sleep(1.5)
+        signal.value=False
+
+def led_blink(signal, sim=False):
+    if sim:
+        print("led "+signal+" is blinking")
+        time.sleep(1)
+        print("led "+signal+" is blinking")
+    else
+        c=3
+        while c>0
+            signal.value=True
+            time.sleep(0.4)
+            signal.value=False
+            time.sleep(0.4)
+            c-=1
+            
+def choose_simulation():
+    user_input = (
+        input(
+            "*** Enter 'P' to use physical LEDs and switches.\n"
+            "*** Enter 'S' to simulate swiches with keyboard.\n"
+        )
+    )
+    user_input = user_input.split()
+    if user_input[0].upper().startswith("P"):
+        sim_value=False
+    if ser_input[0].upper().startswith("S"):
+        sim_value=True
+    return sim_value
+    
+
+        
 #  This following code is to check the functions without calling the
 #	functions outside, to be sure they all work well.
 # 	TO BE COMMENTED BEFORE FINISHING
