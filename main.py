@@ -73,15 +73,16 @@ try:
     strF= openFile(pth)
     codc=check_codec(pth) #now we use path for codec to read more quickly.
     print("CODEC "+codc)
-
-    strF_compressed = compress(strF)
-    payload = fragmentFile(strF_compressed,payload_size)
-
 except:
     codc = None
     payload = None
     print("No usb detected")
-
+try:
+    
+    strF_compressed = compress(strF)
+    payload = fragmentFile(strF_compressed,payload_size)
+except:
+    print("Compression failed")
 
 # master(nrf, payload)
 # slave(nrf, timeout, codec)
