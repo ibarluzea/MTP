@@ -30,7 +30,8 @@ def master(nrf, payload):  # count = 5 will only transmit 5 packets
         # into a usable payload
         limit = 10
         #print(type(payload[i]))
-        #print(payload[i])
+        while i < 2:
+            print(payload[i])
         buffer = payload[i]
         # "<f" means a single little endian (4 byte) float value.
         start_timer = time.monotonic_ns()  # start timer
