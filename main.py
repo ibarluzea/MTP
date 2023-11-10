@@ -81,9 +81,9 @@ except:
 try:
     strF_compressed = compress(strF_2)
     payload_compressed = fragmentFile(strF_compressed,payload_size)
-    print(payload_compressed)
+    print("payload compressed -->", payload_compressed)
     payload = fragmentFile(strF,payload_size)
-    print(payload)
+    print("payload normal -->", payload)
 except:
     payload = None
     print("No payload")
