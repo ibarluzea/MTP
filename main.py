@@ -71,15 +71,19 @@ try:
     path_destino = "/home/mtp/MTP/"
     
     # strF= openFile()
-    strF= openFile_fromGit()
+    strF_2= openFile_fromGit()
+    strF = openFile_fromGit2()
     codc=check_codec(pth) #now we use path for codec to read more quickly.
     print("CODEC "+codc)
 except:
     codc = None
     print("No usb detected")
 try:
-    strF_compressed = compress(strF)
-    payload = fragmentFile(strF_compressed,payload_size)
+    strF_compressed = compress(strF_2)
+    payload_compressed = fragmentFile(strF_compressed,payload_size)
+    print(payload_compressed)
+    payload = fragmentFile(strF,payload_size)
+    print(payload)
 except:
     payload = None
     print("No payload")
