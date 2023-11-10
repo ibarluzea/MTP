@@ -84,7 +84,7 @@ except:
     print("No payload")
 
 try:
-    strF_decompressed = decompress(strf_compressed)
+    strF_decompressed = decompress(strF_compressed)
     path_destino = "/home/mtp/MTP/"
     writeFile(path_destino,strF_decompressed)
 except:
