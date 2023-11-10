@@ -21,7 +21,8 @@ def compress(msg):
     output_string = ','.join(map(str, output))
     #serialized_data = [num.to_bytes(32, byteorder='big') for num in output]
     print("compress -->", output_string)
-    return output_string
+    byte_output_string = output_string.encode("utf-8")
+    return  byte_output_string
 
 def decompress(compressed_data):
 
