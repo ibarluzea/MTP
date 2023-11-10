@@ -86,7 +86,7 @@ def slave(nrf, timeout, codec):
            # Here there is another option
             if i == 2:
                 print(buffer)
-            msg.append(buffer) #.decode("utf-8")
+            msg += buffer #.decode("utf-8")
             #msg.extend(buffer)
             # print details about the received packet
             #print(
