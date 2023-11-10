@@ -56,15 +56,15 @@ def openFile_fromGit():
 def openFile_fromGit2():
     try:
         try:
-            file = open("test_utf8.txt","rb", encoding='utf-32')
+            file = open("test_utf8.txt","rb")
             strF= file.read()
         except:
             try:
-                file = open("test_utf8.txt","rb", encoding='utf-16')
+                file = open("test_utf8.txt","rb")
                 strF= file.read()
                 
             except:
-                file = open("test_utf8.txt","rb", encoding='utf-8')
+                file = open("test_utf8.txt","rb")
                 strF= file.read()
     except:
         print("No file opened")
