@@ -28,7 +28,7 @@ def decompress(compressed_data):
 
     #compressed_data = [int.from_bytes(byte,byteorder='big') for byte in compressed_data]
     compressed_data_str = compressed_data.decode("utf_8")
-    compresed_data_index = compressed_data_str.split(',')
+    compressed_data_index = compressed_data_str.split(',')
     
     dictionary = {i: chr(i) for i in range(5000)} # Es pot fer també així i queda més compacte, same que el compressor.
     output = []
