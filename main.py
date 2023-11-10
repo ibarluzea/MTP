@@ -78,12 +78,17 @@ except:
     print("No usb detected")
 try:
     strF_compressed = compress(strF)
-    strF_decompressed = decompress(strf_compressed)
-    path_destino = "/home/mtp/MTP/"
-    writeFile(path_destino,strF_decompressed)
     payload = fragmentFile(strF_compressed,payload_size)
 except:
     payload = None
+    print("No payload")
+
+try:
+    strF_decompressed = decompress(strf_compressed)
+    path_destino = "/home/mtp/MTP/"
+    writeFile(path_destino,strF_decompressed)
+except:
+    print("Fallo XD")
 
 # master(nrf, payload)
 # slave(nrf, timeout, codec)
