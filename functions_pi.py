@@ -37,7 +37,7 @@ def openFile(path):
     return strF
 
 def openFile_fromGit():
-    file = open("test_utf8.txt", "w", encoding="utf-8")
+    file = open("test_utf8.txt", "r", encoding="utf-8")
     strF = file.read()
     print(strF)
     return strF
