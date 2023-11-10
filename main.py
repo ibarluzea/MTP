@@ -70,7 +70,7 @@ try:
     pth = getUSBpath()
     path_destino = "/home/mtp/MTP/"
     
-    strF= openFile(pth)
+    strF= openFile()
     codc=check_codec(pth) #now we use path for codec to read more quickly.
     print("CODEC "+codc)
 except:
