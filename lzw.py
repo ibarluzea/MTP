@@ -18,12 +18,14 @@ def compress(msg):
             buffer = i
 
     output.append(dictionary[buffer]) # String que conforma el output: Llista dels index del diccionari que envio.
+    print(output)
     serialized_data = [num.to_bytes(2, byteorder='big') for num in output]
     return serialized_data
 
 def decompress(compressed_data):
 
     compressed_data = [int.from_bytes(byte,byteorder='big') for byte in compressed_data]
+    print(compressed_data)
 
     dictionary = {i: chr(i) for i in range(5000)} # Es pot fer també així i queda més compacte, same que el compressor.
     output = []
