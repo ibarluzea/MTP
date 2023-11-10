@@ -37,9 +37,20 @@ def openFile(path):
     return strF
 
 def openFile_fromGit():
-    file = open("test_utf8.txt", "r", encoding="utf-8")
-    strF = file.read()
-    print(strF)
+    try:
+        try:
+            file = open("test_utf8.txt","r", encoding='utf-32')
+            strF= file.read()
+        except:
+            try:
+                file = open("test_utf8.txt","r", encoding='utf-16')
+                strF= file.read()
+                
+            except:
+                file = open("test_utf8.txt","r", encoding='utf-8')
+                strF= file.read()
+    except:
+        print("No file opened")
     return strF
 def writeFile(path, buff):
     file = open(path+"result.txt","w")
