@@ -71,7 +71,7 @@ def slave(nrf, timeout, codec):
     # set RX address of TX node into an RX pipe
     nrf.open_rx_pipe(1, address[0])  # using pipe 1
     nrf.listen = True  # put radio into RX mode and power up
-    msg = []
+    msg = b""
     start = time.monotonic()
     i=0
     while (time.monotonic() - start) < timeout:
