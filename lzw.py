@@ -4,9 +4,9 @@ def compress(msg):
     output = []
     buffer = ""
 # Creant el diccionari per UNICODE (amb ascii es de 256) --> NO ESTAN TOTS ELS CARACTERS, PERO ESQUE HI HAN MES DE 100000.
-    for i in range(1000):
+    for i in range(5000):
       dictionary[chr(i)] = i
-    next_code = 1000
+    next_code = 5001
 
 
     for i in msg:
@@ -25,10 +25,10 @@ def decompress(compressed_data):
 
     compressed_data = [int.from_bytes(byte,byteorder='big') for byte in compressed_data]
 
-    dictionary = {i: chr(i) for i in range(1000)} # Es pot fer també així i queda més compacte, same que el compressor.
+    dictionary = {i: chr(i) for i in range(5000)} # Es pot fer també així i queda més compacte, same que el compressor.
     output = []
     buffer = ""
-    next_code = 1000
+    next_code = 5001
 
     for j in compressed_data:
         if j not in dictionary:
