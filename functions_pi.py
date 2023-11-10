@@ -53,7 +53,7 @@ def openFile_fromGit():
         print("No file opened")
     return strF
 
-def openFile_fromGit():
+def openFile_fromGit2():
     try:
         try:
             file = open("test_utf8.txt","rb", encoding='utf-32')
