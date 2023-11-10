@@ -47,13 +47,14 @@ def master(nrf, payload):  # count = 5 will only transmit 5 packets
         end_timer = time.monotonic_ns()  # end timer
         
         if not result:
-            print("send() failed or timed out")
+            print("send() failed or timed out") 
+            print('Fallo en la transmision'+str(ii))
 #         else:
 #             print(
 #                 "Transmission successful! Time to Transmit:",
 #                 "{} us. Sent: {}".format((end_timer - start_timer) / 1000, payload[i]),
 #             )
-    print('Fallo en la transmision'+str(ii))
+   
     print("Transmission rate: ", (((len(payload)*32)*8)/((end_timer-zero_timer)/1e9)))
     print(nrf.print_details(False))
     
