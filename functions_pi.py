@@ -67,10 +67,10 @@ def check_codec(path):
     
 def setup_inout():
     led_yellow = DigitalInOut(board.D12) #yellow LED for USB signalling 
-    led_yellow.direction = OUTPUT
+    led_yellow.direction = digitalio.Direction.OUTPUT
 
     led_red = DigitalInOut(board.D20) #red LED
-    led_red.direction = OUTPUT
+    led_red.direction = digitalio.Direction.OUTPUT
 
     led_green = DigitalInOut(board.D16) #green LED for sending finished 
     led_green.direction = digitalio.Direction.OUTPUT
@@ -132,6 +132,9 @@ def choose_simulation():
 #  This following code is to check the functions without calling the
 #	functions outside, to be sure they all work well.
 # 	TO BE COMMENTED BEFORE FINISHING
+
+# led_yellow, led_red, led_green, sw_send, sw_txrx, sw_nm, sw_off = setup_inout()
+# led_on(led_yellow, sim=True)
 
 # payload_size = 32
 # pth = getUSBpath()
