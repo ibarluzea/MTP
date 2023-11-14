@@ -99,9 +99,9 @@ def led_blink(signal, sim=False):
     if sim:
         print("yellow board.D12, red board.D20, green board.D16")
         print(f"led {signal} is blinking")
-        time.sleep(1)
+        time.sleep(0.8)
         print(f"led {signal} is blinking")
-        time.sleep(1)
+        time.sleep(0.8)
 
     else:
         c=3
