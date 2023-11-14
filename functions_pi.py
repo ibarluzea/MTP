@@ -84,8 +84,8 @@ def setup_led(pin, sim=False):
     return signal
     
 def led_on(signal, sim=False):
+    print("yellow board.D12, red board.D20, green board.D16")
     if sim:
-        print("yellow board.D12, red board.D20, green board.D16")
         print(f"led {signal} is ON")
         time.sleep(0.5)
         print(f"led {signal} is OFF")
@@ -95,10 +95,11 @@ def led_on(signal, sim=False):
         signal.value=False
 
 def led_blink(signal, sim=False):
+    print("yellow board.D12, red board.D20, green board.D16")
     if sim:
-        print(f"led {signal=} is blinking")
+        print(f"led {signal} is blinking")
         time.sleep(1)
-        print(f"led {signal=} is blinking")
+        print(f"led {signal} is blinking")
         time.sleep(1)
 
     else:

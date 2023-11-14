@@ -16,6 +16,11 @@ led_on(led_yellow, False)
 led_on(led_red, False)
 led_on(led_green, False)
 
+led_blink(led_yellow, False)
+led_blink(led_red, False)
+led_blink(led_green, True)
+
+
 # sim = choose_simulation()
 # 
 # led_yellow=setup_led(board.D12, sim)
@@ -28,7 +33,8 @@ led_on(led_green, False)
 
 # Test switches for 20 seconds
 start_time = time.time()
-while time.time() - start_time < 20:
+t1=10
+while time.time() - start_time < t1:
     print(f"Send Switch: {sw_send.value}, TXRX Switch: {sw_txrx.value}, NM Switch: {sw_nm.value}, OFF Switch: {sw_off.value}")    
     time.sleep(1)  # Delay to make the output readable
 

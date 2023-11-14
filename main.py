@@ -95,7 +95,7 @@ print("    nRF24L01 Simple test")
 
 if __name__ == "__main__":
     try:
-        #sim_value=choose_simulation() #to use switches or showing in screen"
+        sim_value=choose_simulation() #to use switches or showing in screen"
         
         while set_role(nrf,payload, timeout, codc):
             pass  # continue example until 'Q' is entered
