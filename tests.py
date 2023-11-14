@@ -37,10 +37,10 @@ pth = getUSBpath()
 codc=check_codec(pth)
 
 start_time = time.time()
-
-while time.time() - start_time < 3:
-    t=time.time() - start_time
-    print(f"Press off in {int(round(t))}")
+t1=3
+while time.time() - start_time < t1:
+    t2=time.time() - start_time
+    print(f"Press off in {int(round(t1-t2))}")
     if not sw_off.value:
         pi_shutdown()
     else:
