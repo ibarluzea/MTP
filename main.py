@@ -2,6 +2,7 @@ from functions_pi import *
 from functions_nrf24 import *
 from lzw import *
 import spidev
+import os as sys
 
 from circuitpython_nrf24l01.rf24 import RF24
 # invalid default values for scoping
@@ -103,6 +104,8 @@ if __name__ == "__main__":
         sw_txrx = setup_switch(board.D6)
         sw_nm = setup_switch(board.D26)
         sw_off = setup_switch(board.D23)
+        led_on(led_green)
+        
     except:
         led_on(led_red)
     led_on(led_green)
