@@ -92,9 +92,9 @@ def led_on(signal, sim=False):
 
 def led_blink(signal, sim=False):
     if sim:
-        print(f"led {signal} is blinking")
+        print(f"led {signal=} is blinking")
         time.sleep(1)
-        print(f"led {signal} is blinking")
+        print(f"led {signal=} is blinking")
         time.sleep(1)
 
     else:
