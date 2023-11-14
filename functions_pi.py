@@ -83,7 +83,7 @@ def setup_led(pin):
     
 def led_on(signal, sim=False):
     if sim:
-        print("led {signal} is ON")
+        print(f"led {signal} is ON")
         time.sleep(1)
     else:
         signal.value=True
@@ -92,9 +92,9 @@ def led_on(signal, sim=False):
 
 def led_blink(signal, sim=False):
     if sim:
-        print("led {signal} is blinking")
+        print(f"led {signal} is blinking")
         time.sleep(1)
-        print("led  {signal} is blinking")
+        print(f"led {signal} is blinking")
         time.sleep(1)
 
     else:
