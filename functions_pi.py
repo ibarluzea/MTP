@@ -82,7 +82,7 @@ def setup_led(pin):
 def led_on(signal, sim=False):
     if sim:
         print("led "+signal+" is ON")
-    else
+    else:
         signal.value=True
         time.sleep(1.5)
         signal.value=False
@@ -92,7 +92,7 @@ def led_blink(signal, sim=False):
         print("led "+signal+" is blinking")
         time.sleep(1)
         print("led "+signal+" is blinking")
-    else
+    else:
         c=3
         while c>0
             signal.value=True
@@ -122,7 +122,7 @@ def choose_simulation():
 # 	TO BE COMMENTED BEFORE FINISHING
 
 led_yellow=setup_led()
-led_on(led_yellow, True)
+led_on(led_yellow, False)
 
 # payload_size = 32
 # pth = getUSBpath()
