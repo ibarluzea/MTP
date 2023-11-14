@@ -121,7 +121,7 @@ def choose_simulation():
 #	functions outside, to be sure they all work well.
 # 	TO BE COMMENTED BEFORE FINISHING
 
-led_yellow=setup_led()
+led_yellow=setup_led(D12)
 led_on(led_yellow, False)
 
 # payload_size = 32
