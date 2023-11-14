@@ -37,8 +37,10 @@ pth = getUSBpath()
 codc=check_codec(pth)
 
 start_time = time.time()
-while time.time() - start_time < 5:
-    print("Press off switch now")
+
+while time.time() - start_time < 3:
+    t=time.time() - start_time
+    print(f"Press off in {t}")
     if not sw_off.value:
         pi_shutdown()
     else:
