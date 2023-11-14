@@ -104,11 +104,12 @@ if __name__ == "__main__":
         sw_txrx = setup_switch(board.D6)
         sw_nm = setup_switch(board.D26)
         sw_off = setup_switch(board.D23)
+        print("success")
         led_on(led_green)
-        
+        print("not")
     except:
+        print("fail to setup leds")
         led_on(led_red)
-    led_on(led_green)
     
     
     try:       
