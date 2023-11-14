@@ -116,7 +116,7 @@ def choose_simulation():
     user_input = user_input.split()
     if user_input[0].upper().startswith("P"):
         sim_value=False
-    if ser_input[0].upper().startswith("S"):
+    if user_input[0].upper().startswith("S"):
         sim_value=True
     return sim_value
     
