@@ -36,5 +36,9 @@ payload_size = 32
 pth = getUSBpath()
 codc=check_codec(pth)
 
-if sw_off.value:
-    pi_shutdown()
+start_time = time.time()
+while time.time() - start_time < 5:
+    print("Press off switch now")
+    if not sw_off.value:
+        pi_shutdown()
+    else time.sleep(1)
