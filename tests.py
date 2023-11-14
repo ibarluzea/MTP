@@ -18,12 +18,12 @@ led_on(led_green, False)
 
 led_blink(led_yellow, False)
 led_blink(led_red, False)
-led_blink(led_green, True)
 
 
-# sim = choose_simulation()
-# 
-# led_yellow=setup_led(board.D12, sim)
+sim = choose_simulation()
+led_yellow=setup_led(board.D12, sim)
+led_blink(led_yellow, True)
+
 # led_red=setup_led(board.D20, sim)
 # led_green=setup_led(board.D16, sim)
 
