@@ -15,7 +15,7 @@ if not sim_value:
 else:
     led_yellow=("led yellow")
     led_red=("led_red")
-    led_green("led_green")
+    led_green=("led_green")
     sw_send=True
     sw_txrx=True
     sw_nm=True
