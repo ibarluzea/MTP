@@ -40,12 +40,6 @@ def writeFile(path, buff):
     file = open(path+"result.txt","w", 'utf-8')
     file.write(buff)
     file.close()
-    
-def checkSwitch(pin):
-    switch = DigitalInOut(board.GP20)
-    switch.switch_to_input
-    switch.pull
-    return switch
 
 
     
@@ -64,32 +58,26 @@ def check_codec(path):
         print(f"An unexpected error occurred: {e}")
         encoding = None 
     return encoding
+
+
+def setup_switch(pin):
+    # sw_send D5
+    # sw_txrx D6
+    # sw_nm D26
+    # sw_off D23
+    switch = digitalio.DigitalInOut(pin)
+    switch.direction = digitalio.Direction.INPUT
+    switch.pull = digitalio.Pull.UP  # Assuming a pull-up configuration
+    return switch
     
-def setup_inout():
-    led_yellow = DigitalInOut(board.D12) #yellow LED for USB signalling 
-    led_yellow.direction = digitalio.Direction.OUTPUT
-
-    led_red = DigitalInOut(board.D20) #red LED
-    led_red.direction = digitalio.Direction.OUTPUT
-
-    led_green = DigitalInOut(board.D16) #green LED for sending finished 
-    led_green.direction = digitalio.Direction.OUTPUT
-
-    sw_send = DigitalInOut(board.D5)
-    sw_send.switch_to_input
-    sw_send.pull
-
-    sw_txrx = DigitalInOut(board.D6)
-    sw_txrx.switch_to_input
-    sw_txrx.pull
-
-    sw_nm = DigitalInOut(board.D26)
-    sw_nm.switch_to_input
-    sw_nm.pull
-
-    sw_off = DigitalInOut(board.D23)
-    sw_off.switch_to_input
-    sw_off.pull
+def setup_led(pin):
+    #yellow D12
+    #red D20
+    #green D16
+    
+    signal = DigitalInOut(board.pin) #yellow LED for USB signalling 
+    signal.direction = digitalio.Direction.OUTPUT
+    return signal
     
 def led_on(signal, sim=False):
     if sim:
@@ -117,7 +105,7 @@ def choose_simulation():
     user_input = (
         input(
             "*** Enter 'P' to use physical LEDs and switches.\n"
-            "*** Enter 'S' to simulate swiches with keyboard.\n"
+            "*** Enter 'S' to simulate switches with keyboard.\n"
         )
     )
     user_input = user_input.split()
@@ -133,13 +121,15 @@ def choose_simulation():
 #	functions outside, to be sure they all work well.
 # 	TO BE COMMENTED BEFORE FINISHING
 
-# led_yellow, led_red, led_green, sw_send, sw_txrx, sw_nm, sw_off = setup_inout()
-# led_on(led_yellow, sim=True)
+led_yellow=setup_led()
+led_on(led_yellow, sim=True)
 
 # payload_size = 32
 # pth = getUSBpath()
 # codc=check_codec(pth)
 # # 
 # print(codc)
+
+
 
 
