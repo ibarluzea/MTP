@@ -125,7 +125,7 @@ def choose_simulation():
     return sim_value
     
 def pi_shutdown():
-    os.system("sudo poweroff")
+    sys.system("sudo poweroff")
 
         
 #  This following code is to check the functions without calling the

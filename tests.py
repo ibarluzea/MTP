@@ -1,7 +1,6 @@
 from functions_pi import *
 from functions_nrf24 import *
 import spidev
-import os
 
 
 led_yellow=setup_led(board.D12)
@@ -10,22 +9,22 @@ led_green=setup_led(board.D16)
 
 sw_send = setup_switch(board.D5)
 sw_txrx = setup_switch(board.D6)
-sw_nm = setup_switch(board.D26)
+sw_nm = setup_switch(boarsd.D26)
 sw_off = setup_switch(board.D23)
 
 led_on(led_yellow, False)
 led_on(led_red, False)
 led_on(led_green, False)
 
-sim = choose_simulation()
+# sim = choose_simulation()
+# 
+# led_yellow=setup_led(board.D12, sim)
+# led_red=setup_led(board.D20, sim)
+# led_green=setup_led(board.D16, sim)
 
-led_yellow=setup_led(board.D12, sim)
-led_red=setup_led(board.D20, sim)
-led_green=setup_led(board.D16, sim)
-
-led_on(led_yellow, sim)
-led_on(led_red, sim)
-led_on(led_green, sim)
+# led_on(led_yellow, sim)
+# led_on(led_red, sim)
+# led_on(led_green, sim)
 
 # Test switches for 20 seconds
 start_time = time.time()
@@ -37,5 +36,5 @@ payload_size = 32
 pth = getUSBpath()
 codc=check_codec(pth)
 
-if sw_nm.value:
+if sw_off.value:
     pi_shutdown()
