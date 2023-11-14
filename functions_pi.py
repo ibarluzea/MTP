@@ -94,7 +94,7 @@ def led_blink(signal, sim=False):
         print("led "+signal+" is blinking")
     else:
         c=3
-        while c>0
+        while c>0:
             signal.value=True
             time.sleep(0.4)
             signal.value=False
