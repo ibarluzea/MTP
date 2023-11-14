@@ -75,7 +75,7 @@ def setup_led(pin):
     #red D20
     #green D16
     
-    signal = DigitalInOut(board.pin) #yellow LED for USB signalling 
+    signal = DigitalInOut(pin) #yellow LED for USB signalling 
     signal.direction = digitalio.Direction.OUTPUT
     return signal
     
@@ -121,7 +121,7 @@ def choose_simulation():
 #	functions outside, to be sure they all work well.
 # 	TO BE COMMENTED BEFORE FINISHING
 
-led_yellow=setup_led(D12)
+led_yellow=setup_led(board.D12)
 led_on(led_yellow, False)
 
 # payload_size = 32
