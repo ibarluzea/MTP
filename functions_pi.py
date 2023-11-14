@@ -4,8 +4,10 @@ import board
 import os as sys
 import subprocess
 import glob
+import digitalio
 from digitalio import DigitalInOut
 import chardet
+
 
 
 def fragmentFile(string, length):
