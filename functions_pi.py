@@ -72,19 +72,23 @@ def setup_switch(pin):
     switch.pull = digitalio.Pull.UP  # Assuming a pull-up configuration
     return switch
     
-def setup_led(pin):
+def setup_led(pin, sim=False):
     #yellow board.D12
     #red board.D20
     #green board.D16
-    
-    signal = digitalio.DigitalInOut(pin) #yellow LED for USB signalling 
-    signal.direction = digitalio.Direction.OUTPUT
+    if sim:
+        signal=pin
+    else:
+        signal = digitalio.DigitalInOut(pin) #yellow LED for USB signalling 
+        signal.direction = digitalio.Direction.OUTPUT
     return signal
     
 def led_on(signal, sim=False):
     if sim:
+        print("yellow board.D12, red board.D20, green board.D16")
         print(f"led {signal} is ON")
-        time.sleep(1)
+        time.sleep(0.5)
+        print(f"led {signal} is OFF")
     else:
         signal.value=True
         time.sleep(1.5)

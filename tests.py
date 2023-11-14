@@ -18,6 +18,10 @@ led_on(led_green, False)
 
 sim = choose_simulation()
 
+led_yellow=setup_led(board.D12, sim)
+led_red=setup_led(board.D20, sim)
+led_green=setup_led(board.D16, sim)
+
 led_on(led_yellow, sim)
 led_on(led_red, sim)
 led_on(led_green, sim)
