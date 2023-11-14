@@ -52,6 +52,8 @@ while time.time() - start_time < 20:
     print(f"Send Switch: {sw_send.value}, TXRX Switch: {sw_txrx.value}, NM Switch: {sw_nm.value}, OFF Switch: {sw_off.value}")    
     time.sleep(1)  # Delay to make the output readable
 
+if sw_nm.value:
+    pi_shutdown()
 # Turn off LEDs
 led_yellow.value = False
 led_red.value = False
