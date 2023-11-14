@@ -40,7 +40,7 @@ start_time = time.time()
 
 while time.time() - start_time < 3:
     t=time.time() - start_time
-    print(f"Press off in {t}")
+    print(f"Press off in {int(round(x))}")
     if not sw_off.value:
         pi_shutdown()
     else:
