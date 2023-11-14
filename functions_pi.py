@@ -122,7 +122,7 @@ def choose_simulation():
 # 	TO BE COMMENTED BEFORE FINISHING
 
 led_yellow=setup_led()
-led_on(led_yellow, sim=True)
+led_on(led_yellow, True)
 
 # payload_size = 32
 # pth = getUSBpath()
