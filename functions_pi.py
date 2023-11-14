@@ -107,9 +107,13 @@ def led_blink(signal, sim=False):
         c=3
         while c>0:
             signal.value=True
-            time.sleep(0.4)
+            time.sleep(0.3)
             signal.value=False
-            time.sleep(0.4)
+            time.sleep(0.3)
+            signal.value=True
+            time.sleep(0.3)
+            signal.value=False
+            time.sleep(0.3)
             c-=1
             
 def choose_simulation():
