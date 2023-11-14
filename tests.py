@@ -1,6 +1,7 @@
 from functions_pi import *
 from functions_nrf24 import *
 import spidev
+import os
 
 
 led_yellow=setup_led(board.D12)
