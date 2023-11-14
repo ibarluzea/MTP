@@ -41,4 +41,5 @@ while time.time() - start_time < 5:
     print("Press off switch now")
     if not sw_off.value:
         pi_shutdown()
-    else time.sleep(1)
+    else:
+        time.sleep(1)
