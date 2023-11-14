@@ -35,3 +35,6 @@ while time.time() - start_time < 20:
 payload_size = 32
 pth = getUSBpath()
 codc=check_codec(pth)
+
+if sw_nm.value:
+    pi_shutdown()
