@@ -75,7 +75,7 @@ def setup_led(pin):
     #red D20
     #green D16
     
-    signal = DigitalInOut(pin) #yellow LED for USB signalling 
+    signal = digitalio.DigitalInOut(pin) #yellow LED for USB signalling 
     signal.direction = digitalio.Direction.OUTPUT
     return signal
     
