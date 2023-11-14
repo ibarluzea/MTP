@@ -9,7 +9,7 @@ led_green=setup_led(board.D16)
 
 sw_send = setup_switch(board.D5)
 sw_txrx = setup_switch(board.D6)
-sw_nm = setup_switch(boarsd.D26)
+sw_nm = setup_switch(board.D26)
 sw_off = setup_switch(board.D23)
 
 led_on(led_yellow, False)
