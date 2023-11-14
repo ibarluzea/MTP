@@ -16,10 +16,6 @@ else:
     led_yellow=("led yellow")
     led_red=("led_red")
     led_green=("led_green")
-    sw_send.value=True
-    sw_txrx.value=True
-    sw_nm.value=True
-    sw_off.value=True
 
 led_on(led_yellow, sim_value)
 led_on(led_red, sim_value)
