@@ -126,8 +126,11 @@ def choose_simulation():
     user_input = user_input.split()
     if user_input[0].upper().startswith("P"):
         sim_value=False
+        print("entered mode physical")
     if user_input[0].upper().startswith("S"):
         sim_value=True
+        print("entered mode simulation")
+
     return sim_value
     
 def pi_shutdown():
