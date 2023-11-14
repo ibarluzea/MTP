@@ -73,9 +73,9 @@ def setup_switch(pin):
     return switch
     
 def setup_led(pin):
-    #yellow D12
-    #red D20
-    #green D16
+    #yellow board.D12
+    #red board.D20
+    #green board.D16
     
     signal = digitalio.DigitalInOut(pin) #yellow LED for USB signalling 
     signal.direction = digitalio.Direction.OUTPUT
@@ -84,6 +84,7 @@ def setup_led(pin):
 def led_on(signal, sim=False):
     if sim:
         print("led "+signal+" is ON")
+        time.sleep(1)
     else:
         signal.value=True
         time.sleep(1.5)
@@ -94,6 +95,8 @@ def led_blink(signal, sim=False):
         print("led "+signal+" is blinking")
         time.sleep(1)
         print("led "+signal+" is blinking")
+        time.sleep(1)
+
     else:
         c=3
         while c>0:
@@ -123,8 +126,8 @@ def choose_simulation():
 #	functions outside, to be sure they all work well.
 # 	TO BE COMMENTED BEFORE FINISHING
 
-led_yellow=setup_led(board.D12)
-led_on(led_yellow, False)
+#led_yellow=setup_led(board.D12)
+#led_on(led_yellow, False)
 
 # payload_size = 32
 # pth = getUSBpath()
