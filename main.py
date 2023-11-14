@@ -95,20 +95,8 @@ print("    nRF24L01 Simple test")
 
 if __name__ == "__main__":
     try:
-        sim_value=choose_simulation() #to use switches or showing in screen"
-        if not sim_value:
-#             led_yellow, led_red, led_green, sw_send, sw_txrx, sw_nm, sw_off = setup_inout()
-
-        else
-            led_yellow = "led_yellow"
-            led_red= "led_red"
-            led_green="led_green"
-#             sw_send="sw_send"
-#             sw_txrx="sw_txrx"
-#             sw_nm="sw_nm"
-#             sw_off="sw_off"
-            
-            
+        #sim_value=choose_simulation() #to use switches or showing in screen"
+        
         while set_role(nrf,payload, timeout, codc):
             pass  # continue example until 'Q' is entered
     except KeyboardInterrupt:

@@ -5,7 +5,7 @@ import spidev
 
 led_yellow=setup_led(board.D12)
 led_red=setup_led(board.D20)
-led_green=setup_edl(board.D16)
+led_green=setup_led(board.D16)
 
 sw_send = setup_switch(board.D5)
 sw_txrx = setup_switch(board.D6)
@@ -13,9 +13,14 @@ sw_nm = setup_switch(board.D26)
 sw_off = setup_switch(board.D23)
 
 led_on(led_yellow, False)
-led_on(led_yellow, True)
+led_on(led_red, False)
+led_on(led_green, False)
 
-led_on(led_yellow, False)
+sim = choose_simulation()
+
+led_on(led_yellow, sim)
+led_on(led_red, sim)
+led_on(led_green, sim)
 
 # Test switches for 20 seconds
 start_time = time.time()
