@@ -29,7 +29,7 @@ led_blink(led_green, sim_value)
 
 # Test switches for 20 seconds
 start_time = time.time()
-t1=5
+t1=20
 while time.time() - start_time < t1:
     print(f"Send Switch: {sw_send.value}, TXRX Switch: {sw_txrx.value}, NM Switch: {sw_nm.value}, OFF Switch: {sw_off.value}")    
     time.sleep(1)  # Delay to make the output readable
@@ -39,7 +39,7 @@ pth = getUSBpath()
 codc=check_codec(pth)
 
 start_time = time.time()
-t1=3
+t1=4
 while time.time() - start_time < t1:
     t2=time.time() - start_time
     print(f"Press off in {int(round(t1-t2))}")
