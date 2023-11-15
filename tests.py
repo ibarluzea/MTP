@@ -2,29 +2,23 @@ from functions_pi import *
 from functions_nrf24 import *
 import spidev
 
-sim_value=choose_simulation() #to use switches or showing in screen"
-if not sim_value:
-    led_yellow=setup_led(board.D12)
-    led_red=setup_led(board.D20)
-    led_green=setup_led(board.D16)
+led_yellow=setup_led(board.D12)
+led_red=setup_led(board.D20)
+led_green=setup_led(board.D16)
 
-    sw_send = setup_switch(board.D5)
-    sw_txrx = setup_switch(board.D6)
-    sw_nm = setup_switch(board.D26)
-    sw_off = setup_switch(board.D23)
-else:
-    led_yellow=("led yellow")
-    led_red=("led_red")
-    led_green=("led_green")
+sw_send = setup_switch(board.D5)
+sw_txrx = setup_switch(board.D6)
+sw_nm = setup_switch(board.D26)
+sw_off = setup_switch(board.D23)
 
-led_on(led_yellow, sim_value)
-led_on(led_red, sim_value)
-led_on(led_green, sim_value)
 
-led_blink(led_yellow, sim_value)
-led_blink(led_red, sim_value)
-led_blink(led_green, sim_value)
+led_on(led_yellow)
+led_on(led_red)
+led_on(led_green)
 
+led_blink(led_yellow)
+led_blink(led_red)
+led_blink(led_green)
 
 
 # Test switches for 20 seconds

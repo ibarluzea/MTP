@@ -72,67 +72,32 @@ def setup_switch(pin):
     switch.pull = digitalio.Pull.UP  # Assuming a pull-up configuration
     return switch
     
-def setup_led(pin, sim=False):
+def setup_led(pin):
     #yellow board.D12
     #red board.D20
     #green board.D16
-    if sim:
-        signal=pin
-    else:
-        signal = digitalio.DigitalInOut(pin) #yellow LED for USB signalling 
-        signal.direction = digitalio.Direction.OUTPUT
+    signal = digitalio.DigitalInOut(pin) #yellow LED for USB signalling 
+    signal.direction = digitalio.Direction.OUTPUT
     return signal
     
-def led_on(signal, sim=False):
-    if sim:
-        print("yellow board.D12, red board.D20, green board.D16")
-        print(f"led {signal} is ON")
-        time.sleep(0.5)
-        print(f"led {signal} is OFF")
-    else:
-        signal.value=True
-        time.sleep(1.5)
-        signal.value=False
+def led_on(signal):
+    signal.value=True
+    time.sleep(1.5)
+    signal.value=False
 
 def led_blink(signal, sim=False):
-    
-    if sim:
-        print("yellow board.D12, red board.D20, green board.D16")
-        print(f"led {signal} is blinking")
-        time.sleep(0.8)
-        print(f"led {signal} is blinking")
-        time.sleep(0.8)
+    c=3
+    while c>0:
+        signal.value=True
+        time.sleep(0.3)
+        signal.value=False
+        time.sleep(0.3)
+        signal.value=True
+        time.sleep(0.3)
+        signal.value=False
+        time.sleep(0.3)
+        c-=1
 
-    else:
-        c=3
-        while c>0:
-            signal.value=True
-            time.sleep(0.3)
-            signal.value=False
-            time.sleep(0.3)
-            signal.value=True
-            time.sleep(0.3)
-            signal.value=False
-            time.sleep(0.3)
-            c-=1
-            
-def choose_simulation():
-    user_input = (
-        input(
-            "*** Enter 'P' to use physical LEDs and switches.\n"
-            "*** Enter 'S' to simulate switches with keyboard.\n"
-        )
-    )
-    user_input = user_input.split()
-    if user_input[0].upper().startswith("P"):
-        sim_value=False
-        print("entered mode physical")
-    if user_input[0].upper().startswith("S"):
-        sim_value=True
-        print("entered mode simulation")
-
-    return sim_value
-    
 def pi_shutdown():
     sys.system("sudo poweroff")
 
