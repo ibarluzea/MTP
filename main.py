@@ -46,10 +46,10 @@ if nrf is None:
 
 # Parameters RF nrf
 ####################
-nrf.set_pa_level(-6)
-nrf.set_data_rate(2)
-nrf.set_channel(90)
-nrf.enable_ack_payload()
+nrf.pa_level = -6
+nrf.data_rate = 2
+nrf.channel = 90
+nrf.ack = False
 ####################
 
 # radio_number = bool(
