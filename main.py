@@ -85,7 +85,7 @@ try:
     print("SI")
     payload_compressed = fragmentFile(strF_compressed,payload_size)
 except:
-    payload = None
+    payload_compressed = None
     print("No payload")
 
 # master(nrf, payload)
