@@ -47,7 +47,6 @@ if nrf is None:
 # Parameters RF nrf
 ####################
 nrf.pa_level = -6
-nrf.data_rate = 1
 nrf.data_rate = 2
 nrf.channel = 90
 nrf.ack = False
