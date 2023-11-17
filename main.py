@@ -106,7 +106,7 @@ print("    nRF24L01 Simple test")
 
 if __name__ == "__main__":
     try:
-        while set_role(nrf,payload, timeout, codc):
+        while set_role(nrf,payload_compressed, timeout, codc):
             pass  # continue example until 'Q' is entered
     except KeyboardInterrupt:
         print(" Keyboard Interrupt detected. Powering down radio...")
