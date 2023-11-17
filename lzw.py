@@ -4,9 +4,9 @@ def compress(msg):
     output = []
     buffer = ""
 # Creant el diccionari per UNICODE (amb ascii es de 256) --> NO ESTAN TOTS ELS CARACTERS, PERO ESQUE HI HAN MES DE 100000.
-    for i in range(5000):
+    for i in range(10000):
       dictionary[chr(i)] = i
-    next_code = 5000
+    next_code = 10000
 
 
     for i in msg:
