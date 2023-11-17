@@ -49,18 +49,6 @@ if nrf is None:
 nrf.pa_level = -18
 nrf.data_rate = 2
 
-
-# radio_number = bool(
-#     int(input("Which radio is this? Enter '0' or '1'. Defaults to '0' ") or 0)
-# )
-# 
-# # set TX address of RX node into the TX pipe
-# nrf.open_tx_pipe(address[radio_number])  # always uses pipe 0
-# 
-# # set RX address of TX node into an RX pipe
-# nrf.open_rx_pipe(1, address[not radio_number])  # using pipe 1
-
-
 payload_size = 32
 
 # Set timeout
@@ -78,10 +66,12 @@ except OSError:
     print("No usb detected")
 except:
     print(f"An unexpected error occurred")
+
 try:
     payload = fragmentFile(strF,payload_size)
 except:
     payload = None
+    print(f"Not file found to fragment")
 
 
 

@@ -7,7 +7,7 @@ import glob
 import digitalio
 from digitalio import DigitalInOut
 import chardet
-
+import threading
 
 
 def fragmentFile(string, length):
@@ -82,7 +82,7 @@ def led_on(signal):
     time.sleep(1.5)
     signal.value=False
 
-def led_blink(signal, sim=False):
+def led_blink(signal):
     c=3
     while c>0:
         signal.value=True
@@ -94,6 +94,18 @@ def led_blink(signal, sim=False):
         signal.value=False
         time.sleep(0.3)
         c-=1
+        
+def blinkLed(e, t):
+    """flash the specified led every second"""
+    while not e.isSet():
+        print(colour)
+        time.sleep(0.3)
+        event_is_set = e.wait(t)
+        if event_is_set:
+            print('stop led from flashing')
+        else:
+            print('leds off')
+            time.sleep(0.3)
 
 def pi_shutdown():
     sys.system("sudo poweroff")
