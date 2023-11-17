@@ -26,8 +26,9 @@ def compress(msg):
 def decompress(compressed_data):
 
     #compressed_data = [int.from_bytes(byte,byteorder='big') for byte in compressed_data]
-    print(compressed_data)
+
     compressed_data_str = compressed_data.decode("utf_8")
+    print(f"Compressed_data_string: {compressed_data_str}")
     compressed_data_index = compressed_data_str.split(',')
     
     dictionary = {i: chr(i) for i in range(1000)} # Es pot fer també així i queda més compacte, same que el compressor.
