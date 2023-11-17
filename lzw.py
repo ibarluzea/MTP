@@ -29,7 +29,6 @@ def decompress(compressed_data):
 
     compressed_data_str = compressed_data.decode("utf_8")
     compressed_data_index = [int(index) for index in compressed_data_str.split(',')]
-    print(f"Compressed_data_list: {compressed_data_index}")
     
     dictionary = {i: chr(i) for i in range(1000)} # Es pot fer també així i queda més compacte, same que el compressor.
     output = []
