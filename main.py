@@ -90,6 +90,7 @@ except:
 
 try:
     strF_decompressed = decompress(strF_compressed)
+    print(f"String decompressed: {strF_decompressed}")
     path_destino = "/home/mtp/MTP/"
     writeFile(path_destino,strF_decompressed)
 except:
