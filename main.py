@@ -72,7 +72,6 @@ try:
     
     # strF= openFile()
     strF_2= openFile_fromGit()
-    strF = openFile_fromGit2()
     codc=check_codec(pth) #now we use path for codec to read more quickly.
     print("CODEC "+codc)
 except:
@@ -81,20 +80,9 @@ except:
 try:
     strF_compressed = compress(strF_2)
     payload_compressed = fragmentFile(strF_compressed,payload_size)
-    print("payload compressed -->", payload_compressed)
-    payload = fragmentFile(strF,payload_size)
-    print("payload normal -->", payload)
 except:
     payload = None
     print("No payload")
-
-try:
-    strF_decompressed = decompress(strF_compressed)
-    print(f"String decompressed: {strF_decompressed}")
-    path_destino = "/home/mtp/MTP/"
-    writeFile(path_destino,strF_decompressed)
-except:
-    print("Fallo XD")
 
 # master(nrf, payload)
 # slave(nrf, timeout, codec)
