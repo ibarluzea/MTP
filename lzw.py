@@ -30,10 +30,10 @@ def decompress(compressed_data):
     compressed_data_str = compressed_data.decode("utf_8")
     compressed_data_index = [int(index) for index in compressed_data_str.split(',')]
     
-    dictionary = {i: chr(i) for i in range(5000)} # Es pot fer també així i queda més compacte, same que el compressor.
+    dictionary = {i: chr(i) for i in range(10000)} # Es pot fer també així i queda més compacte, same que el compressor.
     output = []
     buffer = ""
-    next_code = 5000
+    next_code = 10000
 
     for j in compressed_data_index:
         if j not in dictionary:
