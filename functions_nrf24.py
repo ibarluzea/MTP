@@ -101,8 +101,8 @@ def slave(nrf, timeout, codec):
     nrf.listen = False  # put the nRF24L01 is in TX mode
     #to optimize, now we open and close the file every 32 BYTES
     msg = decompress(msg)
-    #pth = getUSBpath()
-    pth = "/home/mtp/MTP/"
+    pth = getUSBpath()
+    #pth = "/home/mtp/MTP/"
     writeFile(pth,msg)
         
 def set_role(nrf, payload, timeout, codec):
