@@ -12,7 +12,8 @@ def compress(msg):
     for i in msg:
         buffer += i # Miro el seguent caracter i del msg.
         if buffer not in dictionary:  #Afegeixo al diccionari i al output la seq no guardada -->.
-            print(buffer[:-1])
+            print(f"Buffer -1: {buffer[:-1]}")
+            print(f"Buffer: {buffer[:]}")
             output.append(dictionary[buffer[:-1]])
             dictionary[buffer] = next_code
             next_code += 1
