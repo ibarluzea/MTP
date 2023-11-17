@@ -44,13 +44,13 @@ if nrf is None:
     print("Failed to initialize RF24 after", retry_attempts, "attempts.")
     sys.exit(1)
 
-% Parameters RF nrf
-%%%%%%%%%%%%%%%%%%%%
+# Parameters RF nrf
+####################
 nrf.set_pa_level(-6)
 nrf.set_data_rate(2)
 nrf.set_channel(90)
 nrf.enable_ack_payload()
-%%%%%%%%%%%%%%%%%%%%
+####################
 
 # radio_number = bool(
 #     int(input("Which radio is this? Enter '0' or '1'. Defaults to '0' ") or 0)
