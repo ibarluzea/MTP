@@ -78,17 +78,10 @@ except OSError:
     print("No usb detected")
 except:
     print(f"An unexpected error occurred")
-
 try:
-    strF_compressed = compress(strF)
-    payload = fragmentFile(strF_compressed,payload_size)
+    payload = fragmentFile(strF,payload_size)
 except:
     payload = None
-    print(f"Compression failure")
-
-# master(nrf, payload)
-# slave(nrf, timeout, codec)
-
 
 
 
@@ -104,14 +97,13 @@ if __name__ == "__main__":
         sw_txrx = setup_switch(board.D6)
         sw_nm = setup_switch(board.D26)
         sw_off = setup_switch(board.D23)
-        print("success")
+        print("success in LED and switch setup")
         led_on(led_green)
-        print("not")
+        
     except:
-        print("fail to setup leds")
+        print("failure in LED setup")
         led_on(led_red)
-    
-    
+            
     try:       
         while set_role(nrf,payload, timeout, codc):
             pass  # continue example until 'Q' is entered

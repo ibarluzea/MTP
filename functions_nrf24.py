@@ -36,12 +36,12 @@ def master(nrf, payload):  # count = 5 will only transmit 5 packets
         # "<f" means a single little endian (4 byte) float value.
         start_timer = time.monotonic_ns()  # start timer
         
-        result = nrf.send(buffer, False, 10)
+        result = nrf.send(buffer)
         ii=1
         while not result and limit:
             
             ii+=1
-            result = nrf.send(buffer, False, 0)
+            result = nrf.resend()
             time.sleep(0.5)
             limit -= 1
         end_timer = time.monotonic_ns()  # end timer
@@ -99,7 +99,6 @@ def slave(nrf, timeout, codec):
     # recommended behavior is to keep in TX mode while idle
     nrf.listen = False  # put the nRF24L01 is in TX mode
     #to optimize, now we open and close the file every 32 BYTES
-    msg = decompress(msg)
     pth = getUSBpath()
     writeFile(pth,msg)
         

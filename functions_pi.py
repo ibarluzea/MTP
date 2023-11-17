@@ -63,19 +63,16 @@ def check_codec(path):
 
 
 def setup_switch(pin):
-    # sw_send D5
-    # sw_txrx D6
-    # sw_nm D26
-    # sw_off D23
+    # sw_send D5, sw_txrx D6, sw_nm D26, sw_off D23
+    
     switch = digitalio.DigitalInOut(pin)
     switch.direction = digitalio.Direction.INPUT
     switch.pull = digitalio.Pull.UP  # Assuming a pull-up configuration
     return switch
     
 def setup_led(pin):
-    #yellow board.D12
-    #red board.D20
-    #green board.D16
+    #yellow board.D12, #red board.D20, #green board.D16
+    
     signal = digitalio.DigitalInOut(pin) #yellow LED for USB signalling 
     signal.direction = digitalio.Direction.OUTPUT
     return signal
@@ -101,20 +98,9 @@ def led_blink(signal, sim=False):
 def pi_shutdown():
     sys.system("sudo poweroff")
 
-        
-#  This following code is to check the functions without calling the
-#	functions outside, to be sure they all work well.
 # 	TO BE COMMENTED BEFORE FINISHING
 
-#led_yellow=setup_led(board.D12)
-#led_on(led_yellow, False)
-
-# payload_size = 32
-# pth = getUSBpath()
-# codc=check_codec(pth)
-# # 
-# print(codc)
-
-
+#  This following code is to check the functions without calling the
+#	functions outside, to be sure they all work well.
 
 
