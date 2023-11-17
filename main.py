@@ -49,6 +49,7 @@ if nrf is None:
 nrf.set_pa_level(-6)
 nrf.set_data_rate(2)
 nrf.set_channel(90)
+nrf.enable_ack_payload()
 %%%%%%%%%%%%%%%%%%%%
 
 # radio_number = bool(
