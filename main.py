@@ -82,6 +82,7 @@ except:
     print("No usb detected")
 try:
     strF_compressed = compress(strF)
+    print("SI")
     payload_compressed = fragmentFile(strF_compressed,payload_size)
 except:
     payload = None
