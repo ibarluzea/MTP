@@ -12,7 +12,7 @@ from lzw import *
 
 def master(nrf, payload):  # count = 5 will only transmit 5 packets
     """Transmits an incrementing integer every second"""
-    print(type(payload))
+
     nrf.address_length = 3
     
     address = [b"snd", b"rcv"]
@@ -32,9 +32,8 @@ def master(nrf, payload):  # count = 5 will only transmit 5 packets
         #print(type(payload[i]))
         if i < 2:
             print(payload[i])
-        buffer = payload[i]
-        print(buffer)
-        print(type(buffer))
+        buffer = bytearray(payload[i])
+
         # "<f" means a single little endian (4 byte) float value.
         start_timer = time.monotonic_ns()  # start timer
         result = nrf.send(buffer)
@@ -42,7 +41,7 @@ def master(nrf, payload):  # count = 5 will only transmit 5 packets
         while not result and limit:
             
             ii+=1
-            result = nrf.send(buffer, False, 10)
+            result = nrf.resend(buffer)
             time.sleep(0.5)
             limit -= 1
         end_timer = time.monotonic_ns()  # end timer
