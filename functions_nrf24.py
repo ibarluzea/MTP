@@ -33,9 +33,10 @@ def master(nrf, payload):  # count = 5 will only transmit 5 packets
         if i < 2:
             print(payload[i])
         buffer = payload[i]
+        print(buffer)
         # "<f" means a single little endian (4 byte) float value.
         start_timer = time.monotonic_ns()  # start timer
-        result = nrf.send(buffer, False)
+        result = nrf.send(buffer)
         ii=1
         while not result and limit:
             
