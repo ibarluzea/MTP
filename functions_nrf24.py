@@ -12,7 +12,7 @@ from lzw import *
 
 def master(nrf, payload):  # count = 5 will only transmit 5 packets
     """Transmits an incrementing integer every second"""
-    
+    print(type(payload))
     nrf.address_length = 3
     
     address = [b"snd", b"rcv"]
