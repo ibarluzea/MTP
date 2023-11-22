@@ -36,6 +36,8 @@ def openFile(path):
                 strF= file.read()
     except:
         print("No file opened")
+
+    print("from function, file:"+glob.glob(path+'*.txt')[0])
     return strF
 
 def writeFile(path, buff):
