@@ -14,7 +14,6 @@ def master(nrf, payload):  # count = 5 will only transmit 5 packets
     """Transmits an incrementing integer every second"""
 
     nrf.address_length = 3
-    
     address = [b"snd", b"rcv"]
     nrf.open_tx_pipe(address[0])  # always uses pipe 0
 
@@ -32,14 +31,15 @@ def master(nrf, payload):  # count = 5 will only transmit 5 packets
         #print(type(payload[i]))
         if i < 2:
             print(payload[i])
-        buffer = bytearray(payload[i])
+        
+        buffer = payload[i]
 
         # "<f" means a single little endian (4 byte) float value.
         start_timer = time.monotonic_ns()  # start timer
-        result = nrf.send(buffer)
         ii=1
+	
+        result = nrf.send(buffer)
         while not result and limit:
-            
             ii+=1
             result = nrf.resend(buffer)
             time.sleep(0.5)

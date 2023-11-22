@@ -21,37 +21,45 @@ def getUSBpath():
     path = rpistr + line.rstrip().decode("utf-8")+"/"
     return path
 
-def openFile(path):
+def openFileCompress(path):
     try:
         try:
-            file = open(glob.glob(path+'*.txt')[0],"r", encoding='utf-32')
+            file = open(glob.glob(path+'*.txt')[0],"rb", encoding='utf-32')
             strF= file.read()
         except:
             try:
-                file = open(glob.glob(path+'*.txt')[0],"r", encoding='utf-16')
+                file = open(glob.glob(path+'*.txt')[0],"rb", encoding='utf-16')
                 strF= file.read()
                 
             except:
-                file = open(glob.glob(path+'*.txt')[0],"r", encoding='utf-8')
+                file = open(glob.glob(path+'*.txt')[0],"rb", encoding='utf-8')
                 strF= file.read()
     except:
         print("No file opened")
 
-    print("from function, file:"+glob.glob(path+'*.txt')[0])
+    return strF
+
+def openFile(path):
+    try:
+        file = open(glob.glob(path+'*.txt')[0],"rb")
+        strF= file.read()
+    except:
+        print("No file opened")
+
     return strF
 
 def writeFile(path, buff):
     file = open(path+"result.txt","w", 'utf-8')
     file.write(buff)
     file.close()
-
+    
 
     
 def check_codec(path):
     try:
         file = open(glob.glob(path+'*.txt')[0],"rb")
-        strF= file.read(30)
-        
+        strF= file.read(32)
+    
         result = chardet.detect(strF)
         encoding = result['encoding']
 
@@ -83,6 +91,7 @@ def led_on(signal):
     signal.value=True
     time.sleep(1.5)
     signal.value=False
+    
 
 def led_blink(signal):
     c=3
@@ -96,6 +105,16 @@ def led_blink(signal):
         signal.value=False
         time.sleep(0.3)
         c-=1
+        
+def ledError():
+    signal = digitalio.DigitalInOut(board.D20) #yellow LED for USB signalling 
+    signal.direction = digitalio.Direction.OUTPUT
+    led_on(signal)
+
+def blinkError():
+    signal = digitalio.DigitalInOut(board.D20) #yellow LED for USB signalling 
+    signal.direction = digitalio.Direction.OUTPUT
+    led_blink(signal)
         
 def blinkLed(e, t):
     """flash the specified led every second"""
