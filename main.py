@@ -60,7 +60,6 @@ try:
     path_destino = "/home/mtp/MTP/"
     
     strF= openFile(pth)
-    print(pth)
     codc=check_codec(pth) #now we use path for codec to read more quickly.
     print("CODEC: "+codc)
 except OSError:
