@@ -21,16 +21,9 @@ try:
 except:
     print("failure in LED setup")
     led_on(led_red)
-led_yellow.value=True
-led_green.value=True
-led_red.value=True
-time.sleep(0.5)
-led_yellow.value=False
-led_green.value=False
-led_red.value=False
-
-# to continue here
-
+    
+led_on([led_green, led_yellow, led_red])
+#if __name__ == "__main__":
 try:  # on Linux
     SPI_BUS = spidev.SpiDev()
     CSN_PIN = DigitalInOut(board.D17)
@@ -49,6 +42,7 @@ while attempt < retry_attempts:
     try:
         nrf = RF24(SPI_BUS, CSN_PIN, CE_PIN)
         print("RF24 initialized on attempt", attempt + 1)
+        led_blink(led_green)
         break  # Assume success and exit the loop
 
     except Exception as e:
@@ -71,7 +65,6 @@ timeout = 10 # Set timeout
 
 try:
     pth = getUSBpath()
-    strF= openFile(pth)
     codc=check_codec(pth) #now we use path for codec to read more quickly.
     print("CODEC: "+codc)
 except OSError:
@@ -81,25 +74,32 @@ except:
     print(f"An unexpected error occurred")
     ledError()
 
+isTransmitter, NMode = select_mode(sw_send, sw_txrx, sw_nm, led_yellow, led_green, led_red)
 
-try:
-    payload = fragmentFile(strF,payload_size)
-except:
-    payload = None
-    print(f"Not file found to fragment")
-
-
-
-print("    nRF24L01 Simple test")
-
-if __name__ == "__main__":
-    try:       
-        while set_role(nrf,payload, timeout, codc):
-            pass  # continue example until 'Q' is entered
-    except KeyboardInterrupt:
-        print(" Keyboard Interrupt detected. Powering down radio...")
-        nrf.power = False
-else:
-    print("    Run slave() on receiver\n    Run master() on transmitter")
+if not NMode:
+    if isTransmitter:
+        try:
+            strF= openFile(pth)
+            payload = fragmentFile(strF,payload_size)
+            master(nrf, payload)
+        except:
+            payload = None
+            print(f"Not file found to fragment")
+            ledError()
+    else:
+        slave(nrf, timeout, codc)
 
 
+
+# 
+#     try:       
+#         while set_role(nrf,payload, timeout, codc):
+#             pass  # continue example until 'Q' is entered
+#     except KeyboardInterrupt:
+#         print(" Keyboard Interrupt detected. Powering down radio...")
+#         nrf.power = False
+# else:
+#     print("    Run slave() on receiver\n    Run master() on transmitter")
+# 
+# 
+# 

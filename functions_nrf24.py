@@ -128,3 +128,6 @@ def set_role(nrf, payload, timeout, codec):
     print(user_input[0], "is an unrecognized input. Please try again.")
     return set_role(nrf, payload, timeout, codec)
 
+
+
+    

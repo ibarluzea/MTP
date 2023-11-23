@@ -45,7 +45,6 @@ def openFile(path):
         strF= file.read()
     except:
         print("No file opened")
-
     return strF
 
 def writeFile(path, buff):
@@ -87,39 +86,37 @@ def setup_led(pin):
     signal.direction = digitalio.Direction.OUTPUT
     return signal
     
-def led_on(signal):
-    signal.value=True
-    time.sleep(1.5)
-    signal.value=False
+def led_on(signal, t=1.5):
+    for i in signal:
+        i.value=True
+    time.sleep(t)
+    for i in signal:
+        i.value=False
     
 
 def led_blink(signal):
-    c=3
+    c=5
     while c>0:
-        signal.value=True
+        for i in signal:
+            i.value=True
         time.sleep(0.3)
-        signal.value=False
-        time.sleep(0.3)
-        signal.value=True
-        time.sleep(0.3)
-        signal.value=False
-        time.sleep(0.3)
+        for i in signal:
+            i.value=False   
         c-=1
         
 def ledError():
-    signal = digitalio.DigitalInOut(board.D20) #yellow LED for USB signalling 
+    signal = digitalio.DigitalInOut(board.D20) 
     signal.direction = digitalio.Direction.OUTPUT
     led_on(signal)
 
 def blinkError():
-    signal = digitalio.DigitalInOut(board.D20) #yellow LED for USB signalling 
+    signal = digitalio.DigitalInOut(board.D20) 
     signal.direction = digitalio.Direction.OUTPUT
     led_blink(signal)
         
 def blinkLed(e, t):
-    """flash the specified led every second"""
+    """flash the specified led every second in threading"""
     while not e.isSet():
-        print(colour)
         time.sleep(0.3)
         event_is_set = e.wait(t)
         if event_is_set:
@@ -128,8 +125,40 @@ def blinkLed(e, t):
             print('leds off')
             time.sleep(0.3)
 
+def wait_idle(sw_off):
+    try:
+        while True:
+            if not sw_off.value:
+                print("Powering off...")
+                pi_shutdown()
+            else:
+                time.sleep(1)
+    except KeyboardInterrupt:
+        print(" Keyboard Interrupt detected. Powering down radio...")
+        nrf.power = False
+
 def pi_shutdown():
     sys.system("sudo poweroff")
+    
+    
+def select_mode(switch_send, switch_tx, switch_nm, led_yellow, led_green, led_red):
+    led_blink([led_yellow, led_green, led_red])
+    while switch_send:
+        if switch_tx:
+            isTransmitter=True
+            led_green.value=True
+        else:
+            isTransmitter=False
+        if switch_nm:
+            is NMode = True
+            led_yellow.value=True
+        else:
+            NMode=False
+    
+    led_blink(led_green)
+    led_yellow.value=False
+    return isTransmitter, NMode
+
 
 # 	TO BE COMMENTED BEFORE FINISHING
 
