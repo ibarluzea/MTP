@@ -3,16 +3,29 @@ from functions_nrf24 import *
 import spidev
 
 
-ledError()
-blinkError()
-# led_yellow=setup_led(board.D12)
-# led_red=setup_led(board.D20)
-# led_green=setup_led(board.D16)
+sw_send = setup_switch(board.D5)
+sw_txrx = setup_switch(board.D6)
+sw_nm = setup_switch(board.D26)
+sw_off = setup_switch(board.D23)
+led_yellow=setup_led(board.D12)
+led_red=setup_led(board.D20)
+led_green=setup_led(board.D16)
+
+
+led_off([led_yellow,led_red, led_green ])
+# led_blink(led_yellow)
+# led_blink(led_green)
+# led_blink(led_red)
+
+led_blink([led_yellow,led_red, led_green])
+
+# print("going to choose mode")
+# isTransmitter, NMode = select_mode(sw_send, sw_txrx, sw_nm, led_yellow, led_green, led_red)
+# print("Chosen, is TX: {}, is NM: {}".format(isTransmitter, NMode))
+# #ledError()
+# blinkError()
 # 
-# sw_send = setup_switch(board.D5)
-# sw_txrx = setup_switch(board.D6)
-# sw_nm = setup_switch(board.D26)
-# sw_off = setup_switch(board.D23)
+
 # 
 # 
 # led_on(led_yellow)

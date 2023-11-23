@@ -86,22 +86,43 @@ def setup_led(pin):
     return signal
     
 def led_on(signal, t=1.5):
-    for i in signal:
-        i.value=True
-    time.sleep(t)
-    for i in signal:
-        i.value=False
+    if isinstance(signal, list) :
+        for i in signal:
+            i.value=True
+        time.sleep(t)
+        for i in signal:
+            i.value=False
+    else:
+        signal.value=True
+        time.sleep(t)
+        signal.value=False
+
+def led_off(signal):
+    if isinstance(signal, list) :
+        for i in signal:
+            i.value=False
+    else:
+        signal.value=False
     
 
 def led_blink(signal):
-    c=5
-    while c>0:
-        for i in signal:
-            i.value=True
-        time.sleep(0.3)
-        for i in signal:
-            i.value=False   
-        c-=1
+    c=4
+    if isinstance(signal, list) :
+        while c>0:
+            for i in signal:
+                i.value=True
+            time.sleep(0.3)
+            for i in signal:
+                i.value=False
+            time.sleep(0.3)
+            c-=1
+    else:
+         while c>0:
+            signal.value=True
+            time.sleep(0.3)
+            signal.value=False
+            time.sleep(0.3)
+            c-=1
         
 def ledError():
     signal = digitalio.DigitalInOut(board.D20) 
@@ -142,20 +163,25 @@ def pi_shutdown():
     
 def select_mode(switch_send, switch_tx, switch_nm, led_yellow, led_green, led_red):
     led_blink([led_yellow, led_green, led_red])
-    while switch_send:
-        if switch_tx:
+    led_off([led_yellow, led_green, led_red])
+    while switch_send.value:
+        
+        if switch_tx.value:
             isTransmitter=True
             led_green.value=True
         else:
             isTransmitter=False
-        if switch_nm:
+            led_green.value=False
+        if switch_nm.value:
             NMode = True
             led_yellow.value=True
         else:
             NMode=False
+            led_yellow.value=False
+        time.sleep(1)
     
     led_blink(led_green)
-    led_yellow.value=False
+    led_off(led_yellow)
     return isTransmitter, NMode
 
 
