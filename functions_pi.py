@@ -51,7 +51,6 @@ def writeFile(path, buff):
     file = open(path+"result.txt","w", 'utf-8')
     file.write(buff)
     file.close()
-    
 
     
 def check_codec(path):
@@ -150,7 +149,7 @@ def select_mode(switch_send, switch_tx, switch_nm, led_yellow, led_green, led_re
         else:
             isTransmitter=False
         if switch_nm:
-            is NMode = True
+            NMode = True
             led_yellow.value=True
         else:
             NMode=False
