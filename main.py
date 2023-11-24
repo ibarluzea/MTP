@@ -49,7 +49,7 @@ if nrf is None:
     sys.exit(1)
 
 
-nrf.pa_level = -18
+nrf.pa_level = -6
 nrf.data_rate = 2
 
 
@@ -67,7 +67,7 @@ nrf.data_rate = 2
 payload_size = 32
 
 # Set timeout
-timeout = 10
+timeout = 1000
 
 try:
 
