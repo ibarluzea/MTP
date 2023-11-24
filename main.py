@@ -45,7 +45,7 @@ if nrf is None:
     sys.exit(1)
 
 
-nrf.pa_level = -18
+nrf.pa_level = -6
 nrf.data_rate = 2
 
 
