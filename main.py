@@ -63,7 +63,7 @@ nrf.channel = 90
 payload_size = 32
 
 # Set timeout
-timeout = 10000
+timeout = 30
 
 try:
 
