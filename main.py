@@ -47,7 +47,7 @@ if nrf is None:
 
 nrf.pa_level = -6
 nrf.data_rate = 2
-
+nrf.channel = 90
 
 # radio_number = bool(
 #     int(input("Which radio is this? Enter '0' or '1'. Defaults to '0' ") or 0)
@@ -63,13 +63,13 @@ nrf.data_rate = 2
 payload_size = 32
 
 # Set timeout
-timeout = 10
+timeout = 10000
 
 try:
 
     pth = getUSBpath()
     path_destino = "/home/mtp/MTP/"
-    
+    print("Lee fichero de "+ path_destino)
     # strF= openFile()
     strF_2= openFile_fromGit()
     codc=check_codec(pth) #now we use path for codec to read more quickly.
