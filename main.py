@@ -9,10 +9,6 @@ SPI_BUS, CSN_PIN, CE_PIN = (None, None, None)
 
 try:  # on Linux
     SPI_BUS = spidev.SpiDev()  # for a faster interface on linux
-    
-    #SPI_BUS.open(0,0)
-    #SPI_BUS.max_speed_hz = 5000000 # Set SPI speed to 5MHz
-    
     CSN_PIN = DigitalInOut(board.D17) # use CE0 on default bus (even faster than using any pin)
     CE_PIN = DigitalInOut(board.D22)  # using pin gpio22 (BCM numbering)
 
@@ -105,5 +101,4 @@ if __name__ == "__main__":
         nrf.power = False
 else:
     print("    Run slave() on receiver\n    Run master() on transmitter")
-
 
