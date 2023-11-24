@@ -67,7 +67,7 @@ nrf.data_rate = 2
 payload_size = 32
 
 # Set timeout
-timeout = 1000
+timeout = 10
 
 try:
 
