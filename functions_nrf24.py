@@ -28,7 +28,7 @@ def master(nrf, payload):  # count = 5 will only transmit 5 packets
     for i in range(count):
         # use struct.pack to structure your data
         # into a usable payload
-        limit = 10
+        limit = 10000000000
         #print(type(payload[i]))
         if i < 2:
             print(payload[i])
@@ -36,13 +36,13 @@ def master(nrf, payload):  # count = 5 will only transmit 5 packets
         # "<f" means a single little endian (4 byte) float value.
         start_timer = time.monotonic_ns()  # start timer
         
-        result = nrf.send(buffer, False, 10)
+        result = nrf.send(buffer, False, 10000000000)
         ii=1
         while not result and limit:
             
             ii+=1
             result = nrf.send(buffer, False, 0)
-            time.sleep(0.5)
+            time.sleep(0.1)
             limit -= 1
         end_timer = time.monotonic_ns()  # end timer
         
