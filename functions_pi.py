@@ -49,10 +49,10 @@ def openFile(path):
     return strF
 
 def writeFile(path, buff):
-    file = open(f"{path}result.txt","w", "utf-8")
-    print(file)
-    file.write(buff)
-    file.close()
+    with open(f"{path}result.txt","wb") as file:
+        print(file)
+        file.write(buff)
+        file.close()
 
     
 def check_codec(path):

@@ -16,7 +16,6 @@ msg = []
 
 for i in payload:
     print(i)
-    buffer=read(i)
     msg.append(i)
 
 writeFile(pth,msg)
