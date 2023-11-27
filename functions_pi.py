@@ -2,7 +2,7 @@ import time
 import struct
 import board
 import os
-import sys
+#import sys
 import subprocess
 import glob
 import digitalio
@@ -49,7 +49,7 @@ def openFile(path):
     return strF
 
 def writeFile(path, buff):
-    file = open(f"{path}result.txt","wb")
+    file = open(f"{path}result.txt","w", "utf-8")
     print(file)
     file.write(buff)
     file.close()
