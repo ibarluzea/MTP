@@ -30,6 +30,7 @@ def master(nrf, payload):  # count = 5 will only transmit 5 packets
         #print(type(payload[i]))
         if i < 2:
             print(payload[i])
+        
         buffer = payload[i]
 
         # "<f" means a single little endian (4 byte) float value.
@@ -98,7 +99,7 @@ def slave(nrf, timeout):
     # recommended behavior is to keep in TX mode while idle
     nrf.listen = False  # put the nRF24L01 is in TX mode
     #to optimize, now we open and close the file every 32 BYTES
-    writeFile(pth,bytearray(msg))
+    writeFile(pth,bytes(msg))
         
 def set_role(nrf, payload, timeout, codec):
     """Set the role using stdin stream. Timeout arg for slave() can be
