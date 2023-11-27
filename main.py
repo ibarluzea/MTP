@@ -18,11 +18,12 @@ try:
     sw_nm = setup_switch(board.D26)
     sw_off = setup_switch(board.D23)
     print("success in LED and switch setup")
+    led_on([led_green, led_yellow, led_red])
 except:
     print("failure in LED setup")
     led_on(led_red)
     
-led_on([led_green, led_yellow, led_red])
+
 #if __name__ == "__main__":
 try:  # on Linux
     SPI_BUS = spidev.SpiDev()

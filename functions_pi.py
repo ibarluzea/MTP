@@ -172,16 +172,17 @@ def select_mode(switch_send, switch_tx, switch_nm, led_yellow, led_green, led_re
         else:
             isTransmitter=False
             led_green.value=False
+            led_yellow.value=True
         if switch_nm.value:
             NMode = True
-            led_yellow.value=True
+            led_red.value=True
         else:
             NMode=False
-            led_yellow.value=False
+            led_red.value=False
         time.sleep(1)
     
-    led_blink(led_green)
-    led_off(led_yellow)
+        led_blink([led_yellow, led_green, led_red])
+        led_off([led_yellow, led_green, led_red])
     return isTransmitter, NMode
 
 
