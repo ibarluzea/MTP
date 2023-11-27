@@ -41,7 +41,7 @@ def master(nrf, payload):  # count = 5 will only transmit 5 packets
     
     
     t_g.start()
-    e_red.set()
+    e_r.set()
     t_r.start()
     
     for i in range(count):
