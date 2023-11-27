@@ -1,8 +1,7 @@
 from functions_pi import *
 from functions_nrf24 import *
-from lzw import *
 import spidev
-import os as sys
+import os
 
 from circuitpython_nrf24l01.rf24 import RF24
 # invalid default values for scoping
@@ -55,7 +54,7 @@ while attempt < retry_attempts:
 if nrf is None:
     print("Failed to initialize RF24 after", retry_attempts, "attempts.")
     blinkError()
-    sys.exit(1)
+    os.exit(1)
 
 
 nrf.pa_level = -18
