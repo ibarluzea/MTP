@@ -18,7 +18,7 @@ def getUSBpath():
     rpistr = "/media/mtp/"
     proc = subprocess.Popen("ls "+rpistr,shell=True, preexec_fn=os.setsid, stdout=subprocess.PIPE)
     line = proc.stdout.readline()
-    print(str(line.rstrip()))
+    print("el nombre del USB: "+line.rstrip().decode("utf-8"))
     path = rpistr + line.rstrip().decode("utf-8")+"/"
     return path
 
@@ -49,7 +49,7 @@ def openFile(path):
     return strF
 
 def writeFile(path, buff):
-    with open(path+"result.txt", "wb") as f:
+    with open(path+"result.txt", "w", 'utf-8') as f:
         f.write(buff)
         f.close()
 
@@ -160,6 +160,9 @@ def wait_idle(sw_off):
 
 def pi_shutdown():
     os.system("sudo poweroff")
+    
+def remove_result(path):
+    os.system("rm "+path+"result.txt")
     
     
 def select_mode(switch_send, switch_tx, switch_nm, led_yellow, led_green, led_red):

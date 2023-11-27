@@ -66,6 +66,11 @@ timeout = 10 # Set timeout
 
 try:
     pth = getUSBpath()
+    remove_result(pth)
+except Exception as e:
+    print(e)
+
+try:   
     codc=check_codec(pth) #now we use path for codec to read more quickly.
     print("CODEC: "+codc)
 except OSError as e:
@@ -74,7 +79,6 @@ except OSError as e:
     ledError()
 except Exception as e:
     print(e)
-    print(f"An unexpected error occurred")
     ledError()
 
 print("going to choose mode")
