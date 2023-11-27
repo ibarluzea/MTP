@@ -81,12 +81,11 @@ def slave(nrf, timeout):
             payload_size, pipe_number = (nrf.any(), nrf.pipe)
             # fetch 1 payload from RX FIFO
             buffer = nrf.read()  # also clears nrf.irq_dr status flag
+            print(buffer)
             # expecting a little endian float, thus the format string "<f"
             # buffer[:4] truncates padded 0s if dynamic payloads are disabled
             
-           # Here there is another option
-            if i == 2:
-                print(buffer)
+           # Here there is another opt
             msg.append(buffer) #.decode("utf-8")
             #msg.extend(buffer)
             # print details about the received packet
@@ -101,7 +100,7 @@ def slave(nrf, timeout):
     # recommended behavior is to keep in TX mode while idle
     nrf.listen = False  # put the nRF24L01 is in TX mode
     #to optimize, now we open and close the file every 32 BYTES
-    
+    pth = getUSBpath()        
     writeFile(pth,msg)
         
 def set_role(nrf, payload, timeout, codec):
