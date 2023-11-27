@@ -48,7 +48,7 @@ def openFile(path):
     return strF
 
 def writeFile(path, buff):
-    file = open(path+"result.txt","w", 'utf-8')
+    file = open("{path}/result.txt","w", 'utf-8')
     file.write(buff)
     file.close()
 
@@ -165,10 +165,10 @@ def select_mode(switch_send, switch_tx, switch_nm, led_yellow, led_green, led_re
     led_blink([led_yellow, led_green, led_red])
     led_off([led_yellow, led_green, led_red])
     while switch_send.value:
-        
         if switch_tx.value:
             isTransmitter=True
             led_green.value=True
+            led_yellow.value=False
         else:
             isTransmitter=False
             led_green.value=False
@@ -179,10 +179,10 @@ def select_mode(switch_send, switch_tx, switch_nm, led_yellow, led_green, led_re
         else:
             NMode=False
             led_red.value=False
-        time.sleep(1)
+        time.sleep(0.5)
     
-        led_blink([led_yellow, led_green, led_red])
-        led_off([led_yellow, led_green, led_red])
+    led_blink([led_yellow, led_green, led_red])
+    led_off([led_yellow, led_green, led_red])
     return isTransmitter, NMode
 
 

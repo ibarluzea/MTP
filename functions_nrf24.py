@@ -59,7 +59,7 @@ def master(nrf, payload):  # count = 5 will only transmit 5 packets
     
     
     
-def slave(nrf, timeout, codec):
+def slave(nrf, timeout):
     """Polls the radio and prints the received value. This method expires
     after 6 seconds of no received transmission"""
     nrf.address_length = 3
@@ -73,6 +73,8 @@ def slave(nrf, timeout, codec):
     msg = []
     start = time.monotonic()
     i=0
+    
+    pth = getUSBpath()
     while (time.monotonic() - start) < timeout:
         if nrf.available():
             # grab information about the received payload
@@ -99,7 +101,7 @@ def slave(nrf, timeout, codec):
     # recommended behavior is to keep in TX mode while idle
     nrf.listen = False  # put the nRF24L01 is in TX mode
     #to optimize, now we open and close the file every 32 BYTES
-    pth = getUSBpath()
+    
     writeFile(pth,msg)
         
 def set_role(nrf, payload, timeout, codec):
