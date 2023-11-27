@@ -1,17 +1,21 @@
 import time
 import struct
 import board
-import os as sys
+import os
 import subprocess
 import glob
 from digitalio import DigitalInOut
 import chardet
 from functions_pi import *
+import threading
+
 
 
 def master(nrf, payload):  # count = 5 will only transmit 5 packets
     """Transmits an incrementing integer every second"""
-
+    led_red=setup_led(board.D20)
+    led_green=setup_led(board.D16)
+    
     nrf.address_length = 3
     address = [b"snd", b"rcv"]
     nrf.open_tx_pipe(address[0])  # always uses pipe 0
@@ -23,6 +27,18 @@ def master(nrf, payload):  # count = 5 will only transmit 5 packets
     result = False
 #   print(nrf.is_lna_enabled())
     count=len(payload)
+    
+    e_green = threading.Event()
+    e_red = threading.Event()
+        
+    t_r = threading.Thread(name='non-block', target=blinkLed, args=(e_red, led_red))
+    t = threading.Thread(name='non-block', target=blinkLed, args=(e_green, led_green))
+    
+    t.start()
+    
+    e_red.set()
+    t_r.start()
+    
     for i in range(count):
         # use struct.pack to structure your data
         # into a usable payload
@@ -30,7 +46,6 @@ def master(nrf, payload):  # count = 5 will only transmit 5 packets
         #print(type(payload[i]))
         if i < 2:
             print(payload[i])
-        
         buffer = payload[i]
 
         # "<f" means a single little endian (4 byte) float value.
@@ -38,13 +53,18 @@ def master(nrf, payload):  # count = 5 will only transmit 5 packets
         ii=1
 	
         result = nrf.send(buffer, False, 10)
+        
         while not result and limit:
+            e_red.clear()
+            e_green.set()
             ii+=1
             result = nrf.send(buffer, False, 10)
             time.sleep(0.5)
             limit -= 1
         end_timer = time.monotonic_ns()  # end timer
         
+        e_red.set()
+        e_green.clear()
         if not result:
             print("send() failed or timed out")
 #         else:
@@ -52,6 +72,7 @@ def master(nrf, payload):  # count = 5 will only transmit 5 packets
 #                 "Transmission successful! Time to Transmit:",
 #                 "{} us. Sent: {}".format((end_timer - start_timer) / 1000, payload[i]),
 #             )
+    
     print('Fallo en la transmision'+str(ii))
     print("Transmission rate: ", (((len(payload)*32)*8)/((end_timer-zero_timer)/1e9)))
     print(nrf.print_details(False))

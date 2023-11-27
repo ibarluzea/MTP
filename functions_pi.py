@@ -135,16 +135,18 @@ def blinkError():
     signal.direction = digitalio.Direction.OUTPUT
     led_blink(signal)
         
-def blinkLed(e, t):
+def blinkLed(e, signal, t=0.3):
     """flash the specified led every second in threading"""
     while not e.isSet():
-        time.sleep(0.3)
+        signal.value=True
         event_is_set = e.wait(t)
         if event_is_set:
             print('stop led from flashing')
+            signal.value=False
+            time.sleep(t)
         else:
-            print('leds off')
-            time.sleep(0.3)
+            signal.value=False
+            time.sleep(t)
 
 def wait_idle(sw_off):
     try:
