@@ -9,12 +9,23 @@ import chardet
 from functions_pi import *
 import threading
 
+led_red=setup_led(board.D20)
+led_green=setup_led(board.D16)
+led_yellow=setup_led(board.D12)
 
+
+e_g = threading.Event()
+e_r = threading.Event()
+e_y= threading.Event()
+
+t_r = threading.Thread(name='non-block', target=blinkLed, args=(e_r, led_red))
+t_g = threading.Thread(name='non-block', target=blinkLed, args=(e_g, led_green))
+t_y = threading.Thread(name='non-block', target=blinkLed, args=(e_y, led_yellow))
+    
 
 def master(nrf, payload):  # count = 5 will only transmit 5 packets
     """Transmits an incrementing integer every second"""
-    led_red=setup_led(board.D20)
-    led_green=setup_led(board.D16)
+    
     
     nrf.address_length = 3
     address = [b"snd", b"rcv"]
@@ -28,14 +39,8 @@ def master(nrf, payload):  # count = 5 will only transmit 5 packets
 #   print(nrf.is_lna_enabled())
     count=len(payload)
     
-    e_green = threading.Event()
-    e_red = threading.Event()
-        
-    t_r = threading.Thread(name='non-block', target=blinkLed, args=(e_red, led_red))
-    t = threading.Thread(name='non-block', target=blinkLed, args=(e_green, led_green))
     
-    t.start()
-    
+    t_g.start()
     e_red.set()
     t_r.start()
     
@@ -72,11 +77,11 @@ def master(nrf, payload):  # count = 5 will only transmit 5 packets
 #                 "Transmission successful! Time to Transmit:",
 #                 "{} us. Sent: {}".format((end_timer - start_timer) / 1000, payload[i]),
 #             )
-    
+    t_y.start()
     print('Fallo en la transmision'+str(ii))
     print("Transmission rate: ", (((len(payload)*32)*8)/((end_timer-zero_timer)/1e9)))
-    print(nrf.print_details(False))
-    
+    #print(nrf.print_details(False))
+    e_y.set()
     
     
 def slave(nrf, timeout):
@@ -95,6 +100,8 @@ def slave(nrf, timeout):
     i=0
     
     pth = getUSBpath()
+    t.start()
+    
     while (time.monotonic() - start) < timeout:
         if nrf.available():
             # grab information about the received payload
@@ -115,12 +122,15 @@ def slave(nrf, timeout):
             #)
             start = time.monotonic()
             i +=1
-
+    e_g.set()
+    t_y.start()
     # recommended behavior is to keep in TX mode while idle
     nrf.listen = False  # put the nRF24L01 is in TX mode
     #to optimize, now we open and close the file every 32 BYTES
+    
     writeFile(pth,bytes(msg))
-        
+    e_y.set()
+    
 def set_role(nrf, payload, timeout, codec):
     """Set the role using stdin stream. Timeout arg for slave() can be
     specified using a space delimiter (e.g. 'R 10' calls `slave(10)`)

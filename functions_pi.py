@@ -141,7 +141,6 @@ def blinkLed(e, signal, t=0.3):
         signal.value=True
         event_is_set = e.wait(t)
         if event_is_set:
-            print('stop led from flashing')
             signal.value=False
             time.sleep(t)
         else:
