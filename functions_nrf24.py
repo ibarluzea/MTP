@@ -98,7 +98,7 @@ def slave(nrf, timeout):
     # recommended behavior is to keep in TX mode while idle
     nrf.listen = False  # put the nRF24L01 is in TX mode
     #to optimize, now we open and close the file every 32 BYTES
-    writeFile(pth,msg)
+    writeFile(pth,bytearray(msg))
         
 def set_role(nrf, payload, timeout, codec):
     """Set the role using stdin stream. Timeout arg for slave() can be
