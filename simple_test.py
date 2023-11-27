@@ -12,11 +12,9 @@ SPI_BUS, CSN_PIN, CE_PIN = (None, None, None)
 
 try:  # on Linux
     import spidev
-
-    SPI_BUS = spidev.SpiDev()  # for a faster interface on linux
-    CSN_PIN = 0  # use CE0 on default bus (even faster than using any pin)
-    CE_PIN = DigitalInOut(board.D22)  # using pin gpio22 (BCM numbering)
-
+    SPI_BUS = spidev.SpiDev()
+    CSN_PIN = DigitalInOut(board.D17)
+    CE_PIN = DigitalInOut(board.D22)  
 except ImportError:  # on CircuitPython only
     # using board.SPI() automatically selects the MCU's
     # available SPI pins, board.SCK, board.MOSI, board.MISO
