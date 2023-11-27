@@ -77,11 +77,10 @@ def master(nrf, payload):  # count = 5 will only transmit 5 packets
 #                 "Transmission successful! Time to Transmit:",
 #                 "{} us. Sent: {}".format((end_timer - start_timer) / 1000, payload[i]),
 #             )
-    t_y.start()
+    led_blink(led_yellow)
     print('Fallo en la transmision'+str(ii))
     print("Transmission rate: ", (((len(payload)*32)*8)/((end_timer-zero_timer)/1e9)))
     #print(nrf.print_details(False))
-    e_y.set()
     e_g.set()
     print("fin de la tx")
     
@@ -125,11 +124,11 @@ def slave(nrf, timeout):
             start = time.monotonic()
             i +=1
     e_g.set()
-    t_y.start()
+    
     # recommended behavior is to keep in TX mode while idle
     nrf.listen = False  # put the nRF24L01 is in TX mode
     #to optimize, now we open and close the file every 32 BYTES
-    
+    t_y.start()
     writeFile(pth,bytes(msg))
     e_y.set()
     
