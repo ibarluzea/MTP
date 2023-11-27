@@ -82,6 +82,8 @@ def master(nrf, payload):  # count = 5 will only transmit 5 packets
     print("Transmission rate: ", (((len(payload)*32)*8)/((end_timer-zero_timer)/1e9)))
     #print(nrf.print_details(False))
     e_y.set()
+    e_g.set()
+    print("fin de la tx")
     
     
 def slave(nrf, timeout):
