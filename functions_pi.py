@@ -154,7 +154,7 @@ def wait_idle(sw_off):
                 print("Powering off...")
                 pi_shutdown()
             else:
-                time.sleep(1)
+                time.sleep(0.6)
     except KeyboardInterrupt:
         print(" Keyboard Interrupt detected. Powering down radio...")
         nrf.power = False

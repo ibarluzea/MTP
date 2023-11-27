@@ -96,6 +96,11 @@ if not NMode:
             ledError()
     else:
         slave(nrf, timeout)
+        
+print("Transmision finalizada")
+
+led_blink([led_yellow, led_green, led_red])
+wait_idle(sw_off)
 
 
 
