@@ -69,7 +69,7 @@ def slave(nrf, timeout):
     # set RX address of TX node into an RX pipe
     nrf.open_rx_pipe(1, address[0])  # using pipe 1
     nrf.listen = True  # put radio into RX mode and power up
-    msg = []
+    msg = b""
     start = time.monotonic()
     i=0
     
@@ -83,9 +83,8 @@ def slave(nrf, timeout):
             #print(buffer)
             # expecting a little endian float, thus the format string "<f"
             # buffer[:4] truncates padded 0s if dynamic payloads are disabled
-            
-           # Here there is another opt
-            msg.append(buffer)#.decode("utf-8")
+            msg = b"".join([msg,buffer])
+            #msg.append(buffer)#.decode("utf-8")
             #msg.extend(buffer)
             # print details about the received packet
             #print(
