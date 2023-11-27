@@ -86,9 +86,10 @@ if not NMode:
             strF= openFile(pth)
             payload = fragmentFile(strF,payload_size)
             master(nrf, payload)
-        except:
+        except Exception as e:
             payload = None
             print(f"Not file found to fragment")
+            print(e)
             ledError()
     else:
         slave(nrf, timeout)

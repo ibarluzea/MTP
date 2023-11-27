@@ -31,7 +31,6 @@ def master(nrf, payload):  # count = 5 will only transmit 5 packets
         #print(type(payload[i]))
         if i < 2:
             print(payload[i])
-        
         buffer = payload[i]
 
         # "<f" means a single little endian (4 byte) float value.
