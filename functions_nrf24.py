@@ -7,7 +7,6 @@ import glob
 from digitalio import DigitalInOut
 import chardet
 from functions_pi import *
-from lzw import *
 
 
 def master(nrf, payload):  # count = 5 will only transmit 5 packets
