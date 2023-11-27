@@ -100,7 +100,7 @@ def slave(nrf, timeout):
     i=0
     
     pth = getUSBpath()
-    t.start()
+    t_g.start()
     
     while (time.monotonic() - start) < timeout:
         if nrf.available():
