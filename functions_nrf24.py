@@ -60,7 +60,7 @@ def master(nrf, payload):  # count = 5 will only transmit 5 packets
         result = nrf.send(buffer, False, 10)
         
         while not result and limit:
-            e_red.clear()
+            e_r.clear()
             e_green.set()
             ii+=1
             result = nrf.send(buffer, False, 10)
@@ -68,8 +68,8 @@ def master(nrf, payload):  # count = 5 will only transmit 5 packets
             limit -= 1
         end_timer = time.monotonic_ns()  # end timer
         
-        e_red.set()
-        e_green.clear()
+        e_r.set()
+        e_g.clear()
         if not result:
             print("send() failed or timed out")
 #         else:
