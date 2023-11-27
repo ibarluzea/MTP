@@ -68,10 +68,12 @@ try:
     pth = getUSBpath()
     codc=check_codec(pth) #now we use path for codec to read more quickly.
     print("CODEC: "+codc)
-except OSError:
+except OSError as e:
+    print(e)
     print("No usb detected")
     ledError()
-except:
+except Exception as e:
+    print(e)
     print(f"An unexpected error occurred")
     ledError()
 
