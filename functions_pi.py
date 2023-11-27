@@ -49,7 +49,7 @@ def openFile(path):
     return strF
 
 def writeFile(path, buff):
-    file = open(f"{path}/result.txt","wb")
+    file = open(f"{path}result.txt","wb")
     print(file)
     file.write(buff)
     file.close()
