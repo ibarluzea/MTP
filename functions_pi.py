@@ -1,7 +1,8 @@
 import time
 import struct
 import board
-import os as sys
+import os
+import sys
 import subprocess
 import glob
 import digitalio
@@ -15,7 +16,7 @@ def fragmentFile(string, length):
 
 def getUSBpath():
     rpistr = "/media/mtp/"
-    proc = subprocess.Popen("ls "+rpistr,shell=True, preexec_fn=sys.setsid, stdout=subprocess.PIPE)
+    proc = subprocess.Popen("ls "+rpistr,shell=True, preexec_fn=os.setsid, stdout=subprocess.PIPE)
     line = proc.stdout.readline()
     print(str(line.rstrip()))
     path = rpistr + line.rstrip().decode("utf-8")+"/"
@@ -48,7 +49,8 @@ def openFile(path):
     return strF
 
 def writeFile(path, buff):
-    file = open("{path}/result.txt","w", 'utf-8')
+    file = open(f"{path}/result.txt","wb")
+    print(file)
     file.write(buff)
     file.close()
 
@@ -56,7 +58,7 @@ def writeFile(path, buff):
 def check_codec(path):
     try:
         file = open(glob.glob(path+'*.txt')[0],"rb")
-        strF= file.read(32)
+        strF= file.read(64)
     
         result = chardet.detect(strF)
         encoding = result['encoding']
@@ -158,7 +160,7 @@ def wait_idle(sw_off):
         nrf.power = False
 
 def pi_shutdown():
-    sys.system("sudo poweroff")
+    os.system("sudo poweroff")
     
     
 def select_mode(switch_send, switch_tx, switch_nm, led_yellow, led_green, led_red):
