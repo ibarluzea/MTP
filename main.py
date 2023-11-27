@@ -89,7 +89,7 @@ if not NMode:
             print(f"Not file found to fragment")
             ledError()
     else:
-        slave(nrf, timeout, codc)
+        slave(nrf, timeout)
 
 
 
