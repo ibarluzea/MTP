@@ -15,7 +15,7 @@ def fragmentFile(string, length):
 
 def getUSBpath():
     rpistr = "/media/mtp/"
-    proc = subprocess.Popen("ls "+rpistr,shell=True, preexec_fn=sys.setsid, stdout=subprocess.PIPE)
+    proc = subprocess.Popen("ls "+rpistr,shell=True, preexec_fn=os.setsid, stdout=subprocess.PIPE)
     line = proc.stdout.readline()
     print(str(line.rstrip()))
     path = rpistr + line.rstrip().decode("utf-8")+"/"
