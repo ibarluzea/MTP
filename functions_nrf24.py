@@ -117,7 +117,7 @@ def slave(nrf, switch_send):
             #)
             start = time.monotonic()
             i +=1
-        if switch_send.value:
+        if not switch_send.value:
             break
     print("continua bien")
     led_blink(led_yellow)
