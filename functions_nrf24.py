@@ -67,9 +67,9 @@ def master(nrf, payload, switch_send):  # count = 5 will only transmit 5 packets
         e_r.set()
         e_g.clear()
         
-        if not result:
-            print("send() failed or timed out") 
-            print('Fallo en la transmision'+str(ii))
+        #if not result:
+            #print("send() failed or timed out") 
+            #print('Fallo en la transmision'+str(ii))
 #         else:
 #             print(
 #                 "Transmission successful! Time to Transmit:",
@@ -95,9 +95,10 @@ def slave(nrf, switch_send):
     start = time.monotonic()
     i=0
     t_g.start()
+    print("grab information about the received payload")
     while switch_send.value:
         if nrf.available():
-            # grab information about the received payload
+            
             payload_size, pipe_number = (nrf.any(), nrf.pipe)
             # fetch 1 payload from RX FIFO
             buffer = nrf.read()  # also clears nrf.irq_dr status flag
@@ -107,7 +108,8 @@ def slave(nrf, switch_send):
            # Here there is another option
             if i == 2:
                 print(buffer)
-            msg = b"".join([msg,buffer]) #.decode("utf-8")
+            msg = b"".join([msg,buffer])
+            #.decode("utf-8")
             #msg.extend(buffer)
             # print details about the received packet
             #print(
@@ -117,11 +119,11 @@ def slave(nrf, switch_send):
             #)
             start = time.monotonic()
             i +=1
-
-    e_g.set()
+        e_g.set()
     # recommended behavior is to keep in TX mode while idle
     nrf.listen = False  # put the nRF24L01 is in TX mode
     #to optimize, now we open and close the file every 32 BYTES
+    print("going to decompress")
     msg = decompress(msg)
     pth = getUSBpath()
     t_y.start()
