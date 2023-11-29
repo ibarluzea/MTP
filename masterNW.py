@@ -1,6 +1,6 @@
 import time
 
-def master(nrf,timeout,payload,codec): 
+def masterNW(nrf,timeout,payload,codec): 
 
   nrf.address_length = 3
   address = [b"BRD",b"0RC"] #Change the unicast address xRC for every group. --> 0 to 7
