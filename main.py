@@ -57,6 +57,7 @@ while attempt < retry_attempts:
 
 if nrf is None:
     print("Failed to initialize RF24 after", retry_attempts, "attempts.")
+    ledError()
     sys.exit(1)
 
 # Parameters RF nrf

@@ -42,10 +42,9 @@ def master(nrf, payload, switch_send):  # count = 5 will only transmit 5 packets
 
     while True:
         if switch_send.value:
-            break
+        continue #este fallo era al tener break
+    
     print("It begins to send")
-        
-        
         
     t_g.start()
     e_r.set()
