@@ -98,6 +98,125 @@ def check_codec(path):
         print(f"An unexpected error occurred: {e}")
         return 
     return encoding
+
+def setup_switch(pin):
+    # sw_send D5, sw_txrx D6, sw_nm D26, sw_off D23
+    
+    switch = digitalio.DigitalInOut(pin)
+    switch.direction = digitalio.Direction.INPUT
+    switch.pull = digitalio.Pull.UP  # Assuming a pull-up configuration
+    return switch
+    
+def setup_led(pin):
+    #yellow board.D12, #red board.D20, #green board.D16
+    
+    signal = digitalio.DigitalInOut(pin) #yellow LED for USB signalling 
+    signal.direction = digitalio.Direction.OUTPUT
+    return signal
+    
+def led_on(signal, t=1.5):
+    if isinstance(signal, list) :
+        for i in signal:
+            i.value=True
+        time.sleep(t)
+        for i in signal:
+            i.value=False
+    else:
+        signal.value=True
+        time.sleep(t)
+        signal.value=False
+
+def led_off(signal):
+    if isinstance(signal, list) :
+        for i in signal:
+            i.value=False
+    else:
+        signal.value=False
+    
+
+def led_blink(signal):
+    c=4
+    if isinstance(signal, list) :
+        while c>0:
+            for i in signal:
+                i.value=True
+            time.sleep(0.3)
+            for i in signal:
+                i.value=False
+            time.sleep(0.3)
+            c-=1
+    else:
+         while c>0:
+            signal.value=True
+            time.sleep(0.3)
+            signal.value=False
+            time.sleep(0.3)
+            c-=1
+        
+def ledError():
+    signal = digitalio.DigitalInOut(board.D20) 
+    signal.direction = digitalio.Direction.OUTPUT
+    led_on(signal)
+
+def blinkError():
+    signal = digitalio.DigitalInOut(board.D20) 
+    signal.direction = digitalio.Direction.OUTPUT
+    led_blink(signal)
+        
+def blinkLed(e, signal, t=0.3):
+    """flash the specified led every second in threading"""
+    while not e.isSet():
+        signal.value=True
+        event_is_set = e.wait(t)
+        if event_is_set:
+            signal.value=False
+            time.sleep(t)
+        else:
+            signal.value=False
+            time.sleep(t)
+
+def wait_idle(sw_off):
+    try:
+        while True:
+            if not sw_off.value:
+                print("Powering off...")
+                pi_shutdown()
+            else:
+                time.sleep(0.6)
+    except KeyboardInterrupt:
+        print(" Keyboard Interrupt detected. Powering down radio...")
+        nrf.power = False
+
+def pi_shutdown():
+    os.system("sudo poweroff")
+    
+def remove_result(path):
+    os.system("rm "+path+"result.txt")
+    
+    
+def select_mode(switch_send, switch_tx, switch_nm, led_yellow, led_green, led_red):
+    led_blink([led_yellow, led_green, led_red])
+    led_off([led_yellow, led_green, led_red])
+    while switch_send.value:
+        if switch_tx.value:
+            isTransmitter=True
+            led_green.value=True
+            led_yellow.value=False
+        else:
+            isTransmitter=False
+            led_green.value=False
+            led_yellow.value=True
+        if switch_nm.value:
+            NMode = True
+            led_red.value=True
+        else:
+            NMode=False
+            led_red.value=False
+        time.sleep(0.5)
+    
+    led_blink([led_yellow, led_green, led_red])
+    led_off([led_yellow, led_green, led_red])
+    return isTransmitter, NMode
     
 #  This following code is to check the functions without calling the
 #	functions outside, to be sure they all work well.
