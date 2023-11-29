@@ -72,7 +72,7 @@ if __name__ == "__main__":
 
     try:   
         codc=check_codec(pth) #now we use path for codec to read more quickly.
-        print("CODEC: "+codc)º
+        print("CODEC: "+codc)
     except OSError as e:
         print(e)
         print("No usb detected")
