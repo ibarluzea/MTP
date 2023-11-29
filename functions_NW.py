@@ -27,6 +27,7 @@ def masterNW(nrf,timeout,payload,codec):
   # 1) Neighbor disc
   nrf.open_tx_pipe(address[0]) #uses pipe 0, address 0.
   nrf.open_rx_pipe(1, address[1]) 
+
   buffer_tx = discovery_payload + address[1]  
   no_received = True
   neighbors = b""
@@ -48,7 +49,6 @@ def masterNW(nrf,timeout,payload,codec):
       no_received = False
     end
   
-  nrf.close_rx_pipe(1)
   address_list = [int(char) for char in neighbors.decode() if char.isdigit()] # Get from a b"1RC5RC8RC" --> [1,5,8]
   my_address = [int(char) for char in address[1].decode() if char.isdigit()]
 
@@ -57,10 +57,6 @@ def masterNW(nrf,timeout,payload,codec):
 nrf.open_rx_pipe(2, address[1]) # També podria ser la pipe 1 a priori.
 for i in address_list:
   dst_address = bytes(str(i, codec))+b"RC"
-  nrf.open_tx_pipe(dst_address) 
-
-  
-
   nrf.listen = False
   buffer_tx = b"EOT"
   neighbor_discovery = nrf.send(buffer_tx, False) # AutoAck Enabled.
@@ -91,7 +87,7 @@ def slaveNW(nrf):
     has_file = False
     keep_listening = True
 
-    nrf.address_length = 3
+    nrf.address_length = 3 #migrar al main.
     # addresses needs to be in a buffer protocol object (bytearray)
     address = [b"BRD", b"1RC"]
     my_address = [int(char) for char in address[1].decode() if char.isdigit()]
