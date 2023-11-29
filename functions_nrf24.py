@@ -47,22 +47,28 @@ def master(nrf, payload, switch_send):  # count = 5 will only transmit 5 packets
     while switch_send.value:
         pass    
     print("It begins to send")
-    t_g.start()   
+    
     t_r.start()
     e_r.set()
 
     for i in range(count):
+        t_g = t_g.clone()
+        t_g.start()
+        
         # use struct.pack to structure your data
         # into a usable payload
         buffer = payload[i]
         start_timer = time.monotonic_ns()  # start timer
         
         result = nrf.send(buffer, False, 10)
+        
         if not result:
-            e_r.clear()
             e_g.set()
-        while not result:
+            e_r.clear()
+            t_r = t_r.clone()
+            t_r.start()
             
+        while not result:
             result = nrf.send(buffer, False, 0)
             time.sleep(0.1)
             
