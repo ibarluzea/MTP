@@ -110,7 +110,9 @@ if __name__ == "__main__":
     #            ledError()
     #    else:
     #        slaveNW(nrf)
-            
+        led_blink(led_green)
+        led_blink(led_yellow)
+        led_blink(led_red)
         print("Transmision finalizada")
     
     
