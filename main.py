@@ -84,10 +84,8 @@ nrf.address_length = 3
 # Set timeout
 timeout = 10
 
-try:
-    pth = getUSBpath()
-except:
-    print("No usb detected")
+pth = getUSBpath()
+
 
 
 print("Choosing mode")
