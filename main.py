@@ -107,7 +107,7 @@ if not NMode:
         except:
             print("Compression failed")
         
-        master(nrf, payload, sw_send)
+        master(nrf, payload_compressed, sw_send)
     else:
         slave(nrf, sw_send)
 #else:
