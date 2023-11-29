@@ -1,13 +1,14 @@
 import time
 import struct
 import board
-import os as sys
+import os
 import subprocess
 import glob
 from digitalio import DigitalInOut
 import chardet
 from functions_pi import *
 from lzw import *
+import threading
 
 led_red=setup_led(board.D20)
 led_green=setup_led(board.D16)
