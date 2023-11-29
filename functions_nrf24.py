@@ -39,12 +39,13 @@ def master(nrf, payload, switch_send):  # count = 5 will only transmit 5 packets
     result = False
 #   print(nrf.is_lna_enabled())
     count=len(payload)
-
+    
+    t_g.start()
     while switch_send.value:
         pass    
     print("It begins to send")
         
-    t_g.start()
+    
     e_r.set()
     t_r.start()
     for i in range(count):
@@ -58,7 +59,7 @@ def master(nrf, payload, switch_send):  # count = 5 will only transmit 5 packets
             e_r.clear()
             e_g.set()
             result = nrf.send(buffer, False, 0)
-            time.sleep(0.1)
+            time.sleep(0.5)
         end_timer = time.monotonic_ns()  # end timer
 
         e_r.set()
@@ -124,7 +125,11 @@ def slave(nrf, switch_send):
     msg = decompress(msg)
     pth = getUSBpath()
     t_y.start()
-    writeFile(pth,msg)
+    try:
+        writeFile(pth,msg)
+    except Exception as e:
+        print(e)
+        e_y.set()
     e_y.set()
         
 def set_role(nrf, payload):
