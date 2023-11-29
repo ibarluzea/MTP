@@ -117,19 +117,19 @@ if not NMode:
             ledError()
     else:
         slave(nrf, timeout)
-else:
-    if isTransmitter:
-        try:
-            strF= openFile(pth)
-            #payload = fragmentFile(strF,payload_size) # Need to migrate it into masterNW.
-            masterNW(nrf, strF)
-        except Exception as e:
-            payload = None
-            print(f"No file found to fragment")
-            print(e)
-            ledError()
-    else:
-        slaveNW(nrf)
+#else:
+#    if isTransmitter:
+#        try:
+#            strF= openFile(pth)
+#            #payload = fragmentFile(strF,payload_size) # Need to migrate it into masterNW.
+#            masterNW(nrf, strF)
+#        except Exception as e:
+#            payload = None
+#            print(f"No file found to fragment")
+#            print(e)
+#            ledError()
+#    else:
+#        slaveNW(nrf)
         
 print("Transmision finalizada")
 
