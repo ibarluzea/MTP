@@ -7,7 +7,9 @@ from circuitpython_nrf24l01.rf24 import RF24
 # invalid default values for scoping
 
 if __name__ == "__main__":
+    
     SPI_BUS, CSN_PIN, CE_PIN = (None, None, None)
+    global led_yellow, led_red, led_green, sw_send, sw_txrx, sw_nm, sw_off
     try: 
         try:  # on Linux
             SPI_BUS = spidev.SpiDev()  # for a faster interface on linux
