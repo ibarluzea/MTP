@@ -61,7 +61,7 @@ def master(nrf, payload):  # count = 5 will only transmit 5 packets
         
         while not result and limit:
             e_r.clear()
-            e_green.set()
+            e_g.set()
             ii+=1
             result = nrf.send(buffer, False, 10)
             time.sleep(0.5)
