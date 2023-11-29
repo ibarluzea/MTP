@@ -40,10 +40,8 @@ def master(nrf, payload, switch_send):  # count = 5 will only transmit 5 packets
 #   print(nrf.is_lna_enabled())
     count=len(payload)
 
-    while True:
-        if switch_send.value:
-        continue #este fallo era al tener break
-    
+    while switch_send.value:
+        pass    
     print("It begins to send")
         
     t_g.start()
