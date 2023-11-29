@@ -48,9 +48,6 @@ def master(nrf, payload, switch_send):  # count = 5 will only transmit 5 packets
         pass    
     print("It begins to send")
     
-    t_r.start()
-    e_r.set()
-
     for i in range(count):
         t_g = t_g.clone()
         t_g.start()
