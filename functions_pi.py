@@ -11,6 +11,7 @@ import threading
 
 global led_red, led_yellow, led_green, sw_send, sw_txrx, sw_nm, sw_off
 
+    
 
 def fragmentFile(string, length):
     return list(string[0+i: length+i] for i in range(0, len(string), length))
@@ -221,6 +222,16 @@ def select_mode(switch_send, switch_tx, switch_nm, led_yellow, led_green, led_re
     led_off([led_yellow, led_green, led_red])
     return isTransmitter, NMode
     
+    
+led_yellow=setup_led(board.D12)
+led_red=setup_led(board.D20)
+led_green=setup_led(board.D16)
+
+sw_send = setup_switch(board.D5)
+sw_txrx = setup_switch(board.D6)
+sw_nm = setup_switch(board.D26)
+sw_off = setup_switch(board.D23)
+
 #  This following code is to check the functions without calling the
 #	functions outside, to be sure they all work well.
 # 	TO BE COMMENTED BEFORE FINISHING

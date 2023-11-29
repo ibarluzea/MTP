@@ -1,7 +1,6 @@
 
-
-from functions_nrf24 import *
 from functions_pi import *
+from functions_nrf24 import *
 from lzw import *
 import spidev
 
@@ -9,7 +8,7 @@ from circuitpython_nrf24l01.rf24 import RF24
 # invalid default values for scoping
 
 if __name__ == "__main__":
-    
+
     SPI_BUS, CSN_PIN, CE_PIN = (None, None, None)
     try: 
         try:  # on Linux
@@ -27,33 +26,14 @@ if __name__ == "__main__":
             CSN_PIN = DigitalInOut(board.D5)
         
         try:
-            led_yellow=setup_led(board.D12)
-            led_red=setup_led(board.D20)
-            led_green=setup_led(board.D16)
-
-            sw_send = setup_switch(board.D5)
-            sw_txrx = setup_switch(board.D6)
-            sw_nm = setup_switch(board.D26)
-            sw_off = setup_switch(board.D23)
-            print("success in LED and switch setup")
             led_on([led_green, led_yellow, led_red])
             led_off([led_green, led_yellow, led_red])
+            print("success in LED and switch setup")
         except:
             print("failure in LED setup")
             led_on(led_red)
             
-        try:
-            e_g = threading.Event()
-            e_r = threading.Event()
-            e_y = threading.Event()
-
-            t_r = threading.Thread(name='non-block', target=blinkLed, args=(e_r, led_red))
-            t_g = threading.Thread(name='non-block', target=blinkLed, args=(e_g, led_green))
-            t_y = threading.Thread(name='non-block', target=blinkLed, args=(e_y, led_yellow))
-
-        except Exception as e:
-            print(e)
-
+        
     # initialize the nRF24L01 on the spi bus object
     # nrf = RF24(SPI_BUS, CSN_PIN, CE_PIN)
         nrf = None
