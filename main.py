@@ -110,7 +110,7 @@ else:
             print(e)
             ledError()
     else:
-        slaveNW(nrf, timeout)
+        slaveNW(nrf)
 
 
 print("Transmision finalizada")
