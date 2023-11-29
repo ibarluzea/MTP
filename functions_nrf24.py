@@ -42,8 +42,6 @@ def master(nrf, payload, switch_send):  # count = 5 will only transmit 5 packets
     while True:
         if switch_send.value:
             break
-        else
-            time.sleep(0.5)
             
         
         
@@ -54,19 +52,15 @@ def master(nrf, payload, switch_send):  # count = 5 will only transmit 5 packets
     for i in range(count):
         # use struct.pack to structure your data
         # into a usable payload
-        limit = 10
         buffer = payload[i]
         start_timer = time.monotonic_ns()  # start timer
         
         result = nrf.send(buffer, False, 10)
-        ii=1
-        while not result and limit:
+        while not result:
             e_r.clear()
             e_g.set()
-            ii+=1
             result = nrf.send(buffer, False, 0)
-            time.sleep(0.5)
-            limit -= 1
+            time.sleep(0.1)
         end_timer = time.monotonic_ns()  # end timer
 
         e_r.set()
