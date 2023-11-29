@@ -34,6 +34,10 @@ def node_NW(nrf,strF,isTransmitter):
       token,has_token = token_handover(token, address_list)
     else: # Es Slave
       nrf.open_rx_pipe(0, address[0])
+      has_token = receive(address[1])
+
+
+#### Master ####
 
 def neighbor_discovery(discovery_payload,my_address,dst_address):
   no_received = True
@@ -99,3 +103,50 @@ def token_handover(token,token_payload,address_list,dst_address):
     buffer_tx = token_payload+token_bytes
     nrf.send(buffer_tx, False)
   return token, False
+
+#### Slave ####
+def receive(my_address):
+  keep_listening = True
+  has_token = False
+  while keep_listening:
+    nrf.listen = True  # put radio into RX mode and power up
+    if nrf.available():
+      # grab information about the received payload
+      payload_size, pipe_number = (nrf.any(), nrf.pipe)
+      rx = nrf.read() #Clears flags & empties RX FIFO, saves bytes in rx
+      if pipe_number == 0: # S'ha rebut a la pipe de broadcast -> Neighbour Discovery
+        address_received = rx[1:address_length + 1] 
+        nrf.open_tx_pipe(address_received)
+        time.sleep(backoff)
+        nrf.send(my_address, True)
+        # 3) Rebo algo unicast, mirar quin tipo de paquet arriba
+      if pipe_number == 1: # S'ha rebut a la pipe de unicast -> O fitxer o Token
+        type_byte = rx[0] # Agafar el primer byte que indica tipus de paquet
+        if type_byte == b'\x0D': # Token
+          has_token = True
+          token = interpretarToken(rx[1:]) # FUNCIO QUE LLEGEIXI EL PAQUET DEL TOKEN I EL POSI EN FORMAT LLISTA
+          token[int(my_address[0])][:] = [True,True] # actualitzo token
+          keep_listening = False
+        elif type_byte == b'\x0E': # End of Transmission
+          has_file = True
+                    # PROCESSAR TEXT, ESCRIURE, ETC
+                    # Un cop s'ha rebut tot el fitxer, escriure els bytes al USB, cadascu amb la seva funcio d'escriure al USB
+                    # Codi d'encendre led VERD
+        elif type_byte == b'\x0C':
+          data_fragment = rx[1:]
+  
+  return has_token
+                    # INSERTAR EL VOSTRE CODI per RX UNICAST
+                    #count=len(payload) ---> Per saber quants frames s'hauran d'enviar
+
+
+
+
+
+
+
+
+
+
+
+
