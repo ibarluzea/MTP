@@ -15,13 +15,13 @@ led_green=setup_led(board.D16)
 led_yellow=setup_led(board.D12)
 
 
-e_g = threading.Event()
-e_r = threading.Event()
-e_y= threading.Event()
+global e_g = threading.Event()
+global e_r = threading.Event()
+global e_y= threading.Event()
 
-t_r = threading.Thread(name='non-block', target=blinkLed, args=(e_r, led_red))
-t_g = threading.Thread(name='non-block', target=blinkLed, args=(e_g, led_green))
-t_y = threading.Thread(name='non-block', target=blinkLed, args=(e_y, led_yellow))
+global t_r = threading.Thread(name='non-block', target=blinkLed, args=(e_r, led_red))
+global t_g = threading.Thread(name='non-block', target=blinkLed, args=(e_g, led_green))
+global t_y = threading.Thread(name='non-block', target=blinkLed, args=(e_y, led_yellow))
 
 def master(nrf, payload, switch_send):  # count = 5 will only transmit 5 packets
     """Transmits an incrementing integer every second"""
@@ -92,8 +92,9 @@ def slave(nrf, switch_send):
     msg = b""
     start = time.monotonic()
     i=0
-    t_g.start()
     print("It begins to receive information")
+
+    t_g.start()
     while (time.monotonic() - start) < 30:
         if nrf.available():
             
@@ -117,8 +118,12 @@ def slave(nrf, switch_send):
             #)
             start = time.monotonic()
             i +=1
+        else:
+            print("not receiving")
+            
         if not switch_send.value:
             break
+        
     print("continua bien")
     led_blink(led_yellow)
     e_g.set()
