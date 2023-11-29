@@ -9,6 +9,18 @@ import chardet
 from functions_pi import *
 from lzw import *
 
+led_red=setup_led(board.D20)
+led_green=setup_led(board.D16)
+led_yellow=setup_led(board.D12)
+
+
+e_g = threading.Event()
+e_r = threading.Event()
+e_y= threading.Event()
+
+t_r = threading.Thread(name='non-block', target=blinkLed, args=(e_r, led_red))
+t_g = threading.Thread(name='non-block', target=blinkLed, args=(e_g, led_green))
+t_y = threading.Thread(name='non-block', target=blinkLed, args=(e_y, led_yellow))
 
 def master(nrf, payload):  # count = 5 will only transmit 5 packets
     """Transmits an incrementing integer every second"""
@@ -25,26 +37,31 @@ def master(nrf, payload):  # count = 5 will only transmit 5 packets
     result = False
 #   print(nrf.is_lna_enabled())
     count=len(payload)
+
+    t_g.start()
+    e_r.set()
+    t_r.start()
+    
     for i in range(count):
         # use struct.pack to structure your data
         # into a usable payload
         limit = 10
-        #print(type(payload[i]))
-        if i < 2:
-            print(payload[i])
         buffer = payload[i]
-        # "<f" means a single little endian (4 byte) float value.
         start_timer = time.monotonic_ns()  # start timer
         
         result = nrf.send(buffer, False, 10)
         ii=1
         while not result and limit:
-            
+            e_r.clear()
+            e_green.set()
             ii+=1
             result = nrf.send(buffer, False, 0)
             time.sleep(0.5)
             limit -= 1
         end_timer = time.monotonic_ns()  # end timer
+
+        e_r.set()
+        e_g.clear()
         
         if not result:
             print("send() failed or timed out") 
@@ -54,15 +71,14 @@ def master(nrf, payload):  # count = 5 will only transmit 5 packets
 #                 "Transmission successful! Time to Transmit:",
 #                 "{} us. Sent: {}".format((end_timer - start_timer) / 1000, payload[i]),
 #             )
-   
+    led_blink(led_yellow)
     print("Transmission rate: ", (((len(payload)*(32+1+3+1+2+9+3+2))*8)/((end_timer-zero_timer)/1e9)))
     print(nrf.print_details(False))
+    e_g.set()
     
     
     
 def slave(nrf, timeout, codec):
-    """Polls the radio and prints the received value. This method expires
-    after 6 seconds of no received transmission"""
     nrf.address_length = 3
     address = [b"snd", b"rcv"]
     # set TX address of RX node into the TX pipe
@@ -74,6 +90,7 @@ def slave(nrf, timeout, codec):
     msg = b""
     start = time.monotonic()
     i=0
+    t_g.start()
     while (time.monotonic() - start) < timeout:
         if nrf.available():
             # grab information about the received payload
@@ -97,13 +114,15 @@ def slave(nrf, timeout, codec):
             start = time.monotonic()
             i +=1
 
+    e_g.set()
     # recommended behavior is to keep in TX mode while idle
     nrf.listen = False  # put the nRF24L01 is in TX mode
     #to optimize, now we open and close the file every 32 BYTES
     msg = decompress(msg)
     pth = getUSBpath()
-    #pth = "/home/mtp/MTP/"
+    t_y.start()
     writeFile(pth,msg)
+    e_y.set()
         
 def set_role(nrf, payload, timeout, codec):
     """Set the role using stdin stream. Timeout arg for slave() can be
