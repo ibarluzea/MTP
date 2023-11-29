@@ -129,7 +129,6 @@ def slave(nrf, switch_send):
             break
         
     print("continua bien")
-    led_blink(led_yellow)
     e_g.set()
     # recommended behavior is to keep in TX mode while idle
     nrf.listen = False  # put the nRF24L01 is in TX mode
