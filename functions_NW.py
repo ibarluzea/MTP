@@ -77,3 +77,4 @@ for i in priority:
   token_bytes = bytes(sum(map(lambda x: [int(y) for y in x], token, [])) # ChatGpt llista de llistes --> Byte format.
   buffer_tx = token_payload+token_bytes
   token_sent = nrf.send(buffer_tx, False)
+
