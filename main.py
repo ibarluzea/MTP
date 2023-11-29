@@ -93,6 +93,7 @@ if __name__ == "__main__":
                 except Exception as e:
                     print("Compression failed")
                     print(e)
+                led_blink(led_green)
                 master(nrf, payload_compressed, sw_send)
             else:
                 slave(nrf, sw_send)
