@@ -85,20 +85,11 @@ nrf.address_length = 3
 timeout = 10
 
 try:
-
     pth = getUSBpath()
-    path_destino = "/home/mtp/MTP/"
-    
     strF= openFile(pth)
-    #strF_2= openFile_fromGit()
-    codc=check_codec(pth) #now we use path for codec to read more quickly.
     print("CODEC "+codc)
 except:
-    codc = None
     print("No usb detected")
-
-# master(nrf, payload)
-# slave(nrf, timeout, codec)
 
 
 print("Choosing mode")
@@ -111,14 +102,14 @@ if not NMode:
             strF= openFile(pth)
             strF_compressed = compress(strF)
             payload_compressed = fragmentFile(strF_compressed,payload_size)
-            master(nrf, payload)
+            master(nrf, payload, sw_send)
         except Exception as e:
             payload = None
             print(f"Not file found to fragment")
             print(e)
             ledError()
     else:
-        slave(nrf, timeout)
+        slave(nrf, timeout, sw_send)
 #else:
 #    if isTransmitter:
 #        try:
