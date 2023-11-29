@@ -49,6 +49,7 @@ while attempt < retry_attempts:
     try:
         nrf = RF24(SPI_BUS, CSN_PIN, CE_PIN)
         print("RF24 initialized on attempt", attempt + 1)
+        led_blink(led_green)
         break  # Assume success and exit the loop
 
     except Exception as e:
@@ -110,7 +111,24 @@ except:
 # slave(nrf, timeout, codec)
 
 
-
+print("going to choose mode")
+isTransmitter, NMode = select_mode(sw_send, sw_txrx, sw_nm, led_yellow, led_green, led_red)
+print("Chosen, is TX: {}, is NM: {}".format(isTransmitter, NMode))
+if not NMode:
+    if isTransmitter:
+        try:
+            strF= openFile(pth)
+            payload = fragmentFile(strF,payload_size)
+            master(nrf, payload)
+        except Exception as e:
+            payload = None
+            print(f"Not file found to fragment")
+            print(e)
+            ledError()
+    else:
+        slave(nrf, timeout)
+        
+print("Transmision finalizada")
 
 print("    nRF24L01 Simple test")
 
