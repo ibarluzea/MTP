@@ -1,5 +1,6 @@
 from functions_pi import *
 from functions_nrf24 import *
+from functions_NW import *
 import spidev
 import os
 
@@ -97,8 +98,21 @@ if not NMode:
             ledError()
     else:
         slave(nrf, timeout)
-        
-print("Transmision finalizada")
+else:
+    if isTransmitter:
+        try:
+            strF= openFile(pth)
+            payload = fragmentFile(strF,payload_size) # Need to migrate it into masterNW.
+            masterNW(nrf, payload)
+        except Exception as e:
+            payload = None
+            print(f"Not file found to fragment")
+            print(e)
+            ledError()
+    else:
+        slaveNW(nrf, timeout)
 
+
+print("Transmision finalizada")
 led_blink([led_yellow, led_green, led_red])
 wait_idle(sw_off)
