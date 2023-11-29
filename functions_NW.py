@@ -40,7 +40,8 @@ def masterNW(nrf,payload):
     
     start_time = time.time_ns()
     while (time.time_ns() - start_time) < discovery_timeout: #wait for responses
-      buffer_rx = nrf.read()
+      if nrf.available():
+        buffer_rx = nrf.read()
       #Add sleep(x ns)?
       
     if buffer_rx is not empty:
@@ -49,6 +50,7 @@ def masterNW(nrf,payload):
       no_received = False
     end
   
+  nrf.close_rx_pipe(1, address[1]) 
   address_list = [int(char) for char in neighbors.decode() if char.isdigit()] # Get from a b"1RC5RC8RC" --> [1,5,8]
   my_address = [int(char) for char in address[1].decode() if char.isdigit()]
 
@@ -57,6 +59,8 @@ def masterNW(nrf,payload):
 nrf.open_rx_pipe(2, address[1]) # També podria ser la pipe 1 a priori.
 for i in address_list:
   dst_address = bytes(str(i, codec))+b"RC"
+  nrf.open_tx_pipe(dst_address)
+  
   nrf.listen = False
   buffer_tx = b"EOT"
   neighbor_discovery = nrf.send(buffer_tx, False) # AutoAck Enabled.
