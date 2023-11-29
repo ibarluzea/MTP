@@ -86,7 +86,6 @@ timeout = 10
 
 try:
     pth = getUSBpath()
-    strF= openFile(pth)
     print("CODEC "+codc)
 except:
     print("No usb detected")
@@ -109,7 +108,7 @@ if not NMode:
             print(e)
             ledError()
     else:
-        slave(nrf, timeout, sw_send)
+        slave(nrf, sw_send)
 #else:
 #    if isTransmitter:
 #        try:
