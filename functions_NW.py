@@ -60,9 +60,18 @@ nrf.open_rx_pipe(2, address[1]) # També podria ser la pipe 1 a priori.
 for i in address_list:
   dst_address = bytes(str(i, codec))+b"RC"
   nrf.open_tx_pipe(dst_address)
-  
   payload = fragmentFile(strF,31)
-  
+  count=len(payload)
+  result = False
+  for j in range(count):
+    limit = 10
+    buffer = payload[j]
+    outer_re=1
+    while not result and limit:      
+      outer_re+=1
+      result = nrf.send(buffer, False, 0)
+      time.sleep(0.5)
+      limit -= 1
   
   nrf.listen = False
   buffer_tx = b"EOT"
