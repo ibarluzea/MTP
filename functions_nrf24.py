@@ -42,6 +42,9 @@ def master(nrf, payload, switch_send):  # count = 5 will only transmit 5 packets
     while True:
         if switch_send.value:
             break
+        else
+            time.sleep(0.5)
+            
         
         
     t_g.start()
