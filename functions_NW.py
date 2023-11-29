@@ -77,7 +77,7 @@ for i in priority:
   token_bytes = bytes(sum(map(lambda x: [int(y) for y in x], token, [])) # ChatGpt llista de llistes --> Byte format.
   buffer_tx = token_payload+token_bytes
   token_sent = nrf.send(buffer_tx, False)
-import time
+
 import struct
 import board
 from digitalio import DigitalInOut
@@ -86,15 +86,14 @@ from subprocess import check_output
 from circuitpython_nrf24l01.rf24 import RF24
 import spidev
 
-has_token = False
-has_file = False
+
 
 def slaveNW(nrf):
+    has_token = False
+    has_file = False
     keep_listening = True
 
-    address_length = 3
-    nrf.address_length = address_length
-
+    nrf.address_length = 3
     # addresses needs to be in a buffer protocol object (bytearray)
     address = [b"BRD", b"1RC"]
     my_address = [int(char) for char in address[1].decode() if char.isdigit()]
