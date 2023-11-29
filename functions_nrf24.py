@@ -39,45 +39,48 @@ def master(nrf, payload, switch_send):  # count = 5 will only transmit 5 packets
 #   print(nrf.is_lna_enabled())
     count=len(payload)
 
+    while true:
+        if switch_send.value:
+            break
+        
+        
     t_g.start()
     e_r.set()
     t_r.start()
+    print("ENTRA EN MASTER")
+    for i in range(count):
+        # use struct.pack to structure your data
+        # into a usable payload
+        limit = 10
+        buffer = payload[i]
+        start_timer = time.monotonic_ns()  # start timer
+        
+        result = nrf.send(buffer, False, 10)
+        ii=1
+        while not result and limit:
+            e_r.clear()
+            e_g.set()
+            ii+=1
+            result = nrf.send(buffer, False, 0)
+            time.sleep(0.5)
+            limit -= 1
+        end_timer = time.monotonic_ns()  # end timer
 
-    while not switch_send.value:
-        print("ENTRA EN MASTER")
-        for i in range(count):
-            # use struct.pack to structure your data
-            # into a usable payload
-            limit = 10
-            buffer = payload[i]
-            start_timer = time.monotonic_ns()  # start timer
-            
-            result = nrf.send(buffer, False, 10)
-            ii=1
-            while not result and limit:
-                e_r.clear()
-                e_g.set()
-                ii+=1
-                result = nrf.send(buffer, False, 0)
-                time.sleep(0.5)
-                limit -= 1
-            end_timer = time.monotonic_ns()  # end timer
-    
-            e_r.set()
-            e_g.clear()
-            
-            if not result:
-                print("send() failed or timed out") 
-                print('Fallo en la transmision'+str(ii))
-    #         else:
-    #             print(
-    #                 "Transmission successful! Time to Transmit:",
-    #                 "{} us. Sent: {}".format((end_timer - start_timer) / 1000, payload[i]),
-    #             )
-        led_blink(led_yellow)
-        print("Transmission rate: ", (((len(payload)*(32+1+3+1+2+9+3+2))*8)/((end_timer-zero_timer)/1e9)))
-        print(nrf.print_details(False))
-        e_g.set()
+        e_r.set()
+        e_g.clear()
+        
+        if not result:
+            print("send() failed or timed out") 
+            print('Fallo en la transmision'+str(ii))
+#         else:
+#             print(
+#                 "Transmission successful! Time to Transmit:",
+#                 "{} us. Sent: {}".format((end_timer - start_timer) / 1000, payload[i]),
+#             )
+    led_blink(led_yellow)
+    print("Transmission rate: ", (((len(payload)*(32+1+3+1+2+9+3+2))*8)/((end_timer-zero_timer)/1e9)))
+    print(nrf.print_details(False))
+    e_g.set()
     
     
     
