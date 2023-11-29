@@ -86,7 +86,6 @@ timeout = 10
 
 try:
     pth = getUSBpath()
-    print("CODEC "+codc)
 except:
     print("No usb detected")
 
