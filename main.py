@@ -106,10 +106,8 @@ if not NMode:
             payload_compressed = fragmentFile(strF_compressed,payload_size)
         except:
             print("Compression failed")
-        try:
-            master(nrf, payload, sw_send)
-        except:
-            print("Master failed")
+        
+        master(nrf, payload, sw_send)
     else:
         slave(nrf, sw_send)
 #else:
