@@ -23,7 +23,21 @@ except ImportError:  # on CircuitPython only
     # change these (digital output) pins accordingly
     CE_PIN = DigitalInOut(board.D4)
     CSN_PIN = DigitalInOut(board.D5)
+    
+try:
+    led_yellow=setup_led(board.D12)
+    led_red=setup_led(board.D20)
+    led_green=setup_led(board.D16)
 
+    sw_send = setup_switch(board.D5)
+    sw_txrx = setup_switch(board.D6)
+    sw_nm = setup_switch(board.D26)
+    sw_off = setup_switch(board.D23)
+    print("success in LED and switch setup")
+    led_on([led_green, led_yellow, led_red])
+except:
+    print("failure in LED setup")
+    led_on(led_red)
 
 # initialize the nRF24L01 on the spi bus object
 # nrf = RF24(SPI_BUS, CSN_PIN, CE_PIN)
@@ -84,9 +98,9 @@ except:
     codc = None
     print("No usb detected")
 
-strF_compressed = compress(strF)
+
 try:
-    print("SI")
+    strF_compressed = compress(strF)
     payload_compressed = fragmentFile(strF_compressed,payload_size)
 except:
     payload_compressed = None
