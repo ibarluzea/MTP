@@ -25,7 +25,8 @@ t_y = threading.Thread(name='non-block', target=blinkLed, args=(e_y, led_yellow)
 
 def master(nrf, payload, switch_send):  # count = 5 will only transmit 5 packets
     """Transmits an incrementing integer every second"""
-    
+    print("ENTRA EN MASTER, press send again")
+
     nrf.address_length = 3
     
     address = [b"snd", b"rcv"]
@@ -42,13 +43,13 @@ def master(nrf, payload, switch_send):  # count = 5 will only transmit 5 packets
     while True:
         if switch_send.value:
             break
-            
+    print("It begins to send")
+        
         
         
     t_g.start()
     e_r.set()
     t_r.start()
-    print("ENTRA EN MASTER")
     for i in range(count):
         # use struct.pack to structure your data
         # into a usable payload
