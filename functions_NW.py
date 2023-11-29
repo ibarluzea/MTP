@@ -9,7 +9,7 @@ import spidev
 # Migrar imports en el main.
 
 
-def masterNW(nrf,timeout,payload,codec): 
+def masterNW(nrf,payload): 
 
   has_token = True
   nrf.address_length = 3
