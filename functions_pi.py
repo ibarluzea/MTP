@@ -1,11 +1,13 @@
 import time
 import struct
 import board
-import os as sys
+import os
 import subprocess
 import glob
+import digitalio
 from digitalio import DigitalInOut
 import chardet
+import threading
 
 
 def fragmentFile(string, length):
@@ -86,7 +88,7 @@ def checkSwitch(pin):
 def check_codec(path):
     try:
         file = open(glob.glob(path+'*.txt')[0],"rb")
-        strF= file.read(30)
+        strF= file.read(64)
         
         result = chardet.detect(strF)
         encoding = result['encoding']
