@@ -1,96 +1,104 @@
 from functions_pi import *
 from functions_nrf24 import *
-from lzw import *
 import spidev
+import os
 
 from circuitpython_nrf24l01.rf24 import RF24
 # invalid default values for scoping
 SPI_BUS, CSN_PIN, CE_PIN = (None, None, None)
 
+try:
+    led_yellow=setup_led(board.D12)
+    led_red=setup_led(board.D20)
+    led_green=setup_led(board.D16)
+
+    sw_send = setup_switch(board.D5)
+    sw_txrx = setup_switch(board.D6)
+    sw_nm = setup_switch(board.D26)
+    sw_off = setup_switch(board.D23)
+    #print("success in LED and switch setup")
+    led_on([led_green, led_yellow, led_red])
+except:
+    #print("failure in LED setup")
+    led_on(led_red)
+    
+
+#if __name__ == "__main__":
 try:  # on Linux
-    SPI_BUS = spidev.SpiDev()  # for a faster interface on linux
-    CSN_PIN = DigitalInOut(board.D17) # use CE0 on default bus (even faster than using any pin)
-    CE_PIN = DigitalInOut(board.D22)  # using pin gpio22 (BCM numbering)
+    SPI_BUS = spidev.SpiDev()
+    CSN_PIN = DigitalInOut(board.D17)
+    CE_PIN = DigitalInOut(board.D22)  
 
 except ImportError:  # on CircuitPython only
-    # using board.SPI() automatically selects the MCU's
-    # available SPI pins, board.SCK, board.MOSI, board.MISO
     SPI_BUS = board.SPI()  # init spi bus object
-
-    # change these (digital output) pins accordingly
     CE_PIN = DigitalInOut(board.D4)
     CSN_PIN = DigitalInOut(board.D5)
 
-
-# initialize the nRF24L01 on the spi bus object
-# nrf = RF24(SPI_BUS, CSN_PIN, CE_PIN)
 nrf = None
 attempt = 0
-retry_attempts = 5
-
+retry_attempts = 10
 while attempt < retry_attempts:
     try:
         nrf = RF24(SPI_BUS, CSN_PIN, CE_PIN)
-        print("RF24 initialized on attempt", attempt + 1)
+        #print("RF24 initialized on attempt", attempt + 1)
+        led_blink(led_green)
+        
         break  # Assume success and exit the loop
 
     except Exception as e:
-        print("Tried to connect")
+        #print("Tried to connect")
         time.sleep(1)
         attempt += 1
 
 
 if nrf is None:
-    print("Failed to initialize RF24 after", retry_attempts, "attempts.")
-    sys.exit(1)
+    #print("Failed to initialize RF24 after", retry_attempts, "attempts.")
+    blinkError()
+    os.exit(1)
 
-# Some nrf values
-nrf.pa_level = -18
+nrf.pa_level = -18 #sure value?
 nrf.data_rate = 2
-payload_size = 16
-# Set timeout
-timeout = 10
+payload_size = 32
 
-# Setting up LEDS and switches
-# led_yellow, led_red, led_green,
-# sw_send, sw_txrx, sw_nm, sw_off
-# setup_inout()
-
+timeout = 10 # Set timeout
 
 try:
     pth = getUSBpath()
-    path_destino = "/home/mtp/MTP/"
-    
-    strF= openFile(pth)
+    remove_result(pth)
+except Exception as e:
+    print(e)
+
+try:   
     codc=check_codec(pth) #now we use path for codec to read more quickly.
-    print("CODEC "+codc)
-
-    #strF_compressed = compress(strF)
-    #payload = fragmentFile(strF_compressed,payload_size)
-    payload = fragmentFile(strF,payload_size)
-
-except:
-    codc = None
-    payload = None
+    print("CODEC: "+codc)
+except OSError as e:
+    print(e)
     print("No usb detected")
+    ledError()
+except Exception as e:
+    print(e)
+    ledError()
+
+print("going to choose mode")
+isTransmitter, NMode = select_mode(sw_send, sw_txrx, sw_nm, led_yellow, led_green, led_red)
+print("Chosen, is TX: {}, is NM: {}".format(isTransmitter, NMode))
 
 
-# master(nrf, payload)
-# slave(nrf, timeout, codec)
+if not NMode:
+    if isTransmitter:
+        try:
+            strF= openFile(pth)
+            payload = fragmentFile(strF,payload_size)
+            master(nrf, payload)
+        except Exception as e:
+            payload = None
+            print(f"Not file found to fragment")
+            print(e)
+            ledError()
+    else:
+        slave(nrf, timeout)
+        
+print("Transmision finalizada")
 
-
-
-
-print("    nRF24L01 Simple test")
-
-if __name__ == "__main__":
-    try:
-        while set_role(nrf,payload, timeout, codc):
-            pass  # continue example until 'Q' is entered
-    except KeyboardInterrupt:
-        print(" Keyboard Interrupt detected. Powering down radio...")
-        nrf.power = False
-else:
-    print("    Run slave() on receiver\n    Run master() on transmitter")
-
-
+led_blink([led_yellow, led_green, led_red])
+wait_idle(sw_off)
