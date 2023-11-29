@@ -121,8 +121,6 @@ def slave(nrf, switch_send):
             #)
             start = time.monotonic()
             i +=1
-        else:
-            print("not receiving")
             
         if not switch_send.value:
             break
