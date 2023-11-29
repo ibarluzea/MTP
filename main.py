@@ -79,7 +79,7 @@ nrf.address_length = 3
 # nrf.open_rx_pipe(1, address[not radio_number])  # using pipe 1
 
 
-payload_size = 32
+
 
 # Set timeout
 timeout = 10
@@ -107,6 +107,7 @@ print("Chosen, is TX: {}, is NM: {}".format(isTransmitter, NMode))
 if not NMode:
     if isTransmitter:
         try:
+            payload_size = 32
             strF= openFile(pth)
             strF_compressed = compress(strF)
             payload_compressed = fragmentFile(strF_compressed,payload_size)
