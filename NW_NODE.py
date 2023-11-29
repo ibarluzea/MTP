@@ -17,7 +17,7 @@ def node_NW(nrf,strF,isTransmitter):
 
   discovery_timeout = 8e6 # with respect nanoseconds
   ack_timeout = 992e-6
-  backoff = 1/1000
+  backoff = 1/1000 # One per group
   
   discovery_payload = b'\x0A'
   data_payload = b'\x0C'
@@ -28,12 +28,12 @@ def node_NW(nrf,strF,isTransmitter):
   nrf.open_rx_pipe(1, address[1])
 
   while True:
-    if has_token:
+    if has_token: # Es Master
       address_list = neighbor_discovery(discovery_payload, address[1], address[0])
-      tx_Success = unicast_tx(strF,, address[1], address_list)
+      tx_Success = unicast_tx(strF,data_payload,address[1], address_list)
       token,has_token = token_handover(token, address_list)
-    else:
-      slave_stuff
+    else: # Es Slave
+      nrf.open_rx_pipe(0, address[0])
 
 def neighbor_discovery(discovery_payload,my_address,dst_address):
   no_received = True
@@ -59,19 +59,18 @@ def neighbor_discovery(discovery_payload,my_address,dst_address):
   address_list = [int(char) for char in neighbors.decode() if char.isdigit()] # Get from a b"1RC5RC8RC" --> [1,5,8]
   return address_list
 
-def unicast_tx(file, my_address, address_list):
+def unicast_tx(file,data_payload,my_address,address_list):
   payload = fragmentFile(strF,31)
   count=len(payload)
   
   for i in address_list:
     dst_address = bytes(str(i, codec))+b"RC"
     nrf.open_tx_pipe(dst_address)
-    count=len(payload)
     result = False
     for j in range(count):
       limit = 10
-      buffer = payload[j]
-      outer_re=1
+      buffer = data_payload + payload[j]
+      outer_re = 1 # Reintents fora dels intents del ack. + Resiliencia.
       while not result and limit:      
         outer_re+=1
         result = nrf.send(buffer, False, 0)
@@ -82,7 +81,7 @@ def unicast_tx(file, my_address, address_list):
   Tx_Success = nrf.send(buffer_tx, False)
   # Afegir resiliencia?
 
-def token_handover(token, address_list,dst_address):
+def token_handover(token,token_payload,address_list,dst_address):
   priority = []
   token[int(my_address[0])][:] = [True,True] # I have the file and token.
   for i in address_list:
