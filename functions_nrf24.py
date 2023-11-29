@@ -94,14 +94,14 @@ def slave(nrf, switch_send):
     i=0
     t_g.start()
     print("It begins to receive information")
-    while switch_send.value:
+    while (time.monotonic() - start) < timeout:
         if nrf.available():
             
             payload_size, pipe_number = (nrf.any(), nrf.pipe)
             # fetch 1 payload from RX FIFO
             buffer = nrf.read()  # also clears nrf.irq_dr status flag
             # expecting a little endian float, thus the format string "<f"
-            # buffer[:4] truncates padded 0s if dynamic payloads are disabled
+            # buff_leder[:4] truncates padded 0s if dynamic payloads are disabled
             
            # Here there is another option
             if i == 2:
@@ -117,8 +117,11 @@ def slave(nrf, switch_send):
             #)
             start = time.monotonic()
             i +=1
-        led_blink(led_yellow)  
-        e_g.set()
+        if switch_send.value:
+            break
+    print("continua bien")
+    led_blink(led_yellow)
+    e_g.set()
     # recommended behavior is to keep in TX mode while idle
     nrf.listen = False  # put the nRF24L01 is in TX mode
     #to optimize, now we open and close the file every 32 BYTES
