@@ -94,7 +94,7 @@ def slave(nrf, switch_send):
     i=0
     t_g.start()
     print("It begins to receive information")
-    while (time.monotonic() - start) < timeout:
+    while (time.monotonic() - start) < 30:
         if nrf.available():
             
             payload_size, pipe_number = (nrf.any(), nrf.pipe)
