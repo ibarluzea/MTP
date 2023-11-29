@@ -9,6 +9,8 @@ from digitalio import DigitalInOut
 import chardet
 import threading
 
+global led_red, led_yellow, led_green, sw_send, sw_txrx, sw_nm, sw_off
+
 
 def fragmentFile(string, length):
     return list(string[0+i: length+i] for i in range(0, len(string), length))

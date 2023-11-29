@@ -10,6 +10,7 @@ from functions_pi import *
 from lzw import *
 import threading
 
+global e_g, e_r, e_y, t_r, t_g, t_y
 
 def master(nrf, payload, switch_send):  # count = 5 will only transmit 5 packets
     """Transmits an incrementing integer every second"""

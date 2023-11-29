@@ -1,5 +1,4 @@
-global e_g, e_r, e_y, t_r, t_g, t_y
-global led_red, led_yellow, led_green, sw_send, sw_txrx, sw_nm, sw_off
+
 
 from functions_nrf24 import *
 from functions_pi import *
