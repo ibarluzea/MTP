@@ -78,3 +78,72 @@ for i in priority:
   buffer_tx = token_payload+token_bytes
   token_sent = nrf.send(buffer_tx, False)
 
+    
+    
+    
+def slave(nrf, timeout, codec):
+    """Polls the radio and prints the received value. This method expires
+    after 6 seconds of no received transmission"""
+    nrf.address_length = 3
+    address = [b"snd", b"rcv"]
+    # set TX address of RX node into the TX pipe
+    nrf.open_tx_pipe(address[1])  # always uses pipe 0
+
+    # set RX address of TX node into an RX pipe
+    nrf.open_rx_pipe(1, address[0])  # using pipe 1
+    nrf.listen = True  # put radio into RX mode and power up
+    msg = b""
+    start = time.monotonic()
+    while (time.monotonic() - start) < timeout:
+        if nrf.available():
+            # grab information about the received payload
+            payload_size, pipe_number = (nrf.any(), nrf.pipe)
+            # fetch 1 payload from RX FIFO
+            buffer = nrf.read()  # also clears nrf.irq_dr status flag
+            # expecting a little endian float, thus the format string "<f"
+            # buffer[:4] truncates padded 0s if dynamic payloads are disabled
+            
+           # Here there is another option
+            msg +=buffer#.decode("utf-8")
+            #msg.extend(buffer)
+            # print details about the received packet
+            print(
+                "Received {} bytes on pipe {}: {}".format(
+                    payload_size, pipe_number, msg
+                )
+            )
+            start = time.monotonic()
+
+    # recommended behavior is to keep in TX mode while idle
+    nrf.listen = False  # put the nRF24L01 is in TX mode
+    #to optimize, now we open and close the file every 32 BYTES
+    msg = decompress(msg)
+    pth = getUSBpath()
+    writeFile(pth,msg)
+        
+def set_role(nrf, payload, timeout, codec):
+    """Set the role using stdin stream. Timeout arg for slave() can be
+    specified using a space delimiter (e.g. 'R 10' calls `slave(10)`)
+    """
+    user_input = (
+        input(
+            "*** Enter 'R' for receiver role.\n"
+            "*** Enter 'T' for transmitter role.\n"
+            "*** Enter 'Q' to quit example.\n"
+        )
+        or "?"
+    )
+    user_input = user_input.split()
+    if user_input[0].upper().startswith("R"):
+        slave(nrf, timeout, codec)
+        
+        return True
+    if user_input[0].upper().startswith("T"):
+        master(nrf, payload)
+        return True
+    if user_input[0].upper().startswith("Q"):
+        nrf.power = False
+        return False
+    print(user_input[0], "is an unrecognized input. Please try again.")
+    return set_role(nrf, payload, timeout, codec)
+
