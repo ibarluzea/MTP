@@ -9,7 +9,7 @@ import spidev
 # Migrar imports en el main.
 
 
-def masterNW(nrf,payload): 
+def masterNW(nrf,strF): 
 
   has_token = True
   nrf.address_length = 3
@@ -60,6 +60,9 @@ nrf.open_rx_pipe(2, address[1]) # També podria ser la pipe 1 a priori.
 for i in address_list:
   dst_address = bytes(str(i, codec))+b"RC"
   nrf.open_tx_pipe(dst_address)
+  
+  payload = fragmentFile(strF,31)
+  
   
   nrf.listen = False
   buffer_tx = b"EOT"
