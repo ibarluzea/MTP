@@ -126,10 +126,10 @@ def receive(my_address):
           keep_listening = False
           
         elif type_byte == b'\x0E': # End of Transmission
-          has_file = True
                     # PROCESSAR TEXT, ESCRIURE, ETC
                     # Un cop s'ha rebut tot el fitxer, escriure els bytes al USB, cadascu amb la seva funcio d'escriure al USB
                     # Codi d'encendre led VERD
+                    # Actualitzar el token NOMES es fa al master.
         elif type_byte == b'\x0C':
           msg = b"".join([msg,rx])
         
