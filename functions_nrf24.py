@@ -39,7 +39,7 @@ def master(nrf, payload, switch_send):  # count = 5 will only transmit 5 packets
 #   print(nrf.is_lna_enabled())
     count=len(payload)
 
-    while true:
+    while True:
         if switch_send.value:
             break
         
