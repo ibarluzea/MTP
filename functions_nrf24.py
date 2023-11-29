@@ -76,7 +76,7 @@ def master(nrf, payload, switch_send):  # count = 5 will only transmit 5 packets
 #             )
     led_blink(led_yellow)
     print("Transmission rate: ", (((len(payload)*(32+1+3+1+2+9+3+2))*8)/((end_timer-zero_timer)/1e9)))
-    print(nrf.print_details(False))
+    print(nrf.print_details(True))
     e_g.set()
     
     
