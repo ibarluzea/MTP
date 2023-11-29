@@ -96,14 +96,20 @@ if not NMode:
         try:
             payload_size = 32
             strF= openFile(pth)
-            strF_compressed = compress(strF)
-            payload_compressed = fragmentFile(strF_compressed,payload_size)
-            master(nrf, payload, sw_send)
         except Exception as e:
             payload = None
             print(f"Not file found to fragment")
             print(e)
             ledError()
+        try:
+            strF_compressed = compress(strF)
+            payload_compressed = fragmentFile(strF_compressed,payload_size)
+        except:
+            print("Compression failed")
+        try:
+            master(nrf, payload, sw_send)
+        except:
+            print("Master failed")
     else:
         slave(nrf, sw_send)
 #else:
