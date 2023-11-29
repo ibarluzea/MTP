@@ -44,6 +44,7 @@ def master(nrf, payload, switch_send):  # count = 5 will only transmit 5 packets
     t_r.start()
 
     while not switch_send.value:
+        print("ENTRA EN MASTER")
         for i in range(count):
             # use struct.pack to structure your data
             # into a usable payload
