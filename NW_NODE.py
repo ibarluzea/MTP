@@ -22,7 +22,7 @@ def node_NW(nrf,strF,isTransmitter):
   discovery_payload = b'\x0A'
   data_payload = b'\x0C'
   token_payload = b'\x0D'
-  EOF_payload = b'\x0E'
+  ef_payload = b'\x0E'
 
   #nrf.open_rx_pipe(0, address[0])  # using RX pipe 0 for broadcast
   nrf.open_rx_pipe(1, address[1])
@@ -30,7 +30,7 @@ def node_NW(nrf,strF,isTransmitter):
   while True:
     if has_token: # Es Master
       address_list = neighbor_discovery(discovery_payload, address[1], address[0])
-      tx_Success = unicast_tx(strF,data_payload,address[1], address_list)
+      tx_Success = unicast_tx(strF,data_payload,ef_payload,address[1], address_list)
       token,has_token = token_handover(token, address_list)
     else: # Es Slave
       nrf.open_rx_pipe(0, address[0])
@@ -59,7 +59,7 @@ def neighbor_discovery(discovery_payload,my_address,dst_address):
   address_list = [int(char) for char in neighbors.decode() if char.isdigit()] # Get from a b"1RC5RC8RC" --> [1,5,8]
   return address_list
 
-def unicast_tx(file,data_payload,my_address,address_list):
+def unicast_tx(file,data_payload,ef_payload,my_address,address_list):
   payload = fragmentFile(strF,31)
   count=len(payload)
   
@@ -77,7 +77,7 @@ def unicast_tx(file,data_payload,my_address,address_list):
         time.sleep(0.5)
         limit -= 1
   nrf.listen = False
-  buffer_tx = b'\x0E'
+  buffer_tx = ef_payload
   Tx_Success = nrf.send(buffer_tx, False)
   # Afegir resiliencia?
 
