@@ -10,18 +10,6 @@ from functions_pi import *
 from lzw import *
 import threading
 
-global e_g, e_r, e_y, t_r, t_g, t_y
-
-e_g = threading.Event()
-e_r = threading.Event()
-e_y = threading.Event()
-
-t_r = threading.Thread(name='non-block', target=blinkLed, args=(e_r, led_red))
-t_g = threading.Thread(name='non-block', target=blinkLed, args=(e_g, led_green))
-t_y = threading.Thread(name='non-block', target=blinkLed, args=(e_y, led_yellow))
-
-
-
 
 def master(nrf, payload, switch_send):  # count = 5 will only transmit 5 packets
     """Transmits an incrementing integer every second"""

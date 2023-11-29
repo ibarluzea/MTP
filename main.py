@@ -1,5 +1,8 @@
-from functions_pi import *
+global e_g, e_r, e_y, t_r, t_g, t_y
+global led_red, led_yellow, led_green, sw_send, sw_txrx, sw_nm, sw_off
+
 from functions_nrf24 import *
+from functions_pi import *
 from lzw import *
 import spidev
 
@@ -9,7 +12,6 @@ from circuitpython_nrf24l01.rf24 import RF24
 if __name__ == "__main__":
     
     SPI_BUS, CSN_PIN, CE_PIN = (None, None, None)
-    global led_yellow, led_red, led_green, sw_send, sw_txrx, sw_nm, sw_off
     try: 
         try:  # on Linux
             SPI_BUS = spidev.SpiDev()  # for a faster interface on linux
@@ -40,6 +42,18 @@ if __name__ == "__main__":
         except:
             print("failure in LED setup")
             led_on(led_red)
+            
+        try:
+            e_g = threading.Event()
+            e_r = threading.Event()
+            e_y = threading.Event()
+
+            t_r = threading.Thread(name='non-block', target=blinkLed, args=(e_r, led_red))
+            t_g = threading.Thread(name='non-block', target=blinkLed, args=(e_g, led_green))
+            t_y = threading.Thread(name='non-block', target=blinkLed, args=(e_y, led_yellow))
+
+        except Exception as e:
+            print(e)
 
     # initialize the nRF24L01 on the spi bus object
     # nrf = RF24(SPI_BUS, CSN_PIN, CE_PIN)
@@ -125,6 +139,6 @@ if __name__ == "__main__":
         nrf.power = False
         led_off([led_green, led_yellow, led_red])
         e_g.set()
-        e.r.set()
-        e.g.set()
+        e_r.set()
+        e_g.set()
 
