@@ -93,7 +93,7 @@ def slave(nrf, switch_send):
     start = time.monotonic()
     i=0
     t_g.start()
-    print("grab information about the received payload")
+    print("It begins to receive information")
     while switch_send.value:
         if nrf.available():
             
@@ -117,6 +117,7 @@ def slave(nrf, switch_send):
             #)
             start = time.monotonic()
             i +=1
+        led_blink(led_yellow)  
         e_g.set()
     # recommended behavior is to keep in TX mode while idle
     nrf.listen = False  # put the nRF24L01 is in TX mode

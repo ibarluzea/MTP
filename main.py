@@ -32,6 +32,7 @@ try:
     sw_off = setup_switch(board.D23)
     print("success in LED and switch setup")
     led_on([led_green, led_yellow, led_red])
+    led_off([led_green, led_yellow, led_red])
 except:
     print("failure in LED setup")
     led_on(led_red)
@@ -105,9 +106,9 @@ if not NMode:
         try:
             strF_compressed = compress(strF)
             payload_compressed = fragmentFile(strF_compressed,payload_size)
-        except:
+        except Exception as e:
             print("Compression failed")
-        
+            print(e)
         master(nrf, payload_compressed, sw_send)
     else:
         slave(nrf, sw_send)
