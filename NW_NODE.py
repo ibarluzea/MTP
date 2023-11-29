@@ -8,11 +8,11 @@ from circuitpython_nrf24l01.rf24 import RF24
 import spidev
 
 
-def node_NW(nrf,strF,isTransmitter):
+def node_NW(nrf,strF,isTransmitter): # Mirar Main para strF
   has_token = isTransmitter
   has_file = isTransmitter
   address = [b"BRD",b"0RC"] #Change the unicast address xRC for every group. --> 0 to 7
-  my_address = [int(char) for char in address[1].decode() if char.isdigit()]
+  my_address = [int(char) for char in address[1].decode() if char.isdigit()] # --0
   token =[[False, False],[False, False],[False, False],[False, False],[False, False],[False, False] ,[False, False] ,[False, False]]
 
   discovery_timeout = 8e6 # with respect nanoseconds
@@ -35,7 +35,7 @@ def node_NW(nrf,strF,isTransmitter):
     else: # Es Slave
       nrf.open_rx_pipe(0, address[0])
       has_token = receive(address[1])
-
+      nrf.close_rx_pipe(0, address[0])
 
 #### Master ####
 
@@ -43,12 +43,11 @@ def neighbor_discovery(discovery_payload,my_address,dst_address):
   no_received = True
   nrf.open_tx_pipe(dst_address) #uses pipe 0, address 0.
   buffer_tx = discovery_payload + my_address 
-  no_received = True
   neighbors = b""
   while no_received:
     nrf.listen = False
     nrf.send(buffer_tx, True) #send the broadcast, True = No ACK.
-    nrf.listen = True
+    nrf.listen = True # Limpiar Pipe?
     
     start_time = time.time_ns()
     while (time.time_ns() - start_time) < discovery_timeout: #wait for responses
@@ -68,7 +67,7 @@ def unicast_tx(file,data_payload,ef_payload,my_address,address_list):
   count=len(payload)
   
   for i in address_list:
-    dst_address = bytes(str(i, codec))+b"RC"
+    dst_address = bytes(str(i))+b"RC" # Pasar Codec?
     nrf.open_tx_pipe(dst_address)
     result = False
     for j in range(count):
@@ -80,9 +79,9 @@ def unicast_tx(file,data_payload,ef_payload,my_address,address_list):
         result = nrf.send(buffer, False, 0)
         time.sleep(0.5)
         limit -= 1
-  nrf.listen = False
-  buffer_tx = ef_payload
-  Tx_Success = nrf.send(buffer_tx, False)
+    nrf.listen = False
+    buffer_tx = ef_payload
+    Tx_Success = nrf.send(buffer_tx, False)
   # Afegir resiliencia?
 
 def token_handover(token,token_payload,address_list,dst_address):
@@ -113,28 +112,27 @@ def receive(my_address):
     if nrf.available():
       # grab information about the received payload
       payload_size, pipe_number = (nrf.any(), nrf.pipe)
-      rx = nrf.read() #Clears flags & empties RX FIFO, saves bytes in rx
+      buffer_rx = nrf.read() #Clears flags & empties RX FIFO, saves bytes in rx
       if pipe_number == 0: # S'ha rebut a la pipe de broadcast -> Neighbour Discovery
-        address_received = rx[1:address_length + 1] 
+        address_received = buffer_rx[1:address_length + 1] 
         nrf.open_tx_pipe(address_received)
         time.sleep(backoff)
         nrf.send(my_address, True)
         # 3) Rebo algo unicast, mirar quin tipo de paquet arriba
       if pipe_number == 1: # S'ha rebut a la pipe de unicast -> O fitxer o Token
-        type_byte = rx[0] # Agafar el primer byte que indica tipus de paquet
+        type_byte = buffer_rx[0] # Agafar el primer byte que indica tipus de paquet
         if type_byte == b'\x0D': # Token
           has_token = True
-          token = interpretarToken(rx[1:]) # FUNCIO QUE LLEGEIXI EL PAQUET DEL TOKEN I EL POSI EN FORMAT LLISTA
-          token[int(my_address[0])][:] = [True,True] # actualitzo token
           keep_listening = False
+          
         elif type_byte == b'\x0E': # End of Transmission
           has_file = True
                     # PROCESSAR TEXT, ESCRIURE, ETC
                     # Un cop s'ha rebut tot el fitxer, escriure els bytes al USB, cadascu amb la seva funcio d'escriure al USB
                     # Codi d'encendre led VERD
         elif type_byte == b'\x0C':
-          data_fragment = rx[1:]
-  
+          msg = b"".join([msg,rx])
+        
   return has_token
                     # INSERTAR EL VOSTRE CODI per RX UNICAST
                     #count=len(payload) ---> Per saber quants frames s'hauran d'enviar
