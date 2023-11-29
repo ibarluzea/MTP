@@ -99,26 +99,19 @@ except:
     codc = None
     print("No usb detected")
 
-
-try:
-    strF_compressed = compress(strF)
-    payload_compressed = fragmentFile(strF_compressed,payload_size)
-except:
-    payload_compressed = None
-    print("No payload")
-
 # master(nrf, payload)
 # slave(nrf, timeout, codec)
 
 
-print("going to choose mode")
+print("Choosing mode")
 isTransmitter, NMode = select_mode(sw_send, sw_txrx, sw_nm, led_yellow, led_green, led_red)
 print("Chosen, is TX: {}, is NM: {}".format(isTransmitter, NMode))
 if not NMode:
     if isTransmitter:
         try:
             strF= openFile(pth)
-            payload = fragmentFile(strF,payload_size)
+            strF_compressed = compress(strF)
+            payload_compressed = fragmentFile(strF_compressed,payload_size)
             master(nrf, payload)
         except Exception as e:
             payload = None
@@ -127,19 +120,32 @@ if not NMode:
             ledError()
     else:
         slave(nrf, timeout)
+else:
+    if isTransmitter:
+        try:
+            strF= openFile(pth)
+            #payload = fragmentFile(strF,payload_size) # Need to migrate it into masterNW.
+            masterNW(nrf, strF)
+        except Exception as e:
+            payload = None
+            print(f"Not file found to fragment")
+            print(e)
+            ledError()
+    else:
+        slaveNW(nrf)
         
 print("Transmision finalizada")
 
-print("    nRF24L01 Simple test")
+# print("    nRF24L01 Simple test")
 
-if __name__ == "__main__":
-    try:
-        while set_role(nrf,payload_compressed, timeout, codc):
-            pass  # continue example until 'Q' is entered
-    except KeyboardInterrupt:
-        print(" Keyboard Interrupt detected. Powering down radio...")
-        nrf.power = False
-else:
-    print("    Run slave() on receiver\n    Run master() on transmitter")
+# if __name__ == "__main__":
+#     try:
+#         while set_role(nrf,payload_compressed, timeout, codc):
+#             pass  # continue example until 'Q' is entered
+#     except KeyboardInterrupt:
+#         print(" Keyboard Interrupt detected. Powering down radio...")
+#         nrf.power = False
+# else:
+#     print("    Run slave() on receiver\n    Run master() on transmitter")
 
 
