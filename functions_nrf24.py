@@ -22,7 +22,7 @@ t_r = threading.Thread(name='non-block', target=blinkLed, args=(e_r, led_red))
 t_g = threading.Thread(name='non-block', target=blinkLed, args=(e_g, led_green))
 t_y = threading.Thread(name='non-block', target=blinkLed, args=(e_y, led_yellow))
 
-def master(nrf, payload):  # count = 5 will only transmit 5 packets
+def master(nrf, payload, switch_send):  # count = 5 will only transmit 5 packets
     """Transmits an incrementing integer every second"""
     
     nrf.address_length = 3
@@ -41,44 +41,45 @@ def master(nrf, payload):  # count = 5 will only transmit 5 packets
     t_g.start()
     e_r.set()
     t_r.start()
-    
-    for i in range(count):
-        # use struct.pack to structure your data
-        # into a usable payload
-        limit = 10
-        buffer = payload[i]
-        start_timer = time.monotonic_ns()  # start timer
-        
-        result = nrf.send(buffer, False, 10)
-        ii=1
-        while not result and limit:
-            e_r.clear()
-            e_green.set()
-            ii+=1
-            result = nrf.send(buffer, False, 0)
-            time.sleep(0.5)
-            limit -= 1
-        end_timer = time.monotonic_ns()  # end timer
 
-        e_r.set()
-        e_g.clear()
-        
-        if not result:
-            print("send() failed or timed out") 
-            print('Fallo en la transmision'+str(ii))
-#         else:
-#             print(
-#                 "Transmission successful! Time to Transmit:",
-#                 "{} us. Sent: {}".format((end_timer - start_timer) / 1000, payload[i]),
-#             )
-    led_blink(led_yellow)
-    print("Transmission rate: ", (((len(payload)*(32+1+3+1+2+9+3+2))*8)/((end_timer-zero_timer)/1e9)))
-    print(nrf.print_details(False))
-    e_g.set()
+    while not switch_send.value:
+        for i in range(count):
+            # use struct.pack to structure your data
+            # into a usable payload
+            limit = 10
+            buffer = payload[i]
+            start_timer = time.monotonic_ns()  # start timer
+            
+            result = nrf.send(buffer, False, 10)
+            ii=1
+            while not result and limit:
+                e_r.clear()
+                e_green.set()
+                ii+=1
+                result = nrf.send(buffer, False, 0)
+                time.sleep(0.5)
+                limit -= 1
+            end_timer = time.monotonic_ns()  # end timer
+    
+            e_r.set()
+            e_g.clear()
+            
+            if not result:
+                print("send() failed or timed out") 
+                print('Fallo en la transmision'+str(ii))
+    #         else:
+    #             print(
+    #                 "Transmission successful! Time to Transmit:",
+    #                 "{} us. Sent: {}".format((end_timer - start_timer) / 1000, payload[i]),
+    #             )
+        led_blink(led_yellow)
+        print("Transmission rate: ", (((len(payload)*(32+1+3+1+2+9+3+2))*8)/((end_timer-zero_timer)/1e9)))
+        print(nrf.print_details(False))
+        e_g.set()
     
     
     
-def slave(nrf, timeout, codec):
+def slave(nrf, switch_send):
     nrf.address_length = 3
     address = [b"snd", b"rcv"]
     # set TX address of RX node into the TX pipe
@@ -91,7 +92,7 @@ def slave(nrf, timeout, codec):
     start = time.monotonic()
     i=0
     t_g.start()
-    while (time.monotonic() - start) < timeout:
+    while switch_send.value:
         if nrf.available():
             # grab information about the received payload
             payload_size, pipe_number = (nrf.any(), nrf.pipe)
@@ -124,7 +125,7 @@ def slave(nrf, timeout, codec):
     writeFile(pth,msg)
     e_y.set()
         
-def set_role(nrf, payload, timeout, codec):
+def set_role(nrf, payload):
     """Set the role using stdin stream. Timeout arg for slave() can be
     specified using a space delimiter (e.g. 'R 10' calls `slave(10)`)
     """
