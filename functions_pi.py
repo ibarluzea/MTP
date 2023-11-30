@@ -210,18 +210,8 @@ def blinkLed(e, signal, t=0.3):
         else:
             signal.value=False
             time.sleep(t)
-    sys.exit()
-                
-def blink_thread(e, t=0.3):
-    """flash the specified led every second in threading"""
-    while not e.isSet():
-        signal_led.value=True
-        event_is_set = e.wait(t)
-        if event_is_set:
-            signal_led.value=False
-        else:
-            signal_led.value=False
-            e.wait(t)
+        
+            
 
 
 def wait_idle(sw_off):

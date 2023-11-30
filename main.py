@@ -123,4 +123,5 @@ if __name__ == "__main__":
         e_g.set()
         e_r.set()
         e_g.set()
+        e.set()
 

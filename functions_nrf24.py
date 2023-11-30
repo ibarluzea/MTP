@@ -9,14 +9,7 @@ import chardet
 from functions_pi import *
 from lzw import *
 import threading
-
-# global e_g
-# global e_r
-# global e_y
-# global t_r
-# global t_g
-# global t_y
-        
+ 
 
 def master(nrf, payload, switch_send):  # count = 5 will only transmit 5 packets
     """Transmits an incrementing integer every second"""
@@ -39,15 +32,17 @@ def master(nrf, payload, switch_send):  # count = 5 will only transmit 5 packets
     while switch_send.value:
         pass    
     print("It begins to send")
+    e_g = threading.Event()
+    e_r = threading.Event()
+    t_r = threading.Thread(name='non-block', target=blinkLed, args=(e_r, led_red))
+    t_g = threading.Thread(name='non-block', target=blinkLed, args=(e_g, led_green))
     
-    
+    t_g.start()
+    t_r.start()
+    e_r.set()
     for i in range(count):
-        e_g = threading.Event()
-        e_r = threading.Event()
-        t_r = threading.Thread(name='non-block', target=blinkLed, args=(e_r, led_red))
-        t_g = threading.Thread(name='non-block', target=blinkLed, args=(e_g, led_green))
-        t_g.start()
-        
+    
+
         # use struct.pack to structure your data
         # into a usable payload
         buffer = payload[i]
@@ -57,18 +52,26 @@ def master(nrf, payload, switch_send):  # count = 5 will only transmit 5 packets
         
         if not result:
             e_g.set()
-            del e_g
-            del t_g
-            t_r.start()      
+            e_r.clear()
+            blinkLed(e_r, led_red)
+
+#             del e_g
+#             del t_g
+#             t_r.start()
+            
         
         while not result:
             result = nrf.send(buffer, False, 0)
             time.sleep(0.1)
             
         end_timer = time.monotonic_ns()  # end timer
-        e_r.set() 
-        del e_r
-        del t_r
+        e_r.set()
+        blinkLed(e_g, led_green)
+
+        
+#         del e_r
+#         del t_r
+
         
 
         
@@ -81,7 +84,8 @@ def master(nrf, payload, switch_send):  # count = 5 will only transmit 5 packets
 #                 "Transmission successful! Time to Transmit:",
 #                 "{} us. Sent: {}".format((end_timer - start_timer) / 1000, payload[i]),
 #             )
-    e_g.set()
+#     e_g.set()
+    e.set()
     led_blink(led_yellow)
     print("Transmission rate: ", (((len(payload)*(32+1+3+1+2+9+3+2))*8)/((end_timer-zero_timer)/1e9)))
     print(nrf.print_details(True))
@@ -108,7 +112,7 @@ def slave(nrf, switch_send):
     start = time.monotonic()
     i=0
     print("It begins to receive information")
-    led_signal=led_green
+    
     t_g.start()
     while switch_send.value:
         if nrf.available():
@@ -153,8 +157,6 @@ def slave(nrf, switch_send):
         print(e)
         e_y.set()
     e_y.set()
-    t_y._Thread_stop()
-    t_g._Thread_stop()
         
 def set_role(nrf, payload):
     """Set the role using stdin stream. Timeout arg for slave() can be
@@ -181,4 +183,17 @@ def set_role(nrf, payload):
         return False
     print(user_input[0], "is an unrecognized input. Please try again.")
     return set_role(nrf, payload, timeout, codec)
+
+def blink_thread(e, t=0.3):
+    global led_signal
+    led_signal=led_green
+    """flash the specified led every second in threading"""
+    while not e.isSet():
+        led_signal.value=True
+        event_is_set = e.wait(t)
+        if event_is_set:
+             led_signal.value=False
+        else:
+            led_signal.value=False
+            e.wait(t)
 
