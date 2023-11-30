@@ -52,19 +52,19 @@ def openFile(path):
         #except:
         #    print("Chardet failed")
         try:
-            file = open(glob.glob(path+'*.txt')[0],"r", encoding='utf-32')
+            file = open(glob.glob(path+"/"+'*.txt')[0],"r", encoding='utf-32')
             strF= file.read()
             
             print("Tried utf-32")
             
         except:
             try:
-                file = open(glob.glob(path+'*.txt')[0],"r", encoding='utf-16')
+                file = open(glob.glob(path+"/"+'*.txt')[0],"r", encoding='utf-16')
                 strF= file.read()
                 print("Tried utf-16")
                 
             except:
-                file = open(glob.glob(path+'*.txt')[0],"r", encoding='utf-8')
+                file = open(glob.glob(path+"/"+'*.txt')[0],"r", encoding='utf-8')
                 strF= file.read()
                 print("Tried utf-8")
     except:
