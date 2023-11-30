@@ -113,6 +113,7 @@ if __name__ == "__main__":
         led_blink(led_green)
         led_blink(led_yellow)
         led_blink(led_red)
+        led_off([led_yellow, led_green, led_red])
         print("Transmision finalizada")
     
     
