@@ -16,14 +16,33 @@ global led_red, led_yellow, led_green, sw_send, sw_txrx, sw_nm, sw_off
 def fragmentFile(string, length):
     return list(string[0+i: length+i] for i in range(0, len(string), length))
 
+#def getUSBpath():
+#    rpistr = "/media/mtp/"
+#    proc = subprocess.Popen("ls "+rpistr,shell=True, preexec_fn=os.setsid, stdout=subprocess.PIPE)
+#    line = proc.stdout.readline()
+#    print(str(line.rstrip()))
+#    path = rpistr + line.rstrip().decode("utf-8")+"/"
+#    return path
 def getUSBpath():
     rpistr = "/media/mtp/"
-    proc = subprocess.Popen("ls "+rpistr,shell=True, preexec_fn=os.setsid, stdout=subprocess.PIPE)
-    line = proc.stdout.readline()
-    print(str(line.rstrip()))
-    path = rpistr + line.rstrip().decode("utf-8")+"/"
-    return path
+    try:
+        # Listando todos los directorios en /media/mtp/
+        directories = os.listdir(rpistr)
+        print(directories)
+        for directory in directories:
+            path = os.path.join(rpistr, directory)
+            
+            # Verificar si el directorio es accesible
+            if os.access(path, os.R_OK):
+                print("Accesible: ", path)
+                return path
+            else:
+                print("No accesible: ", path)
 
+    except Exception as e:
+        print("Error: ", str(e))
+
+    return None
 def openFile(path):
     try:
         #try:
