@@ -109,8 +109,7 @@ def slave(nrf, switch_send):
             start = time.monotonic()
             i +=1
             
-        if not switch_send.value:
-            break
+   
         
     print("Ha dejado de recibir cosas")
     e_g.set()
