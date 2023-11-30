@@ -27,13 +27,14 @@ def getUSBpath():
 def openFile(path):
     try:
         try:
+            codc=check_codec(path) #now we use path for codec to read more quickly.
+            print("Chardet detected: "+codc)
+        except:
+            print("Chardet failed")
+        try:
             file = open(glob.glob(path+'*.txt')[0],"r", encoding='utf-32')
             strF= file.read()
-            try:
-                codc=check_codec(path) #now we use path for codec to read more quickly.
-                print("Chardet detected: "+codc)
-            except:
-                print("Chardet failed")
+            
             print("Tried utf-32")
             
         except:
