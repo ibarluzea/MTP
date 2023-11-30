@@ -44,6 +44,7 @@ def getUSBpath():
 
     return None
 def openFile(path):
+    print(path)
     try:
         #try:
         #    codc=check_codec(path) #now we use path for codec to read more quickly.
