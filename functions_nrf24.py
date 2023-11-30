@@ -33,13 +33,9 @@ def master(nrf, payload, switch_send):  # count = 5 will only transmit 5 packets
         pass    
     print("It begins to send")
     e_g = threading.Event()
-    e_r = threading.Event()
-    t_r = threading.Thread(name='non-block', target=blinkLed, args=(e_r, led_red))
     t_g = threading.Thread(name='non-block', target=blinkLed, args=(e_g, led_green))
-    
     t_g.start()
-    t_r.start()
-    e_r.set()
+    
     for i in range(count):
     
 
@@ -49,43 +45,18 @@ def master(nrf, payload, switch_send):  # count = 5 will only transmit 5 packets
         start_timer = time.monotonic_ns()  # start timer
         
         result = nrf.send(buffer, False, 10)
-        
-        if not result:
-            e_g.set()
-            e_r.clear()
-            blinkLed(e_r, led_red)
-
-#             del e_g
-#             del t_g
-#             t_r.start()
             
         
         while not result:
+            led_red.value = True
             result = nrf.send(buffer, False, 0)
             time.sleep(0.1)
-            
+
+        led_red.value = False
+     
         end_timer = time.monotonic_ns()  # end timer
-        e_r.set()
-        blinkLed(e_g, led_green)
 
         
-#         del e_r
-#         del t_r
-
-        
-
-        
-        
-        #if not result:
-            #print("send() failed or timed out") 
-            #print('Fallo en la transmision'+str(ii))
-#         else:
-#             print(
-#                 "Transmission successful! Time to Transmit:",
-#                 "{} us. Sent: {}".format((end_timer - start_timer) / 1000, payload[i]),
-#             )
-#     e_g.set()
-    e.set()
     led_blink(led_yellow)
     print("Transmission rate: ", (((len(payload)*(32+1+3+1+2+9+3+2))*8)/((end_timer-zero_timer)/1e9)))
     print(nrf.print_details(True))
