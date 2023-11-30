@@ -66,6 +66,9 @@ def master(nrf, payload, switch_send):  # count = 5 will only transmit 5 packets
         end_timer = time.monotonic_ns()  # end timer
         e_r.set() 
         
+        t_r._Thread_stop()
+        t_g._Thread_stop()
+        
 
         
         
@@ -81,9 +84,6 @@ def master(nrf, payload, switch_send):  # count = 5 will only transmit 5 packets
     led_blink(led_yellow)
     print("Transmission rate: ", (((len(payload)*(32+1+3+1+2+9+3+2))*8)/((end_timer-zero_timer)/1e9)))
     print(nrf.print_details(True))
-
-    t_r._Thread_stop()
-    t_g._Thread_stop()
     
     
     
@@ -109,7 +109,7 @@ def slave(nrf, switch_send):
     print("It begins to receive information")
     led_signal=led_green
     t_g.start()
-    while (time.monotonic() - start) < 30:
+    while switch_send.value:
         if nrf.available():
             
             payload_size, pipe_number = (nrf.any(), nrf.pipe)
