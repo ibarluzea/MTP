@@ -28,9 +28,10 @@ def master(nrf, payload, switch_send):  # count = 5 will only transmit 5 packets
 #   print(nrf.is_lna_enabled())
     count=len(payload)
     
-    
+    led_yellow.value = True
     while switch_send.value:
         pass    
+    led_yellow.value = False
     print("It begins to send")
     e_g = threading.Event()
     t_g = threading.Thread(name='non-block', target=blinkLed, args=(e_g, led_green))
@@ -83,6 +84,11 @@ def slave(nrf, switch_send):
     start = time.monotonic()
     i=0
     print("It begins to receive information")
+    
+    led_yellow.value = True
+    while switch_send.value:
+        pass
+    led_yellow.value = False
     
     t_g.start()
     while switch_send.value:
