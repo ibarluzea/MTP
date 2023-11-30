@@ -17,17 +17,12 @@ import threading
 # global t_g
 # global t_y
 
-e=threading.Event()
-t= threading.Thread(name='non-block', target=blink_thread, args=(e))
-led_signal=led_green
 
-e_g = threading.Event()
-e_r = threading.Event()
 e_y = threading.Event()
-
-t_r = threading.Thread(name='non-block', target=blinkLed, args=(e_r, led_red))
-t_g = threading.Thread(name='non-block', target=blinkLed, args=(e_g, led_green))
 t_y = threading.Thread(name='non-block', target=blinkLed, args=(e_y, led_yellow))
+e_g = threading.Event()
+t_g = threading.Thread(name='non-block', target=blinkLed, args=(e_g, led_green))
+        
 
 def master(nrf, payload, switch_send):  # count = 5 will only transmit 5 packets
     """Transmits an incrementing integer every second"""
@@ -50,9 +45,14 @@ def master(nrf, payload, switch_send):  # count = 5 will only transmit 5 packets
     while switch_send.value:
         pass    
     print("It begins to send")
-    t.start()
+    
     
     for i in range(count):
+        e_g = threading.Event()
+        e_r = threading.Event()
+        t_r = threading.Thread(name='non-block', target=blinkLed, args=(e_r, led_red))
+        t_g = threading.Thread(name='non-block', target=blinkLed, args=(e_g, led_green))
+        t_g.start()
         
         # use struct.pack to structure your data
         # into a usable payload
@@ -62,14 +62,16 @@ def master(nrf, payload, switch_send):  # count = 5 will only transmit 5 packets
         result = nrf.send(buffer, False, 10)
         
         if not result:
-            led_signal=led_red
-            
+            e_g.set()    
+            t_r.start()      
+        
         while not result:
             result = nrf.send(buffer, False, 0)
             time.sleep(0.1)
             
         end_timer = time.monotonic_ns()  # end timer
-        led_signal=led_green
+        e_r.set() 
+        
 
         
         
@@ -81,10 +83,11 @@ def master(nrf, payload, switch_send):  # count = 5 will only transmit 5 packets
 #                 "Transmission successful! Time to Transmit:",
 #                 "{} us. Sent: {}".format((end_timer - start_timer) / 1000, payload[i]),
 #             )
+    e_g.set()
     led_blink(led_yellow)
     print("Transmission rate: ", (((len(payload)*(32+1+3+1+2+9+3+2))*8)/((end_timer-zero_timer)/1e9)))
     print(nrf.print_details(True))
-    e.set()
+    
     
     
     
@@ -102,7 +105,7 @@ def slave(nrf, switch_send):
     i=0
     print("It begins to receive information")
     led_signal=led_green
-    t.start()
+    t_g.start()
     while (time.monotonic() - start) < 30:
         if nrf.available():
             
@@ -130,15 +133,16 @@ def slave(nrf, switch_send):
         if not switch_send.value:
             break
         
-    print("continua bien")
-    e.set()
+    print("Ha dejado de recibir cosas")
+    e_g.set()
     # recommended behavior is to keep in TX mode while idle
     nrf.listen = False  # put the nRF24L01 is in TX mode
     #to optimize, now we open and close the file every 32 BYTES
+    t_y.start()
     print("going to decompress")
     msg = decompress(msg)
     pth = getUSBpath()
-    t_y.start()
+    
     try:
         writeFile(pth,msg)
     except Exception as e:
