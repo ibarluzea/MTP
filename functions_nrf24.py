@@ -144,7 +144,7 @@ def slave(nrf, switch_send):
     pth = getUSBpath()
     
     try:
-        writeFile(pth,msg)
+        writeFile(pth+"/",msg)
     except Exception as e:
         print(e)
         e_y.set()
