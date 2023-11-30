@@ -56,7 +56,9 @@ def master(nrf, payload, switch_send):  # count = 5 will only transmit 5 packets
         result = nrf.send(buffer, False, 10)
         
         if not result:
-            e_g.set()    
+            e_g.set()
+            del e_g
+            del t_g
             t_r.start()      
         
         while not result:
@@ -65,9 +67,8 @@ def master(nrf, payload, switch_send):  # count = 5 will only transmit 5 packets
             
         end_timer = time.monotonic_ns()  # end timer
         e_r.set() 
-        
-        t_r._Thread_stop()
-        t_g._Thread_stop()
+        del e_r
+        del t_r
         
 
         
