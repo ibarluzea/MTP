@@ -17,6 +17,9 @@ import threading
 # global t_g
 # global t_y
 
+e=threading.Event()
+t= threading.Thread(name='non-block', target=blink_thread, args=(e))
+led_signal=led_green
 
 e_g = threading.Event()
 e_r = threading.Event()
@@ -47,10 +50,9 @@ def master(nrf, payload, switch_send):  # count = 5 will only transmit 5 packets
     while switch_send.value:
         pass    
     print("It begins to send")
+    t.start()
     
     for i in range(count):
-        t_g = t_g.clone()
-        t_g.start()
         
         # use struct.pack to structure your data
         # into a usable payload
@@ -60,19 +62,16 @@ def master(nrf, payload, switch_send):  # count = 5 will only transmit 5 packets
         result = nrf.send(buffer, False, 10)
         
         if not result:
-            e_g.set()
-            e_r.clear()
-            t_r = t_r.clone()
-            t_r.start()
+            led_signal=led_red
             
         while not result:
             result = nrf.send(buffer, False, 0)
             time.sleep(0.1)
             
         end_timer = time.monotonic_ns()  # end timer
+        led_signal=led_green
 
-        e_r.set()
-        e_g.clear()
+        
         
         #if not result:
             #print("send() failed or timed out") 
@@ -85,7 +84,7 @@ def master(nrf, payload, switch_send):  # count = 5 will only transmit 5 packets
     led_blink(led_yellow)
     print("Transmission rate: ", (((len(payload)*(32+1+3+1+2+9+3+2))*8)/((end_timer-zero_timer)/1e9)))
     print(nrf.print_details(True))
-    e_g.set()
+    e.set()
     
     
     
@@ -102,8 +101,8 @@ def slave(nrf, switch_send):
     start = time.monotonic()
     i=0
     print("It begins to receive information")
-
-    t_g.start()
+    led_signal=led_green
+    t.start()
     while (time.monotonic() - start) < 30:
         if nrf.available():
             
@@ -132,7 +131,7 @@ def slave(nrf, switch_send):
             break
         
     print("continua bien")
-    e_g.set()
+    e.set()
     # recommended behavior is to keep in TX mode while idle
     nrf.listen = False  # put the nRF24L01 is in TX mode
     #to optimize, now we open and close the file every 32 BYTES
