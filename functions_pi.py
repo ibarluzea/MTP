@@ -209,6 +209,7 @@ def blinkLed(e, signal, t=0.3):
         else:
             signal.value=False
             time.sleep(t)
+    sys.exit()
                 
 def blink_thread(e, t=0.3):
     """flash the specified led every second in threading"""
