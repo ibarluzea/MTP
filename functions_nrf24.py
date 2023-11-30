@@ -16,12 +16,6 @@ import threading
 # global t_r
 # global t_g
 # global t_y
-
-
-e_y = threading.Event()
-t_y = threading.Thread(name='non-block', target=blinkLed, args=(e_y, led_yellow))
-e_g = threading.Event()
-t_g = threading.Thread(name='non-block', target=blinkLed, args=(e_g, led_green))
         
 
 def master(nrf, payload, switch_send):  # count = 5 will only transmit 5 packets
@@ -92,6 +86,12 @@ def master(nrf, payload, switch_send):  # count = 5 will only transmit 5 packets
     
     
 def slave(nrf, switch_send):
+        
+    e_y = threading.Event()
+    t_y = threading.Thread(name='non-block', target=blinkLed, args=(e_y, led_yellow))
+    e_g = threading.Event()
+    t_g = threading.Thread(name='non-block', target=blinkLed, args=(e_g, led_green))
+    
     nrf.address_length = 3
     address = [b"snd", b"rcv"]
     # set TX address of RX node into the TX pipe
