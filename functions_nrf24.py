@@ -153,8 +153,6 @@ def slave(nrf, switch_send):
         print(e)
         e_y.set()
     e_y.set()
-    t_y._Thread_stop()
-    t_g._Thread_stop()
         
 def set_role(nrf, payload):
     """Set the role using stdin stream. Timeout arg for slave() can be
