@@ -89,6 +89,7 @@ def slave(nrf, switch_send):
     while switch_send.value:
         pass
     led_yellow.value = False
+    sleep(0.5)
     
     t_g.start()
     while switch_send.value:
