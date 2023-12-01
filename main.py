@@ -38,7 +38,7 @@ if __name__ == "__main__":
     # nrf = RF24(SPI_BUS, CSN_PIN, CE_PIN)
         nrf = None
         attempt = 0
-        retry_attempts = 5
+        retry_attempts = 20
 
         while attempt < retry_attempts:
             try:
@@ -49,7 +49,7 @@ if __name__ == "__main__":
 
             except Exception as e:
                 print("Tried to connect")
-                time.sleep(1)
+                time.sleep(0.5)
                 attempt += 1
 
 
