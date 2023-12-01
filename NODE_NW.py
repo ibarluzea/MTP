@@ -28,7 +28,7 @@ def node_NW(nrf,strF,isTransmitter): # FOR EACH GROUP MAIN: strF is the text fil
 
   # Time variables
   discovery_timeout = 24e6 # with respect nanoseconds
-  backoff = 3/1000 * my_address
+  backoff = 3/1000 * my_address[0]
   
   # Packet identifiers (corresponding to their first Byte)
   discovery_payload = b'\x0A'
@@ -197,7 +197,7 @@ def receive(my_address, backoff, has_file, had_token):
                     # Un cop s'ha rebut tot el fitxer, escriure els bytes al USB, cadascu amb la seva funcio d'escriure al USB
                     # Codi d'encendre led VERD
                     # Actualitzar el token NOMES es fa al master.
-          WriteFile2USB(msg) # Quadrar cada grup la seva funció.
+          writeFileNW(msg) # Quadrar cada grup la seva funció.
           strF = msg
           msg = b""
           has_file = True
