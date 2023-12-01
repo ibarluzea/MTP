@@ -130,7 +130,7 @@ def slave(nrf, switch_send):
     t_y.start()
     print("going to decompress")
     try:
-        msg = decompress(msg)
+        msg = decompress(msg,codc)
         pth = getUSBpath()
     except:
         pass
