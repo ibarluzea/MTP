@@ -102,9 +102,11 @@ def slave(nrf, switch_send):
             # expecting a little endian float, thus the format string "<f"
             # buff_leder[:4] truncates padded 0s if dynamic payloads are disabled
             print("Mirando el codec:")
+            buffer = nrf.read()
             while not has_codec:
                 try:
-                    codc = nrf.read()
+                    print(buffer)
+                    codc=buffer.decode("utf-8")
                     print(codc)
                     if codc==(b"utf-8" or b"utf-16" or b"utf-32"):
                         has_codec=True
@@ -112,8 +114,6 @@ def slave(nrf, switch_send):
                 except:
                     codc="utf-16"
                     continue
-                             
-            buffer = nrf.read()
               
            # Here there is another option
             if i == 2:
@@ -129,7 +129,7 @@ def slave(nrf, switch_send):
     t_y.start()
     print("going to decompress")
     try:
-        msg = decompress(msg,codc)
+        msg = decompress(msg)
         pth = getUSBpath()
     except:
         pass
