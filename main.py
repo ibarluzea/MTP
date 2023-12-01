@@ -97,9 +97,10 @@ if __name__ == "__main__":
             else:
                 slave(nrf, sw_send)
     else:
+        
         if isTransmitter:
             try:
-                strF = openFile(pth)
+                strF = openFileNW(pth)
                 node_NW(nrf,strF,isTransmitter):
             except Exception as e:
                ledError()
