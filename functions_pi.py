@@ -66,6 +66,7 @@ def openFile(path):
 
         # Usar chardet para sugerir una codificación
         try:
+           print("checkcodec")
            codc = check_codec(file_path)
            # Si chardet devuelve ASCII, asumir que es UTF-8
            if codc == 'ascii':
@@ -116,9 +117,13 @@ def checkSwitch(pin):
   
 def check_codec(path):
     try:
+        print("antes")
         file = open(glob.glob(path+'*.txt')[0],"rb")
+        print("despues")
+
         strF= file.read(64)
         result = chardet.detect(strF)
+        print("chardet good")
         encoding = result['encoding']
 
     except UnicodeDecodeError:
