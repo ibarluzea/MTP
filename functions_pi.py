@@ -44,71 +44,71 @@ def getUSBpath():
         print("Error: ", str(e))
 
     return None
-#def openFile(path):
-#    print(path)
-#    try:
+def openFile(path):
+    print(path)
+    try:
         #try:
 #        #    codc=check_codec(path) #now we use path for codec to read more quickly.
 #        #    print("Chardet detected: "+codc)
 #        #except:
 #        #    print("Chardet failed")
-#        try:
-#            file = open(glob.glob(path+"/"+'*.txt')[0],"r", encoding='utf-32')
-#            strF= file.read()
+        try:
+            file = open(glob.glob(path+"/"+'*.txt')[0],"r", encoding='utf-32')
+            strF= file.read()
             
-#            print("Tried utf-32")
+            print("Tried utf-32")
             
-#        except:
-#            try:
-#                file = open(glob.glob(path+"/"+'*.txt')[0],"r", encoding='utf-16')
-#                strF= file.read()
-#                print("Tried utf-16")
+        except:
+            try:
+                file = open(glob.glob(path+"/"+'*.txt')[0],"r", encoding='utf-16')
+                strF= file.read()
+                print("Tried utf-16")
                 
-#            except:
-#                file = open(glob.glob(path+"/"+'*.txt')[0],"r", encoding='utf-8')
-#                strF= file.read()
-#                print("Tried utf-8")
-#    except:
-#        print("No file opened")
-#    return strF
-def openFile(path):
-    print(path)
-    try:
-        file_path = glob.glob(path + '/*.txt')[0]
+            except:
+                file = open(glob.glob(path+"/"+'*.txt')[0],"r", encoding='utf-8')
+                strF= file.read()
+                print("Tried utf-8")
+    except:
+        print("No file opened")
+    return strF
+#def openFile(path):
+#    print(path)
+#    try:
+#        file_path = glob.glob(path + '/*.txt')[0]
 
         # Usar chardet para sugerir una codificación
-        codc = check_codec(file_path)
-        print("Chardet detected: " + str(codc))
+#        codc = check_codec(file_path)
+#        print("Chardet detected: " + str(codc))
 
         # Si chardet devuelve ASCII, asumir que es UTF-8
-        if codc == 'ascii':
-            codc = 'utf-8'
+#        if codc == 'ascii':
+#            codc = 'utf-8'
 
         # Ajustar el orden de las codificaciones comunes
-        common_encodings = ['utf-32', 'utf-16', 'utf-8']
+#        common_encodings = ['utf-32', 'utf-16', 'utf-8']
 
         # Intentar abrir el archivo con la codificación detectada
-        if codc in common_encodings:
-            try:
-                with open(file_path, "r", encoding=codc) as file:
-                    return file.read()
-            except:
-                pass  # Ignorar cualquier error y probar con otras codificaciones
+#        if codc in common_encodings:
+#            try:
+#                with open(file_path, "r", encoding=codc) as file:
+#                    return file.read()
+#            except:
+#                pass  # Ignorar cualquier error y probar con otras codificaciones
 
         # Probar con un conjunto de codificaciones comunes
-        for encoding in common_encodings:
-            try:
-                with open(file_path, "r", encoding=encoding) as file:
-                    print(f"Tried {encoding}")
-                    return file.read()
-            except:
-                continue  # Intentar con la siguiente codificación
+#        for encoding in common_encodings:
+#            try:
+#                with open(file_path, "r", encoding=encoding) as file:
+#                    print(f"Tried {encoding}")
+#                    return file.read()
+#            except:
+#                continue  # Intentar con la siguiente codificación
 
-        print("No se pudo abrir el archivo con las codificaciones comunes.")
-    except Exception as e:
-        print(f"Error al abrir el archivo: {e}")
+#        print("No se pudo abrir el archivo con las codificaciones comunes.")
+#    except Exception as e:
+#        print(f"Error al abrir el archivo: {e}")
 
-    return ""
+#    return ""
 
 
 
