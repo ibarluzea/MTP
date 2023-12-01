@@ -47,7 +47,7 @@ def node_NW(nrf,strF,isTransmitter): # FOR EACH GROUP MAIN: strF is the text fil
       token,has_token = token_handover(token, success_nodes, backup_list, not_priority_list, token_payload)
     else: # Es Slave
       nrf.open_rx_pipe(0, address[0])  # using RX pipe 0 for broadcast
-      has_token = receive(address[1])
+      has_file, has_token, token, strF = receive(address[1], backoff, has_file, had_token)
       nrf.close_rx_pipe(0, address[0])
 
 #### Master #####
@@ -168,9 +168,10 @@ def token_handover(token, address_list, backup_list, not_priority_list, token_pa
 
 #### Slave ####
 
-def receive(my_address):
+def receive(my_address, backoff, has_file, had_token):
   keep_listening = True
   has_token = False
+  msg = b""
   while keep_listening:
     nrf.listen = True  # put radio into RX mode and power up
     if nrf.available():
@@ -178,39 +179,54 @@ def receive(my_address):
       payload_size, pipe_number = (nrf.any(), nrf.pipe)
       buffer_rx = nrf.read() #Clears flags & empties RX FIFO, saves bytes in rx
       if pipe_number == 0: # S'ha rebut a la pipe de broadcast -> Neighbour Discovery
-        address_received = buffer_rx[1:address_length + 1] 
+        msg = b""
+        address_received = buffer_rx[1:4] 
         nrf.open_tx_pipe(address_received)
         time.sleep(backoff)
-        nrf.send(my_address, True)
+        send_address(my_address, has_file, had_token)
         # 3) Rebo algo unicast, mirar quin tipo de paquet arriba
       if pipe_number == 1: # S'ha rebut a la pipe de unicast -> O fitxer o Token
         type_byte = buffer_rx[0] # Agafar el primer byte que indica tipus de paquet
         if type_byte == b'\x0D': # Token
           has_token = True
           keep_listening = False
+          token = interpretarToken(buffer_rx[1:])
           
         elif type_byte == b'\x0E': # End of Transmission
                     # PROCESSAR TEXT, ESCRIURE, ETC
                     # Un cop s'ha rebut tot el fitxer, escriure els bytes al USB, cadascu amb la seva funcio d'escriure al USB
                     # Codi d'encendre led VERD
                     # Actualitzar el token NOMES es fa al master.
+          WriteFile2USB(msg) # Quadrar cada grup la seva funció.
+          strF = msg
+          msg = b""
+          has_file = True
         elif type_byte == b'\x0C':
-          msg = b"".join([msg,rx]) # Què és aqui "rx"?
+          msg += buffer_rx[1:] # Què és aqui "rx"?
         
-  return has_token
+  return has_file, has_token, token, strF
                     
-  def send_address():
-    data_to_send = address[1]    
-    if has_file and had_token: # has token és si és master o no, s'ha d'usar una altra var
-        data_to_send += b'\x02'
-    elif has_file and not had_token:
-        data_to_send += b'\x01'
-    else:
-        data_to_send += b'\x00'
+def send_address(address, has_file, had_token):
+  data_to_send = address    
+  if has_file and had_token: # has token és si és master o no, s'ha d'usar una altra var
+    data_to_send += b'\x02'
+  elif has_file and not had_token:
+    data_to_send += b'\x01'
+  else:
+    data_to_send += b'\x00'
 
-    nrf.listen = False  # ensures the nRF24L01 is in TX 
+  nrf.listen = False  # ensures the nRF24L01 is in TX 
+  result = nrf.send(data_to_send, True) # Enviem adreça i control byte, i posem True el no ack
+  nrf.listen = True 
+    
+def interpretarToken(data_token): # Chat GPT
+    # Convierte los bytes a una lista de enteros
+    received_int_list = list(data_token)
 
-    result = nrf.send(data_to_send, True) # Enviem adreça i control byte, i posem True el no ack
-    nrf.listen = True
+    # Agrupa la lista de enteros en sublistas de tamaño 2
+    received_token = [received_int_list[i:i+2] for i in range(0, len(received_int_list), 2)]
 
-    return result  
+    # Convierte la lista de enteros en una lista de listas de booleanos
+    token = [[bool(x) for x in sublist] for sublist in received_token]
+
+    return token
