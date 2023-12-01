@@ -95,7 +95,7 @@ def openFile(path):
         print("No se pudo abrir el archivo con las codificaciones comunes.")
     except Exception as e:
         print(f"Error al abrir el archivo: {e}")
-        return ""
+        return "",""
 
 def writeFile(path, buff):
     file = open(path+"result.txt","w")
