@@ -117,7 +117,7 @@ def checkSwitch(pin):
 def check_codec(path):
     try:
         print("antes")
-        file = open(glob.glob(path+'*.txt')[0],"rb")
+        file = open(path,"rb")
         print("despues")
 
         strF= file.read(64)
