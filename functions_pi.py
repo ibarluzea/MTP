@@ -247,8 +247,16 @@ def select_mode(switch_send, switch_tx, switch_nm, led_yellow, led_green, led_re
     led_blink([led_yellow, led_green, led_red])
     led_off([led_yellow, led_green, led_red])
     return isTransmitter, NMode
-    
 
+# Network
+def openFileNW(path):
+    open(file_path."rb") as fichero_texto:
+         strF = ichero_texto.read()
+    return strF
 
+def writeFileNW(path, buff):
+    file = open(path+"result.txt","wb")
+    file.write(buff)
+    file.close()
 
 
