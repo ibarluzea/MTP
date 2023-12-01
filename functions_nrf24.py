@@ -51,8 +51,7 @@ def master(nrf, payload, switch_send):  # count = 5 will only transmit 5 packets
         while not result:
             led_red.value = True
             result = nrf.send(buffer, False, 0)
-            time.sleep(0.1)
-
+            time.sleep(0.005)
         led_red.value = False
      
         end_timer = time.monotonic_ns()  # end timer
@@ -104,7 +103,7 @@ def slave(nrf, switch_send):
            # Here there is another option
             if i == 2:
                 print(buffer)
-            msg = b"".join([msg,buffer])
+            msg += buffer
             #.decode("utf-8")
             #msg.extend(buffer)
             # print details about the received packet
@@ -126,12 +125,12 @@ def slave(nrf, switch_send):
     t_y.start()
     print("going to decompress")
     try:
-        msg = decompress(msg)
+        msg_decompressed = zlib.decompress(msg)
         pth = getUSBpath()
     except:
         pass
     try:
-        writeFile(pth+"/",msg)
+        writeFile(pth+"/",msg_decompressed)
     except Exception as e:
         print(e)
         e_y.set()
