@@ -89,7 +89,9 @@ if __name__ == "__main__":
                     ledError()
                 try:
                     strF_compressed = compress(strF)
+                    print("el tipo despues del compress es: " + type(strF_compressed))
                     payload_compressed = fragmentFile(strF_compressed,payload_size)
+                    print("el tipo despues del fragmentFile es: " + type(strF_compressed))
                 except Exception as e:
                     print("Compression failed")
                     print(e)
