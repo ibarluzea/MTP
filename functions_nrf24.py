@@ -106,15 +106,8 @@ def slave(nrf, switch_send):
             while not buffer1:
                 try:
                     buffer1 = nrf.read()
-                    codc=buffer1
-                    print(codc)
-                    if codc==(bytearray(b'utf-8') or bytearray(b'utf-16') or bytearray(b'utf-32')):
-                        print(codc)
-                        codc=codc.decode('utf-8')
+                    codc=buffer1.decode('utf-8')
                         #print("el codec recibido es {}".format(codc))
-                    else: 
-                        print("no encontrado")
-             
                 except:
                     codc="utf-16"
                     continue
