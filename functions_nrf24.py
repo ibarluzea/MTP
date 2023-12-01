@@ -11,7 +11,7 @@ from lzw import *
 import threading
  
 
-def master(nrf, payload, switch_send, codec):  # count = 5 will only transmit 5 packets
+def master(nrf, payload, switch_send):  # count = 5 will only transmit 5 packets
     """Transmits an incrementing integer every second"""
     print("ENTRA EN MASTER, press send again")
 
@@ -37,24 +37,21 @@ def master(nrf, payload, switch_send, codec):  # count = 5 will only transmit 5 
     t_g = threading.Thread(name='non-block', target=blinkLed, args=(e_g, led_green))
     t_g.start()
     
-    while not result: #We send the encoding
-        print((bytes(codec, 'utf-8')))
-        result = nrf.send((bytes(codec, 'utf-8')), False, 0)
-     
+    for i in range(count):
     
 
-    for i in range(count):
-        # use struct.pack to structure your data into a usable payload
+        # use struct.pack to structure your data
+        # into a usable payload
         buffer = payload[i]
         start_timer = time.monotonic_ns()  # start timer
         
         result = nrf.send(buffer, False, 10)
-        if not result:
-            led_red.value = True
-     
+            
+        
         while not result:
+            led_red.value = True
             result = nrf.send(buffer, False, 0)
-            #time.sleep(0.01)
+            time.sleep(0.1)
 
         led_red.value = False
      
@@ -65,7 +62,8 @@ def master(nrf, payload, switch_send, codec):  # count = 5 will only transmit 5 
     print("Transmission rate: ", (((len(payload)*(32+1+3+1+2+9+3+2))*8)/((end_timer-zero_timer)/1e9)))
     print(nrf.print_details(True))
     
-
+    
+    
     
 def slave(nrf, switch_send):
         
@@ -87,41 +85,39 @@ def slave(nrf, switch_send):
     i=0
     print("It begins to receive information")
     
-    #led_yellow.value = True
-    #while switch_send.value:
-        #pass
-    #led_yellow.value = False
-    #time.sleep(0.5)
+    led_yellow.value = True
+    while switch_send.value:
+        pass
+    led_yellow.value = False
+    time.sleep(0.5)
     
     t_g.start()
-    buffer1 = False
     while switch_send.value:
-        if nrf.available() and not buffer1:
+        if nrf.available():
+            
             payload_size, pipe_number = (nrf.any(), nrf.pipe)
             # fetch 1 payload from RX FIFO
-              # also clears nrf.irq_dr status flag
+            buffer = nrf.read()  # also clears nrf.irq_dr status flag
             # expecting a little endian float, thus the format string "<f"
             # buff_leder[:4] truncates padded 0s if dynamic payloads are disabled
-            print("Mirando el codec:")
             
-            while not buffer1:
-                try:
-                    buffer1 = nrf.read()
-                    codc=buffer1.decode('utf-8')
-                        #print("el codec recibido es {}".format(codc))
-                except:
-                    codc="utf-16"
-                    print("codec va mal")
-                    continue
-        if nrf.available():
-            payload_size, pipe_number = (nrf.any(), nrf.pipe)
-            buffer = nrf.read()   
            # Here there is another option
             if i == 2:
                 print(buffer)
             msg = b"".join([msg,buffer])
+            #.decode("utf-8")
+            #msg.extend(buffer)
+            # print details about the received packet
+            #print(
+             #   "Received {} bytes on pipe {}: {}".format(
+              #      payload_size, pipe_number, msg
+               # )
+            #)
             start = time.monotonic()
-            i +=1  
+            i +=1
+            
+   
+        
     print("Ha dejado de recibir cosas")
     e_g.set()
     # recommended behavior is to keep in TX mode while idle
@@ -130,7 +126,7 @@ def slave(nrf, switch_send):
     t_y.start()
     print("going to decompress")
     try:
-        msg = decompress(msg,codc)
+        msg = decompress(msg)
         pth = getUSBpath()
     except:
         pass
@@ -140,3 +136,42 @@ def slave(nrf, switch_send):
         print(e)
         e_y.set()
     e_y.set()
+        
+def set_role(nrf, payload):
+    """Set the role using stdin stream. Timeout arg for slave() can be
+    specified using a space delimiter (e.g. 'R 10' calls `slave(10)`)
+    """
+    user_input = (
+        input(
+            "*** Enter 'R' for receiver role.\n"
+            "*** Enter 'T' for transmitter role.\n"
+            "*** Enter 'Q' to quit example.\n"
+        )
+        or "?"
+    )
+    user_input = user_input.split()
+    if user_input[0].upper().startswith("R"):
+        slave(nrf, timeout, codec)
+        
+        return True
+    if user_input[0].upper().startswith("T"):
+        master(nrf, payload)
+        return True
+    if user_input[0].upper().startswith("Q"):
+        nrf.power = False
+        return False
+    print(user_input[0], "is an unrecognized input. Please try again.")
+    return set_role(nrf, payload, timeout, codec)
+
+def blink_thread(e, t=0.3):
+    global led_signal
+    led_signal=led_green
+    """flash the specified led every second in threading"""
+    while not e.isSet():
+        led_signal.value=True
+        event_is_set = e.wait(t)
+        if event_is_set:
+             led_signal.value=False
+        else:
+            led_signal.value=False
+            e.wait(t)
