@@ -40,7 +40,7 @@ def master(nrf, payload, switch_send, codec):  # count = 5 will only transmit 5 
     while not result: #We send the encoding
         print((bytes(codec, 'utf-8')))
         result = nrf.send((bytes(codec, 'utf-8')), False, 0)
-    time.sleep(0.5)
+    
 
     for i in range(count):
         # use struct.pack to structure your data into a usable payload
@@ -108,11 +108,13 @@ def slave(nrf, switch_send):
                     buffer1 = nrf.read()
                     codc=buffer1
                     print(codc)
-                    if codc==(bytes('utf-8') or bytes('utf-16') or bytes('utf-32')):
+                    if codc==(bytearray(b'utf-8') or bytearray(b'utf-16') or bytearray(b'utf-32')):
                         print(codc)
                         codc=codc.decode('utf-8')
                         #print("el codec recibido es {}".format(codc))
-                    
+                    else: 
+                        print("no encontrado")
+             
                 except:
                     codc="utf-16"
                     continue
