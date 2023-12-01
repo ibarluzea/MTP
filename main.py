@@ -2,6 +2,7 @@
 from functions_pi import *
 from functions_nrf24 import *
 from lzw import *
+from NODE_NW import *
 import spidev
 
 from circuitpython_nrf24l01.rf24 import RF24
@@ -71,8 +72,6 @@ if __name__ == "__main__":
         timeout = 10
         pth = getUSBpath()
 
-
-
         print("Choosing mode")
         
         isTransmitter, NMode = select_mode(sw_send, sw_txrx, sw_nm, led_yellow, led_green, led_red)
@@ -97,15 +96,15 @@ if __name__ == "__main__":
                 master(nrf, payload_compressed, sw_send)
             else:
                 slave(nrf, sw_send)
-    #else:
-    #    if isTransmitter:
-    #        try:
-    #            strF= openFile(pth)
-    #            node_NW(nrf,strF,isTransmitter):
-    #        except Exception as e:
-    #            ledError()
-    #    else:
-    #        node_NW(nrf,None,isTransmitter):
+    else:
+        if isTransmitter:
+            try:
+                strF = openFile(pth)
+                node_NW(nrf,strF,isTransmitter):
+            except Exception as e:
+               ledError()
+        else:
+            node_NW(nrf,None,isTransmitter):
         
         led_off([led_yellow, led_green, led_red])
         print("Transmision finalizada")
