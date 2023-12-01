@@ -101,15 +101,11 @@ if __name__ == "__main__":
     #    if isTransmitter:
     #        try:
     #            strF= openFile(pth)
-    #            #payload = fragmentFile(strF,payload_size) # Need to migrate it into masterNW.
-    #            masterNW(nrf, strF)
+    #            node_NW(nrf,strF,isTransmitter):
     #        except Exception as e:
-    #            payload = None
-    #            print(f"No file found to fragment")
-    #            print(e)
     #            ledError()
     #    else:
-    #        slaveNW(nrf)
+    #        node_NW(nrf,None,isTransmitter):
         led_blink(led_green)
         led_blink(led_yellow)
         led_blink(led_red)
