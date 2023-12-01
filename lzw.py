@@ -20,22 +20,14 @@ def compress(msg):
     output.append(dictionary[buffer]) # String que conforma el output: Llista dels index del diccionari que envio.
     output_string = ','.join(map(str, output))
     #serialized_data = [num.to_bytes(32, byteorder='big') for num in output]
-    byte_output_string = output_string.encode("utf-16")
+    byte_output_string = output_string.encode("utf-8")
     return  byte_output_string
 
-def decompress(compressed_data, codec):
-    print("el codec pasasdo a descomprimir s: "+codec)
+def decompress(compressed_data):
+
     #compressed_data = [int.from_bytes(byte,byteorder='big') for byte in compressed_data]
-    if codec=="utf-8":
-        codec="utf_8"
-    if codec=="utf-16":
-        codec="utf_16"
-    if codec=="utf-32":
-        codec="utf_32"
-    else:
-        codec="utf_16"
-        print(codec)
-    compressed_data_str = compressed_data.decode(codec)
+
+    compressed_data_str = compressed_data.decode("utf_8")
     compressed_data_index = [int(index) for index in compressed_data_str.split(',')]
     
     dictionary = {i: chr(i) for i in range(10000)} # Es pot fer també així i queda més compacte, same que el compressor.
