@@ -38,7 +38,7 @@ def master(nrf, payload, switch_send, codec):  # count = 5 will only transmit 5 
     t_g.start()
     
     while not result: #We send the encoding
-        result = nrf.send((bytes(encoding, 'utf-8')), False, 0)
+        result = nrf.send((bytes(codec, 'utf-8')), False, 0)
     time.sleep(0.5)
 
     for i in range(count):
