@@ -107,9 +107,11 @@ def slave(nrf, switch_send):
                 try:
                     buffer1 = nrf.read()
                     codc=buffer1
+                    print(codc)
                     if codc==(bytes('utf-8') or bytes('utf-16') or bytes('utf-32')):
+                        print(codc)
                         codc=codc.decode('utf-8')
-                        print("el codec recibido es {}".format(codc))
+                        #print("el codec recibido es {}".format(codc))
                     
                 except:
                     codc="utf-16"
