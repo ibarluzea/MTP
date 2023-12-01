@@ -89,7 +89,7 @@ def openFile(path):
         if codc in common_encodings:
            try:
                with open(file_path, "r", encoding=codc) as file:
-                   return file.read()
+                   return file.read(), codc
            except:
                pass  # Ignorar cualquier error y probar con otras codificaciones
 
@@ -98,7 +98,7 @@ def openFile(path):
            try:
                with open(file_path, "r", encoding=encoding) as file:
                    print(f"Tried {encoding}")
-                   return file.read()
+                   return file.read(), encoding
            except:
                continue  # Intentar con la siguiente codificación
 
