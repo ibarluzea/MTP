@@ -40,6 +40,7 @@ def master(nrf, payload, switch_send, codec):  # count = 5 will only transmit 5 
     while not result: #We send the encoding
         print((bytes(codec, 'utf-8')))
         result = nrf.send((bytes(codec, 'utf-8')), False, 0)
+     
     
 
     for i in range(count):
@@ -95,7 +96,7 @@ def slave(nrf, switch_send):
     t_g.start()
     buffer1 = False
     while switch_send.value:
-        if nrf.available():
+        if nrf.available() and not buffer1:
             payload_size, pipe_number = (nrf.any(), nrf.pipe)
             # fetch 1 payload from RX FIFO
               # also clears nrf.irq_dr status flag
@@ -111,6 +112,7 @@ def slave(nrf, switch_send):
                 except:
                     codc="utf-16"
                     continue
+        if nrf.available():     
             buffer = nrf.read()   
            # Here there is another option
             if i == 2:
