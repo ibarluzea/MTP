@@ -34,7 +34,7 @@ def decompress(compressed_data, codec):
         codec="utf_32"
     else:
         codec="utf_8"
-    
+        print(codec)
     compressed_data_str = compressed_data.decode(codec)
     compressed_data_index = [int(index) for index in compressed_data_str.split(',')]
     
