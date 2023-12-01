@@ -47,7 +47,7 @@ def node_NW(nrf,strF,isTransmitter): # FOR EACH GROUP MAIN: strF is the text fil
       token,has_token = token_handover(token, success_nodes, backup_list, not_priority_list, token_payload)
     else: # Es Slave
       nrf.open_rx_pipe(0, address[0])  # using RX pipe 0 for broadcast
-      has_file, has_token, token, strF = receive(address[1], backoff, has_file, had_token)
+      has_file, has_token, token, strF = receive(address[1], backoff, has_file, had_token, my_address)
       nrf.close_rx_pipe(0, address[0])
 
 #### Master #####
@@ -143,7 +143,7 @@ def unicast_tx(strF,data_payload,ef_payload,my_address,address_list):
 
 
 # This function does the token handshake and returns a token in a list format
-def token_handover(token, address_list, backup_list, not_priority_list, token_payload):
+def token_handover(token, address_list, backup_list, not_priority_list, token_payload, my_address):
   priority = []
   token[int(my_address[0])][:] = [True,True] # I have the file and token.
   for i in address_list:
