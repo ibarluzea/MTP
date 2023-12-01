@@ -9,7 +9,7 @@ import spidev
 
 # Al main definir la length de la address.
 
-def node_NW(nrf,strF,isTransmitter): # FOR EACH GROUP MAIN: strF is the text file to transmit. It's the outcome of the openFile with rb such as: b'\x00\x01\x02...'
+def node_NW(nrf,strF,isTransmitter,path): # FOR EACH GROUP MAIN: strF is the text file to transmit. It's the outcome of the openFile with rb such as: b'\x00\x01\x02...'
 
   has_token = isTransmitter # FOR EACH GROUP: isTransmiter is a boolean that is true if and only if: I have usb + file.
   had_token = isTransmitter
@@ -18,7 +18,7 @@ def node_NW(nrf,strF,isTransmitter): # FOR EACH GROUP MAIN: strF is the text fil
   # Broadcast b"BRD" for either TX or RX, and b"0RC" for RX pipes (for the first node)
   address = [b"BRD",b"0RC"] # FOR EACH GROUP: Change the unicast address xRC. --> 0 to 7
   my_address = [int(char) for char in address[1].decode() if char.isdigit()] # Extract the numeric digit from the address -> '0'
-
+  my_address = my_address[0]
   # Token list initialization
   token =[[False, False],[False, False],
           [False, False],[False, False],
@@ -28,7 +28,7 @@ def node_NW(nrf,strF,isTransmitter): # FOR EACH GROUP MAIN: strF is the text fil
 
   # Time variables
   discovery_timeout = 24e6 # with respect nanoseconds
-  backoff = 3/1000 * my_address[0]
+  backoff = 3/1000 * my_address
   
   # Packet identifiers (corresponding to their first Byte)
   discovery_payload = b'\x0A'
@@ -42,24 +42,24 @@ def node_NW(nrf,strF,isTransmitter): # FOR EACH GROUP MAIN: strF is the text fil
   while True: # Fotre timeout voluntari
     if has_token: # Es Master
       had_token = True
-      address_list,backup_list,not_priority_list,token = neighbor_discovery(discovery_payload, address[1], address[0],token) 
-      success_nodes = unicast_tx(strF,data_payload,ef_payload,address[1], address_list)
-      token,has_token = token_handover(token, success_nodes, backup_list, not_priority_list, token_payload)
+      address_list,backup_list,not_priority_list,token = neighbor_discovery(nrf,discovery_payload, address[1], address[0],token) 
+      success_nodes = unicast_tx(nrf,strF,data_payload,ef_payload, address_list)
+      token,has_token = token_handover(nrf,token, success_nodes, backup_list, not_priority_list, token_payload)
     else: # Es Slave
       nrf.open_rx_pipe(0, address[0])  # using RX pipe 0 for broadcast
-      has_file, has_token, token, strF = receive(address[1], backoff, has_file, had_token, my_address)
+      has_file, has_token, token, strF = receive(nrf,address[1], backoff, has_file, had_token,path)
       nrf.close_rx_pipe(0, address[0])
 
 #### Master #####
 
 
-def neighbor_discovery(discovery_payload,my_address,dst_address,token):
+def neighbor_discovery(nrf,discovery_payload,src_address,dst_address,token,my_address):
   
   # This function does the neighbor discovery process and returns a list with the numerical "IDs"
   #  of the responders (1,2,...)
 
   nrf.open_tx_pipe(dst_address) # MUST use pipe 0 and address[0] (i.e. TX using b"BRD" address)
-  buffer_tx = discovery_payload + my_address # Concatenate the b'\x0A' with our address to send the buffer
+  buffer_tx = discovery_payload + src_address # Concatenate the b'\x0A' with our address to send the buffer
   neighbors = []
   address_list = []
   backup_list = []
@@ -86,7 +86,7 @@ def neighbor_discovery(discovery_payload,my_address,dst_address,token):
         num_address_n = [int(char) for char in address_n.decode() if char.isdigit()][0] 
         if info_byte == 0:
           address_list.append(num_address_n) # Store the addresses of the neighbor responses with numerical IDs 
-        elif: info_byte == 1:
+        elif info_byte == 1:
           token[num_address_n][:] = [True, False]
           backup_list.append(num_address_n)
         else:
@@ -99,7 +99,7 @@ def neighbor_discovery(discovery_payload,my_address,dst_address,token):
   return address_list, backup_list, not_priority_list, token
 
 #### Unicast transmission function ####
-def unicast_tx(strF,data_payload,ef_payload,my_address,address_list):
+def unicast_tx(nrf,strF,data_payload,ef_payload,address_list):
 
   # This function performs a unicast transmission of the file in chunks of 31 or less bits
 
@@ -143,9 +143,9 @@ def unicast_tx(strF,data_payload,ef_payload,my_address,address_list):
 
 
 # This function does the token handshake and returns a token in a list format
-def token_handover(token, address_list, backup_list, not_priority_list, token_payload, my_address):
+def token_handover(nrf,token, address_list, backup_list, not_priority_list, token_payload, my_address):
   priority = []
-  token[int(my_address[0])][:] = [True,True] # I have the file and token.
+  token[my_address][:] = [True,True] # I have the file and token.
   for i in address_list:
     # NOTA: Falta acabar de fer les condicions
     if (token[i][1]) == False # Never had the token. (If true, it must have the file)
@@ -168,7 +168,7 @@ def token_handover(token, address_list, backup_list, not_priority_list, token_pa
 
 #### Slave ####
 
-def receive(my_address, backoff, has_file, had_token):
+def receive(nrf,src_address, backoff, has_file, had_token,path):
   keep_listening = True
   has_token = False
   msg = b""
@@ -183,7 +183,7 @@ def receive(my_address, backoff, has_file, had_token):
         address_received = buffer_rx[1:4] 
         nrf.open_tx_pipe(address_received)
         time.sleep(backoff)
-        send_address(my_address, has_file, had_token)
+        send_address(src_address, has_file, had_token)
         # 3) Rebo algo unicast, mirar quin tipo de paquet arriba
       if pipe_number == 1: # S'ha rebut a la pipe de unicast -> O fitxer o Token
         type_byte = buffer_rx[0] # Agafar el primer byte que indica tipus de paquet
@@ -197,7 +197,7 @@ def receive(my_address, backoff, has_file, had_token):
                     # Un cop s'ha rebut tot el fitxer, escriure els bytes al USB, cadascu amb la seva funcio d'escriure al USB
                     # Codi d'encendre led VERD
                     # Actualitzar el token NOMES es fa al master.
-          writeFileNW(msg) # Quadrar cada grup la seva funció.
+          writeFileNW(path,msg) # Quadrar cada grup la seva funció.
           strF = msg
           msg = b""
           has_file = True
@@ -206,7 +206,7 @@ def receive(my_address, backoff, has_file, had_token):
         
   return has_file, has_token, token, strF
                     
-def send_address(address, has_file, had_token):
+def send_address(nrf, address, has_file, had_token):
   data_to_send = address    
   if has_file and had_token: # has token és si és master o no, s'ha d'usar una altra var
     data_to_send += b'\x02'
