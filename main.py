@@ -115,4 +115,5 @@ if __name__ == "__main__":
         print(" Keyboard Interrupt detected. Powering down radio...")
         nrf.power = False
         led_off([led_green, led_yellow, led_red])
+        e_g.set()
 
