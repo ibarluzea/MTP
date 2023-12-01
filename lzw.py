@@ -20,7 +20,7 @@ def compress(msg):
     output.append(dictionary[buffer]) # String que conforma el output: Llista dels index del diccionari que envio.
     output_string = ','.join(map(str, output))
     #serialized_data = [num.to_bytes(32, byteorder='big') for num in output]
-    byte_output_string = output_string.encode("utf-16")
+    byte_output_string = output_string.encode("utf-8")
     return  byte_output_string
 
 def decompress(compressed_data, codec):
@@ -33,7 +33,7 @@ def decompress(compressed_data, codec):
     if codec=="utf-32":
         codec="utf_32"
     else:
-        codec="utf_16"
+        codec="utf_8"
         print(codec)
     compressed_data_str = compressed_data.decode(codec)
     compressed_data_index = [int(index) for index in compressed_data_str.split(',')]
