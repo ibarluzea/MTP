@@ -63,17 +63,14 @@ def openFile(path):
     print(path)
     try:
         file_path = glob.glob(path + '/*.txt')[0]
-
         # Usar chardet para sugerir una codificación
         try:
-           print("checkcodec")
            codc = check_codec(file_path)
            # Si chardet devuelve ASCII, asumir que es UTF-8
            if codc == 'ascii':
                codc = 'utf-8'
                print("el codec es:"+codc)
         except:
-            print("fallo1")
             pass
         # Ajustar el orden de las codificaciones comunes
         common_encodings = ['utf-32', 'utf-16', 'utf-8']
@@ -84,7 +81,6 @@ def openFile(path):
                with open(file_path, "r", encoding=codc) as file:
                    return file.read(), codc
            except:
-               print("fallo2")
                pass  # Ignorar cualquier error y probar con otras codificaciones
 
         # Probar con un conjunto de codificaciones comunes
@@ -94,7 +90,6 @@ def openFile(path):
                    print(f"Tried {encoding}")
                    return file.read(), encoding
            except:
-               print("fallo3")
                continue  # Intentar con la siguiente codificación
 
         print("No se pudo abrir el archivo con las codificaciones comunes.")
@@ -116,13 +111,9 @@ def checkSwitch(pin):
   
 def check_codec(path):
     try:
-        print("antes")
         file = open(path,"rb")
-        print("despues")
-
         strF= file.read(64)
         result = chardet.detect(strF)
-        print("chardet good")
         encoding = result['encoding']
 
     except UnicodeDecodeError:
@@ -131,7 +122,6 @@ def check_codec(path):
     except Exception as e:
         print(f"An unexpected error occurred: {e}")
         return
-    print(encoding)
     return encoding
 
 def setup_switch(pin):
