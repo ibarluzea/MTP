@@ -11,10 +11,19 @@ import threading
 import sys
 
 global led_red, led_yellow, led_green, sw_send, sw_txrx, sw_nm, sw_off
+
     
+
 def fragmentFile(string, length):
     return list(string[0+i: length+i] for i in range(0, len(string), length))
 
+#def getUSBpath():
+#    rpistr = "/media/mtp/"
+#    proc = subprocess.Popen("ls "+rpistr,shell=True, preexec_fn=os.setsid, stdout=subprocess.PIPE)
+#    line = proc.stdout.readline()
+#    print(str(line.rstrip()))
+#    path = rpistr + line.rstrip().decode("utf-8")+"/"
+#    return path
 def getUSBpath():
     rpistr = "/media/mtp/"
     try:
@@ -35,68 +44,108 @@ def getUSBpath():
         print("Error: ", str(e))
 
     return None
-    
-# def openFile(path):
-#     print(path)
-#     try:
-#         try:
-#             file = open(glob.glob(path+"/"+'*.txt')[0],"r", encoding='utf-32')
-#             strF= file.read()
-#             
-#             print("Tried utf-32")
-#             
-#         except:
-#             try:
-#                 file = open(glob.glob(path+"/"+'*.txt')[0],"r", encoding='utf-16')
-#                 strF= file.read()
-#                 print("Tried utf-16")
-#                 
-#             except:
-#                 file = open(glob.glob(path+"/"+'*.txt')[0],"r", encoding='utf-8')
-#                 strF= file.read()
-#                 print("Tried utf-8")
-#     except:
-#         print("No file opened")
-#     return strF    
-
 def openFile(path):
     print(path)
     try:
-        file_path = glob.glob(path + '/*.txt')[0]
-        # Usar chardet para sugerir una codificación
+        #try:
+#        #    codc=check_codec(path) #now we use path for codec to read more quickly.
+#        #    print("Chardet detected: "+codc)
+#        #except:
+#        #    print("Chardet failed")
         try:
-           codc = check_codec(file_path)
-           # Si chardet devuelve ASCII, asumir que es UTF-8
-           if codc == 'ascii':
-               codc = 'utf-8'
-           print("el codec es:"+codc)
+            file = open(glob.glob(path+"/"+'*.txt')[0],"r", encoding='utf-32')
+            strF= file.read()
+            
+            print("Tried utf-32")
+            
         except:
-            pass
+            try:
+                file = open(glob.glob(path+"/"+'*.txt')[0],"r", encoding='utf-16')
+                strF= file.read()
+                print("Tried utf-16")
+                
+            except:
+                file = open(glob.glob(path+"/"+'*.txt')[0],"r", encoding='utf-8')
+                strF= file.read()
+                print("Tried utf-8")
+    except:
+        print("No file opened")
+    return strF
+#def openFile(path):
+#    print(path)
+#    try:
+#        file_path = glob.glob(path + '/*.txt')[0]
+
+        # Usar chardet para sugerir una codificación
+#        codc = check_codec(file_path)
+#        print("Chardet detected: " + str(codc))
+
+        # Si chardet devuelve ASCII, asumir que es UTF-8
+#        if codc == 'ascii':
+#            codc = 'utf-8'
+
         # Ajustar el orden de las codificaciones comunes
-        common_encodings = ['utf-32', 'utf-16', 'utf-8']
+#        common_encodings = ['utf-32', 'utf-16', 'utf-8']
 
         # Intentar abrir el archivo con la codificación detectada
-        if codc in common_encodings:
-           try:
-               with open(file_path, "r", encoding=codc) as file:
-                   return file.read(), codc
-           except:
-               print("Ha fallado open con chardet "+ codc)
-               pass  # Ignorar cualquier error y probar con otras codificaciones
+#        if codc in common_encodings:
+#            try:
+#                with open(file_path, "r", encoding=codc) as file:
+#                    return file.read()
+#            except:
+#                pass  # Ignorar cualquier error y probar con otras codificaciones
 
         # Probar con un conjunto de codificaciones comunes
-        for encoding in common_encodings:
-           try:
-               with open(file_path, "r", encoding=encoding) as file:
-                   print(f"Tried {encoding}")
-                   return file.read(), encoding
-           except:
-               continue  # Intentar con la siguiente codificación
+#        for encoding in common_encodings:
+#            try:
+#                with open(file_path, "r", encoding=encoding) as file:
+#                    print(f"Tried {encoding}")
+#                    return file.read()
+#            except:
+#                continue  # Intentar con la siguiente codificación
 
-        print("No se pudo abrir el archivo con las codificaciones comunes.")
-    except Exception as e:
-        print(f"Error al abrir el archivo: {e}")
-        return "",""
+#        print("No se pudo abrir el archivo con las codificaciones comunes.")
+#    except Exception as e:
+#        print(f"Error al abrir el archivo: {e}")
+
+#    return ""
+
+
+
+
+def openFile_fromGit():
+    try:
+        try:
+            file = open("test_utf8.txt","r", encoding='utf-32')
+            strF= file.read()
+        except:
+            try:
+                file = open("test_utf8.txt","r", encoding='utf-16')
+                strF= file.read()
+                
+            except:
+                file = open("test_utf8.txt","r", encoding='utf-8')
+                strF= file.read()
+    except:
+        print("No file opened")
+    return strF
+
+def openFile_fromGit2():
+    try:
+        try:
+            file = open("test_utf8.txt","rb")
+            strF= file.read()
+        except:
+            try:
+                file = open("test_utf8.txt","rb")
+                strF= file.read()
+                
+            except:
+                file = open("test_utf8.txt","rb")
+                strF= file.read()
+    except:
+        print("No file opened")
+    return strF
 
 def writeFile(path, buff):
     file = open(path+"result.txt","w")
@@ -109,11 +158,13 @@ def checkSwitch(pin):
     switch.pull
     return switch
 
-  
+
+    
 def check_codec(path):
     try:
-        file = open(path,"rb")
+        file = open(glob.glob(path+'*.txt')[0],"rb")
         strF= file.read(64)
+        
         result = chardet.detect(strF)
         encoding = result['encoding']
 
@@ -122,11 +173,12 @@ def check_codec(path):
         return 
     except Exception as e:
         print(f"An unexpected error occurred: {e}")
-        return
+        return 
     return encoding
 
 def setup_switch(pin):
     # sw_send D5, sw_txrx D6, sw_nm D26, sw_off D23
+    
     switch = digitalio.DigitalInOut(pin)
     switch.direction = digitalio.Direction.INPUT
     switch.pull = digitalio.Pull.UP  # Assuming a pull-up configuration
@@ -134,6 +186,7 @@ def setup_switch(pin):
     
 def setup_led(pin):
     #yellow board.D12, #red board.D20, #green board.D16
+    
     signal = digitalio.DigitalInOut(pin) #yellow LED for USB signalling 
     signal.direction = digitalio.Direction.OUTPUT
     return signal
@@ -157,6 +210,7 @@ def led_off(signal):
     else:
         signal.value=False
     
+
 def led_blink(signal):
     c=4
     if isinstance(signal, list) :
@@ -198,6 +252,9 @@ def blinkLed(e, signal, t=0.3):
             signal.value=False
             time.sleep(t)
         
+            
+
+
 def wait_idle(sw_off):
     try:
         while True:
@@ -208,16 +265,14 @@ def wait_idle(sw_off):
                 time.sleep(0.6)
     except KeyboardInterrupt:
         print(" Keyboard Interrupt detected. Powering down radio...")
-        led_off([led_green, led_yellow, led_red])
-        e_g.set()
-        nrf.power = False
 
 def pi_shutdown():
     os.system("sudo poweroff")
     
 def remove_result(path):
     os.system("rm "+path+"result.txt")
-      
+    
+    
 def select_mode(switch_send, switch_tx, switch_nm, led_yellow, led_green, led_red):
     led_blink([led_yellow, led_green, led_red])
     led_off([led_yellow, led_green, led_red])
@@ -236,11 +291,12 @@ def select_mode(switch_send, switch_tx, switch_nm, led_yellow, led_green, led_re
         else:
             NMode=False
             led_red.value=False
-        time.sleep(0.3)
+        time.sleep(0.5)
     
     led_blink([led_yellow, led_green, led_red])
     led_off([led_yellow, led_green, led_red])
     return isTransmitter, NMode
+    
     
 led_yellow=setup_led(board.D12)
 led_red=setup_led(board.D20)
@@ -250,7 +306,14 @@ sw_send = setup_switch(board.D5)
 sw_txrx = setup_switch(board.D6)
 sw_nm = setup_switch(board.D26)
 sw_off = setup_switch(board.D23)
-    
 
+#  This following code is to check the functions without calling the
+#	functions outside, to be sure they all work well.
+# 	TO BE COMMENTED BEFORE FINISHING
 
+# payload_size = 32
+# pth = getUSBpath()
+# codc=check_codec(pth)
+# # 
+# print(codc)
 
