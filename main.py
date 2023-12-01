@@ -81,7 +81,7 @@ if __name__ == "__main__":
             if isTransmitter:
                 try:
                     payload_size = 32
-                    strF, encoding= openFile(pth)
+                    [strF, encoding]= openFile(pth)
                 except Exception as e:
                     payload = None
                     print(f"Not file found to fragment")
