@@ -111,6 +111,7 @@ def slave(nrf, switch_send):
                         #print("el codec recibido es {}".format(codc))
                 except:
                     codc="utf-16"
+                    print("codec va mal")
                     continue
         if nrf.available():
             payload_size, pipe_number = (nrf.any(), nrf.pipe)
