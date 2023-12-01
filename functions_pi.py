@@ -69,7 +69,7 @@ def openFile(path):
            # Si chardet devuelve ASCII, asumir que es UTF-8
            if codc == 'ascii':
                codc = 'utf-8'
-               print("el codec es:"+codc)
+           print("el codec es:"+codc)
         except:
             pass
         # Ajustar el orden de las codificaciones comunes
