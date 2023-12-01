@@ -31,7 +31,7 @@ if __name__ == "__main__":
             print("success in LED and switch setup")
         except:
             print("failure in LED setup")
-            led_on(led_red)
+            
             
         
     # initialize the nRF24L01 on the spi bus object
