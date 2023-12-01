@@ -112,7 +112,8 @@ def slave(nrf, switch_send):
                 except:
                     codc="utf-16"
                     continue
-        if nrf.available():     
+        if nrf.available():
+            payload_size, pipe_number = (nrf.any(), nrf.pipe)
             buffer = nrf.read()   
            # Here there is another option
             if i == 2:
