@@ -81,7 +81,7 @@ if __name__ == "__main__":
             if isTransmitter:
                 try:
                     payload_size = 32
-                    strF= openFile(pth)
+                    strF, encoding= openFile(pth)
                 except Exception as e:
                     payload = None
                     print(f"Not file found to fragment")
@@ -94,7 +94,7 @@ if __name__ == "__main__":
                     print("Compression failed")
                     print(e)
                 led_blink(led_green)
-                master(nrf, payload_compressed, sw_send)
+                master(nrf, payload_compressed, sw_send, encoding)
             else:
                 slave(nrf, sw_send)
     #else:
