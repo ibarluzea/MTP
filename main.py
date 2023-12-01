@@ -110,7 +110,7 @@ if __name__ == "__main__":
         led_off([led_yellow, led_green, led_red])
         print("Transmision finalizada")
 
-        wait_idle(sw_off)
+        #wait_idle(sw_off)
     
     
     except KeyboardInterrupt:
