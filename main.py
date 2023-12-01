@@ -97,7 +97,7 @@ if __name__ == "__main__":
             else:
                 slave(nrf, sw_send)
     else:
-        
+        nrf.channel = 90 #channel NW mode.
         if isTransmitter:
             try:
                 strF = openFileNW(pth)
