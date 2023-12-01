@@ -207,6 +207,9 @@ def wait_idle(sw_off):
                 time.sleep(0.6)
     except KeyboardInterrupt:
         print(" Keyboard Interrupt detected. Powering down radio...")
+        led_off([led_green, led_yellow, led_red])
+        e_g.set()
+        nrf.power = False
 
 def pi_shutdown():
     os.system("sudo poweroff")
