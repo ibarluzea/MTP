@@ -81,6 +81,7 @@ def openFile(path):
                with open(file_path, "r", encoding=codc) as file:
                    return file.read(), codc
            except:
+               print("Ha fallado open con chardet "+ codc)
                pass  # Ignorar cualquier error y probar con otras codificaciones
 
         # Probar con un conjunto de codificaciones comunes
