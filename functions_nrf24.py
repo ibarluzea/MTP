@@ -108,7 +108,7 @@ def slave(nrf, switch_send):
                     print(buffer)
                     codc=buffer.decode("utf-8")
                     print(codc)
-                    if codc==(b"utf-8" or b"utf-16" or b"utf-32"):
+                    if codc==("utf-8" or "utf-16" or "utf-32"):
                         has_codec=True
                         print("el codec recibido es {}".format(codc))
                 except:
