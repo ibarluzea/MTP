@@ -11,7 +11,7 @@ from lzw import *
 import threading
  
 
-def master(nrf, payload, switch_send):  # count = 5 will only transmit 5 packets
+def master(nrf, payload, switch_send, codec):  # count = 5 will only transmit 5 packets
     """Transmits an incrementing integer every second"""
     print("ENTRA EN MASTER, press send again")
 
@@ -37,18 +37,22 @@ def master(nrf, payload, switch_send):  # count = 5 will only transmit 5 packets
     t_g = threading.Thread(name='non-block', target=blinkLed, args=(e_g, led_green))
     t_g.start()
     
+    while not result: #We send the encoding
+        result = nrf.send((bytes(encoding, 'utf-8')), False, 0)
+    time.sleep(0.5)
+
     for i in range(count):
         # use struct.pack to structure your data into a usable payload
         buffer = payload[i]
         start_timer = time.monotonic_ns()  # start timer
         
         result = nrf.send(buffer, False, 10)
-            
-        
-        while not result:
+        if not result:
             led_red.value = True
+     
+        while not result:
             result = nrf.send(buffer, False, 0)
-            time.sleep(0.1)
+            #time.sleep(0.01)
 
         led_red.value = False
      
@@ -59,8 +63,7 @@ def master(nrf, payload, switch_send):  # count = 5 will only transmit 5 packets
     print("Transmission rate: ", (((len(payload)*(32+1+3+1+2+9+3+2))*8)/((end_timer-zero_timer)/1e9)))
     print(nrf.print_details(True))
     
-    
-    
+
     
 def slave(nrf, switch_send):
         
@@ -89,15 +92,27 @@ def slave(nrf, switch_send):
     #time.sleep(0.5)
     
     t_g.start()
+    has_codec=False
     while switch_send.value:
         if nrf.available():
-            
             payload_size, pipe_number = (nrf.any(), nrf.pipe)
             # fetch 1 payload from RX FIFO
-            buffer = nrf.read()  # also clears nrf.irq_dr status flag
+              # also clears nrf.irq_dr status flag
             # expecting a little endian float, thus the format string "<f"
             # buff_leder[:4] truncates padded 0s if dynamic payloads are disabled
-            
+            print("Mirando el codec:")
+            while not has_codec:
+                try:
+                    buffer = nrf.read()
+                    codc=buffer.decode("utf-8")
+                    if codc==(b"utf-8" or b"utf-16" or b"utf-32"):
+                        has_codec=True
+                except:
+                    codc="utf-16"
+                    continue
+                             
+            buffer = nrf.read()
+              
            # Here there is another option
             if i == 2:
                 print(buffer)
@@ -122,4 +137,3 @@ def slave(nrf, switch_send):
         print(e)
         e_y.set()
     e_y.set()
-
