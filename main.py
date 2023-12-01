@@ -3,7 +3,7 @@ from functions_pi import *
 from functions_nrf24 import *
 from lzw import *
 import spidev
-
+import zlib
 from circuitpython_nrf24l01.rf24 import RF24
 # invalid default values for scoping
 
@@ -69,29 +69,39 @@ if __name__ == "__main__":
 
         # Set timeout
         timeout = 10
-        pth = getUSBpath()
+        
 
 
 
         print("Choosing mode")
         
         isTransmitter, NMode = select_mode(sw_send, sw_txrx, sw_nm, led_yellow, led_green, led_red)
+        pth = None
+        while pth is None:
+             pth = getUSBpath()
+        if pth is None:
+            print("USB not found, retrying...")
+            time.sleep(0.3)  # Short delay to avoid excessive CPU usage
         print("Chosen, is TX: {}, is NM: {}".format(isTransmitter, NMode))
         if not NMode:
             if isTransmitter:
                 try:
+                    print("USB path is:", pth)
                     payload_size = 32
-                    [strF, encoding]= openFile(pth)
+                    strF= openFile(pth)
                 except Exception as e:
                     payload = None
                     print(f"Not file found to fragment")
                     print(e)
                     ledError()
                 try:
-                    strF_compressed = compress(strF)
-                    print("el tipo despues del compress es: " + type(strF_compressed))
-                    payload_compressed = fragmentFile(strF_compressed,payload_size)
-                    print("el tipo despues del fragmentFile es: " + type(strF_compressed))
+                    
+                    compressed_file = zlib.compress(strF)
+                    print("el tipo despues del compress es: ")
+                    print(type(compressed_file))
+                    compressed_fragmented_zlib = fragmentFile(compressed_file, payload_size)
+                    print("el tipo despues del fragmentFile es: ")
+                    print(type(compressed_fragmented_zlib))
                 except Exception as e:
                     print("Compression failed")
                     print(e)
