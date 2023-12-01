@@ -104,9 +104,8 @@ def slave(nrf, switch_send):
             print("Mirando el codec:")
             while not has_codec:
                 try:
-                    buffer = nrf.read()
-                    print(buffer)
-                    codc=buffer.decode("utf-8")
+                    codc = nrf.read()
+                    print(codc)
                     if codc==(b"utf-8" or b"utf-16" or b"utf-32"):
                         has_codec=True
                         print("el codec recibido es {}".format(codc))
@@ -130,7 +129,7 @@ def slave(nrf, switch_send):
     t_y.start()
     print("going to decompress")
     try:
-        msg = decompress(msg)
+        msg = decompress(msg,codc)
         pth = getUSBpath()
     except:
         pass
