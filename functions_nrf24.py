@@ -125,9 +125,11 @@ def slave(nrf, switch_send):
     #to optimize, now we open and close the file every 32 BYTES
     t_y.start()
     print("going to decompress")
-    msg = decompress(msg)
-    pth = getUSBpath()
-    
+    try:
+        msg = decompress(msg)
+        pth = getUSBpath()
+    except:
+        pass
     try:
         writeFile(pth+"/",msg)
     except Exception as e:
