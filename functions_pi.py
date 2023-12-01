@@ -126,7 +126,8 @@ def check_codec(path):
         return 
     except Exception as e:
         print(f"An unexpected error occurred: {e}")
-        return 
+        return
+    print(encoding)
     return encoding
 
 def setup_switch(pin):
