@@ -23,11 +23,17 @@ def compress(msg):
     byte_output_string = output_string.encode("utf-8")
     return  byte_output_string
 
-def decompress(compressed_data):
+def decompress(compressed_data, codec):
 
     #compressed_data = [int.from_bytes(byte,byteorder='big') for byte in compressed_data]
-
-    compressed_data_str = compressed_data.decode("utf_8")
+    if codec=="utf-8":
+        codec="utf_8"
+    if codec=="utf-16":
+        codec="utf_16"
+    if codec=="utf-32":
+        codec="utf_32"
+        
+    compressed_data_str = compressed_data.decode(codec)
     compressed_data_index = [int(index) for index in compressed_data_str.split(',')]
     
     dictionary = {i: chr(i) for i in range(10000)} # Es pot fer també així i queda més compacte, same que el compressor.
