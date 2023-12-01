@@ -72,7 +72,8 @@ def openFile(path):
                
                codc = 'utf-8'
                print("el codec es:"+codc)
-        except: 
+        except:
+            print("fallo1")
             pass
         # Ajustar el orden de las codificaciones comunes
         common_encodings = ['utf-32', 'utf-16', 'utf-8']
@@ -83,6 +84,7 @@ def openFile(path):
                with open(file_path, "r", encoding=codc) as file:
                    return file.read(), codc
            except:
+               print("fallo2")
                pass  # Ignorar cualquier error y probar con otras codificaciones
 
         # Probar con un conjunto de codificaciones comunes
@@ -92,6 +94,7 @@ def openFile(path):
                    print(f"Tried {encoding}")
                    return file.read(), encoding
            except:
+               print("fallo3")
                continue  # Intentar con la siguiente codificación
 
         print("No se pudo abrir el archivo con las codificaciones comunes.")
