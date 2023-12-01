@@ -24,7 +24,7 @@ def compress(msg):
     return  byte_output_string
 
 def decompress(compressed_data, codec):
-
+    print("el codec pasasdo a descomprimir s: "+codec)
     #compressed_data = [int.from_bytes(byte,byteorder='big') for byte in compressed_data]
     if codec=="utf-8":
         codec="utf_8"
@@ -32,7 +32,8 @@ def decompress(compressed_data, codec):
         codec="utf_16"
     if codec=="utf-32":
         codec="utf_32"
-        
+    else:
+        codec="utf_16"
     compressed_data_str = compressed_data.decode(codec)
     compressed_data_index = [int(index) for index in compressed_data_str.split(',')]
     
