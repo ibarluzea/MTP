@@ -93,7 +93,7 @@ def slave(nrf, switch_send):
     #time.sleep(0.5)
     
     t_g.start()
-    has_codec=False
+    buffer1 = False
     while switch_send.value:
         if nrf.available():
             payload_size, pipe_number = (nrf.any(), nrf.pipe)
@@ -102,19 +102,19 @@ def slave(nrf, switch_send):
             # expecting a little endian float, thus the format string "<f"
             # buff_leder[:4] truncates padded 0s if dynamic payloads are disabled
             print("Mirando el codec:")
-            buffer = nrf.read()
-            while not has_codec:
+            
+            while not buffer1:
                 try:
-                    print(buffer)
-                    codc=buffer
-                    print(codc)
-                    if codc==(b"utf-8" or b"utf-16" or b"utf-32"):
-                        has_codec=True
+                    buffer1 = nrf.read()
+                    codc=buffer1
+                    if codc==(bytes('utf-8') or bytes('utf-16') or bytes('utf-32'):
+                        codc=codc.decode('utf-8')
                         print("el codec recibido es {}".format(codc))
+                    
                 except:
                     codc="utf-16"
                     continue
-              
+            buffer = nrf.read()   
            # Here there is another option
             if i == 2:
                 print(buffer)
