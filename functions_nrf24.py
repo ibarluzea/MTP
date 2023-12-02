@@ -45,7 +45,7 @@ def master(nrf, payload, switch_send):  # count = 5 will only transmit 5 packets
         buffer = payload[i]
         start_timer = time.monotonic_ns()  # start timer
         if i == 238:
-            print(payload[238])
+            print(payload[238]+payload[239])
         result = nrf.send(buffer, False, 10)
             
         
