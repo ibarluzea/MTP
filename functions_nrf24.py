@@ -130,9 +130,15 @@ def slave(nrf, switch_send):
     print("msg type is:")
     print(type(msg))
     try:
-        msg_decompressed = zlib.decompress(msg)
         pth = getUSBpath()
     except:
+        print("getusbpath failed")
+        pass
+    writeFile(pth+"/",msg)
+    try:
+        msg_decompressed = zlib.decompress(msg)
+    except:
+        print("decompress failed")
         pass
     try:
         writeFile(pth+"/",msg_decompressed)
