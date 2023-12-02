@@ -16,7 +16,7 @@ def master(nrf, payload, switch_send):  # count = 5 will only transmit 5 packets
     print("ENTRA EN MASTER, press send again")
 
     nrf.address_length = 3
-    
+    print(payload)
     address = [b"snd", b"rcv"]
     nrf.open_tx_pipe(address[0])  # always uses pipe 0
 
@@ -44,10 +44,8 @@ def master(nrf, payload, switch_send):  # count = 5 will only transmit 5 packets
         # into a usable payload
         buffer = payload[i]
         start_timer = time.monotonic_ns()  # start timer
-        if i == 238:
-            print(payload[238]+payload[239])
         result = nrf.send(buffer, False, 10)
-            
+     
         
         while not result:
             led_red.value = True
