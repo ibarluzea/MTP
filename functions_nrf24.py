@@ -30,9 +30,11 @@ def master(nrf, payload, switch_send):  # count = 5 will only transmit 5 packets
     count=len(payload)
     
     led_yellow.value = True
+    led_green.value = True
     while switch_send.value:
         pass    
     led_yellow.value = False
+    led_green.value = False
     print("It begins to send")
     e_g = threading.Event()
     t_g = threading.Thread(name='non-block', target=blinkLed, args=(e_g, led_green))
