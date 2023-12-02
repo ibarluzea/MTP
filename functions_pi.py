@@ -50,7 +50,7 @@ def openFile(path):
 
 
 def writeFile(path, buff):
-    file = open(path+"result.txt","wb")
+    file = open(path+"MTP-F23-SRI-A-RX.txt","wb")
     file.write(buff)
     file.close()
     
