@@ -115,15 +115,15 @@ if __name__ == "__main__":
                 master(nrf, compressed_fragmented_zlib, sw_send)
             else:
                 slave(nrf, sw_send)
-    else:
-        if isTransmitter:
-            try:
-                strF= openFile(pth)
-                node_NW(nrf,strF,isTransmitter):
-            except Exception as e:
-                ledError()
         else:
-            node_NW(nrf,None,isTransmitter):
+            if isTransmitter:
+                try:
+                    strF= openFile(pth)
+                    node_NW(nrf,strF,isTransmitter):
+                except Exception as e:
+                    ledError()
+            else:
+                node_NW(nrf,None,isTransmitter):
         
         led_off([led_yellow, led_green, led_red])
         print("Transmision finalizada")
