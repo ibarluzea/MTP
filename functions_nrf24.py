@@ -51,7 +51,7 @@ def master(nrf, payload, switch_send):  # count = 5 will only transmit 5 packets
         while not result:
             led_red.value = True
             result = nrf.send(buffer, False, 0)
-            time.sleep(0.5)
+            time.sleep(0.01)
         led_red.value = False
      
         end_timer = time.monotonic_ns()  # end timer
