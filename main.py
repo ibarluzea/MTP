@@ -80,7 +80,7 @@ if __name__ == "__main__":
         print("Chosen, is TX: {}, is NM: {}".format(isTransmitter, NMode))
         if not NMode:
             if isTransmitter:
-                print "Vamos a buscar path usb"
+                print("Vamos a buscar path usb")
                 led_yellow.value = True
                 pth = None
                 while pth is None:
