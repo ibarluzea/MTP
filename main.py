@@ -76,15 +76,19 @@ if __name__ == "__main__":
         print("Choosing mode")
         
         isTransmitter, NMode = select_mode(sw_send, sw_txrx, sw_nm, led_yellow, led_green, led_red)
-        pth = None
-        while pth is None:
-             pth = getUSBpath()
-        if pth is None:
-            print("USB not found, retrying...")
-            time.sleep(0.3)  # Short delay to avoid excessive CPU usage
+        
         print("Chosen, is TX: {}, is NM: {}".format(isTransmitter, NMode))
         if not NMode:
             if isTransmitter:
+                print "Vamos a buscar path usb"
+                led_yellow.value = True
+                pth = None
+                while pth is None:
+                    pth = getUSBpath()
+                    if pth is None:
+                        print("USB not found, retrying...")
+                        time.sleep(0.3)  # Short delay to avoid excessive CPU usage
+                led_yellow.value = False
                 try:
                     print("USB path is:", pth)
                     payload_size = 32
