@@ -82,7 +82,7 @@ if __name__ == "__main__":
         if not NMode:
             if isTransmitter:
                 print("Vamos a buscar path usb")
-                led_yellow.red = True
+                led_red.value = True
                 pth = None
                 while pth is None:
                     pth = getUSBpath()
