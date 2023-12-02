@@ -6,14 +6,14 @@ import os, glob, getpass, math
 
 # Al main definir la length de la address.
 
-def node_NW(nrf,strF,isTransmitter): # FOR EACH GROUP MAIN: strF is the text file to transmit. It's the outcome of the openFile with rb such as: b'\x00\x01\x02...'
+def node_NW(nrf,strF,isTransmitter,pth): # FOR EACH GROUP MAIN: strF is the text file to transmit. It's the outcome of the openFile with rb such as: b'\x00\x01\x02...'
 
   has_token = isTransmitter # FOR EACH GROUP: isTransmiter is a boolean that is true if and only if: I have usb + file.
   had_token = isTransmitter
   has_file = isTransmitter
 
   # Broadcast b"BRD" for either TX or RX, and b"0RC" for RX pipes (for the first node)
-  address = [b"BRD",b"7RC"] # FOR EACH GROUP: Change the unicast address xRC. --> 0 to 7
+  address = [b"BRD",b"0RC"] # FOR EACH GROUP: Change the unicast address xRC. --> 0 to 7
   my_address = [int(char) for char in address[1].decode() if char.isdigit()][0] # Extract the numeric digit from the address -> '0'
 
   # Token list initialization
@@ -47,7 +47,7 @@ def node_NW(nrf,strF,isTransmitter): # FOR EACH GROUP MAIN: strF is the text fil
     else: # Es Slave
       nrf.open_rx_pipe(0, address[0])  # using RX pipe 0 for broadcast
       print("I'm SLAVE")
-      has_file, has_token, token, tmp_strF = receive(nrf, address[1], backoff, has_file, had_token)
+      has_file, has_token, token, tmp_strF = receive(nrf, address[1], backoff, has_file, had_token,pth)
       strF = tmp_strF if tmp_strF is not None else strF
       nrf.close_rx_pipe(0)
 
@@ -152,7 +152,7 @@ def unicast_tx(nrf, strF,data_payload,ef_payload,my_address,address_list):
 
 
 # This function does the token handshake and returns a token in a list format
-def token_handover(nrf, token, address_list, backup_list, not_priority_list, token_payload, my_address):
+def token_handover(nrf, token, address_list, backup_list, not_priority_list, token_payload, my_address,path):
   priority = []
   token[int(my_address)][:] = [True,True] # I have the file and token.
   for i in address_list:
@@ -184,7 +184,7 @@ def token_handover(nrf, token, address_list, backup_list, not_priority_list, tok
 
 #### Slave ####
 
-def receive(nrf, my_address, backoff, has_file, had_token):
+def receive(nrf, my_address, backoff, has_file, had_token,path):
   keep_listening = True
   has_token = False
   msg = b""
@@ -215,12 +215,8 @@ def receive(nrf, my_address, backoff, has_file, had_token):
           print(f"Token received: {token}")
           print(f"I'm master {has_token}")
 
-        elif type_byte == 14: # End of Transmission
-                    # PROCESSAR TEXT, ESCRIURE, ETC
-                    # Un cop s'ha rebut tot el fitxer, escriure els bytes al USB, cadascu amb la seva funcio d'escriure al USB
-                    # Codi d'encendre led VERD
-                    # Actualitzar el token NOMES es fa al master.
-          writeToUSB(msg) # Quadrar cada grup la seva funció.
+        elif type_byte == 14: 
+          writeFile(path, msg)
           strF = msg
           print(f"EOF received. Writing file to USB...")
           msg = b""
@@ -257,23 +253,7 @@ def interpretarToken(data_token): # Chat GPT
 
   return token
     
-def writeToUSB(data):
 
-	# Obten la direccion del punto de montaje del dispositivo (por ejemplo, /media/usb0)
-	user = getpass.getuser()
-	mount_point = "/media/" + user  # Debes especificar el punto de montaje correcto.
-
-	# Lista archivos en el punto de montaje del dispositivo USB
-	devices = glob.glob(os.path.join(mount_point, "*"))
-	if devices:
-		print("Hay un USB")
-		# Imprime la lista de archivos
-		for usb in devices:
-			with open(os.path.join(usb, "MTP-F23-NM-D-RX.txt"), "wb") as output:
-				output.write(data)
-		print("Output saved")
-	else:
-		print("No hay USB")
 		
 def fragmentFile(string, length):
 	return list(string[0+i: length+i] for i in range(0, len(string), length))
