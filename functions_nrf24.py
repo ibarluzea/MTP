@@ -113,12 +113,6 @@ def slave(nrf, switch_send):
                # )
             #)
             start = time.monotonic()
-            if i>300 and i<305:
-                time.sleep(2)
-            if i>500 and i<503:
-                time.sleep(2)
-            while not result:
-               led_red.value = True
             
             i +=1
             
