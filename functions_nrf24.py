@@ -124,6 +124,11 @@ def slave(nrf, switch_send):
     #to optimize, now we open and close the file every 32 BYTES
     t_y.start()
     print("going to decompress")
+    print("msg type is:")
+    print(type(msg))
+    print(type(msg))
+    print("msg type is:")
+    print(type(msg))
     try:
         msg_decompressed = zlib.decompress(msg)
         pth = getUSBpath()
