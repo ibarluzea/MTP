@@ -36,7 +36,7 @@ def master(nrf, payload, switch_send):  # count = 5 will only transmit 5 packets
     e_g = threading.Event()
     t_g = threading.Thread(name='non-block', target=blinkLed, args=(e_g, led_green))
     t_g.start()
-    
+    print(payload[0])
     for i in range(count):
     
 
