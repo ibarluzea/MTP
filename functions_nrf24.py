@@ -134,15 +134,15 @@ def slave(nrf, switch_send):
     except:
         print("getusbpath failed")
         pass
-    writeFile(pth+"/",msg)
+    #writeFile(pth+"/",msg)
     try:
         msg_decompressed = zlib.decompress(msg)
     except:
         print("decompress failed")
         pass
     try:
-        #writeFile(pth+"/",msg_decompressed)
-     print("hola")
+        writeFile(pth+"/",msg_decompressed)
+        print("hola")
     except Exception as e:
         print(e)
         e_y.set()
