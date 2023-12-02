@@ -7,8 +7,9 @@ import glob
 from digitalio import DigitalInOut
 import chardet
 from functions_pi import *
-from lzw import *
+#from lzw import *
 import threading
+import zlib
  
 
 def master(nrf, payload, switch_send):  # count = 5 will only transmit 5 packets
