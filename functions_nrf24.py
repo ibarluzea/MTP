@@ -100,9 +100,7 @@ def slave(nrf, switch_send):
             # expecting a little endian float, thus the format string "<f"
             # buff_leder[:4] truncates padded 0s if dynamic payloads are disabled
             
-           # Here there is another option
-            if i == 2:
-                print(buffer)
+
             msg += buffer
             #.decode("utf-8")
             #msg.extend(buffer)
