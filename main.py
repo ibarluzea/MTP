@@ -103,7 +103,7 @@ if __name__ == "__main__":
                     compressed_file = zlib.compress(strF)
                     print("el tipo despues del compress es: ")
                     print(type(compressed_file))
-                    print(compressed_file)
+                    #print(compressed_file)
                     compressed_fragmented_zlib = fragmentFile(compressed_file, payload_size)
                     print("el tipo despues del fragmentFile es: ")
                     print(type(compressed_fragmented_zlib))
