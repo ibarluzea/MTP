@@ -110,7 +110,7 @@ if __name__ == "__main__":
                     print("Compression failed")
                     print(e)
                 led_blink(led_green)
-                master(nrf, compressed_fragmented_zlib, sw_send, encoding)
+                master(nrf, compressed_fragmented_zlib, sw_send)
             else:
                 slave(nrf, sw_send)
     #else:
