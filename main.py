@@ -1,6 +1,7 @@
 
 from functions_pi import *
 from functions_nrf24 import *
+from NODE_NW import *
 #from lzw import *
 import spidev
 import zlib
