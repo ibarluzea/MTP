@@ -16,7 +16,7 @@ def master(nrf, payload, switch_send):  # count = 5 will only transmit 5 packets
     print("ENTRA EN MASTER, press send again")
 
     nrf.address_length = 3
-    print(payload)
+    
     address = [b"snd", b"rcv"]
     nrf.open_tx_pipe(address[0])  # always uses pipe 0
 
