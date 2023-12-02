@@ -82,14 +82,14 @@ if __name__ == "__main__":
         if not NMode:
             if isTransmitter:
                 print("Vamos a buscar path usb")
-                led_yellow.value = True
+                led_yellow.red = True
                 pth = None
                 while pth is None:
                     pth = getUSBpath()
                     if pth is None:
                         print("USB not found, retrying...")
                         time.sleep(0.3)  # Short delay to avoid excessive CPU usage
-                led_yellow.value = False
+                led_red.value = False
                 try:
                     print("USB path is:", pth)
                     payload_size = 32
