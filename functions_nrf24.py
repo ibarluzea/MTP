@@ -126,7 +126,7 @@ def slave(nrf, switch_send):
     print("going to decompress")
     print("msg type is:")
     print(type(msg))
-    print(type(msg))
+    print(msg)
     print("msg type is:")
     print(type(msg))
     try:
