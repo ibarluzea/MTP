@@ -40,22 +40,21 @@ def master(nrf, payload, switch_send):  # count = 5 will only transmit 5 packets
     t_g = threading.Thread(name='non-block', target=blinkLed, args=(e_g, led_green))
     t_g.start()
     print(payload[0])
-    for i in range(count):
-    
+    sequence_id = 0  # Initialize sequence ID
 
-        # use struct.pack to structure your data
-        # into a usable payload
-        buffer = payload[i]
-        start_timer = time.monotonic_ns()  # start timer
-        #result = nrf.send(buffer, False, 10)
+    for buffer in payload:
+        # Add sequence ID before the buffer we will send
+        buffer_with_id = bytes([sequence_id]) + buffer
+		
         result = False
-        
         while not result:
-            
-            ######result = nrf.send(buffer, False, 0)
-            result = nrf.send(buffer)
+            result = nrf.send(buffer_with_id)
             if not result:
                 led_red.value = True
+
+        # Increment ID
+        sequence_id = (sequence_id + 1) % 256
+  
      
         led_red.value = False
         
@@ -95,6 +94,8 @@ def slave(nrf, switch_send):
     #led_yellow.value = False
     #time.sleep(0.5)
     
+	last_sequence_id = None # Initialize sequence id we will receive
+	
     t_g.start()
     while switch_send.value:
         if nrf.available():
@@ -102,8 +103,11 @@ def slave(nrf, switch_send):
             payload_size, pipe_number = (nrf.any(), nrf.pipe)
             # fetch 1 payload from RX FIFO
             buffer = nrf.read()  # also clears nrf.irq_dr status flag
-            # expecting a little endian float, thus the format string "<f"
-            # buff_leder[:4] truncates padded 0s if dynamic payloads are disabled
+			         sequence_id = buffer[0]  # This is a byte
+            data_chunk = buffer[1:]
+            if sequence_id != last_sequence_id:
+                msg += data_chunk
+                last_sequence_id = sequence_id
             
 
             msg += buffer
