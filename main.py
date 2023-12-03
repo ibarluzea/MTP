@@ -93,7 +93,7 @@ if __name__ == "__main__":
                 led_red.value = False
                 try:
                     print("USB path is:", pth)
-                    payload_size = 31
+                    payload_size = 30
                     strF= openFile(pth)
                 except Exception as e:
                     payload = None
