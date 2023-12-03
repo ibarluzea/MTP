@@ -3,7 +3,7 @@ import struct
 import board
 from digitalio import DigitalInOut
 import os, glob, getpass, math
-
+from functions_pi import *
 # Al main definir la length de la address.
 
 def node_NW(nrf,strF,isTransmitter,pth): # FOR EACH GROUP MAIN: strF is the text file to transmit. It's the outcome of the openFile with rb such as: b'\x00\x01\x02...'
@@ -215,10 +215,18 @@ def receive(nrf, my_address, backoff, has_file, had_token,path):
           print(f"Token received: {token}")
           print(f"I'm master {has_token}")
 
-        elif type_byte == 14: 
-          writeFile(path, msg)
-          strF = msg
+        elif type_byte == 14:
+	  try:
+            pth = None
+            while pth is None:
+              pth = getUSBpath()
+                if pth is None:
+	          time.sleep(0.3)  # Short delay to avoid excessive CPU usage
+       
+            writeFile(pth+"MTP-F23-NM-A-RX.txt", msg)
+          
           print(f"EOF received. Writing file to USB...")
+	  strF = msg
           msg = b""
           has_file = True
         elif type_byte == 12:
