@@ -12,13 +12,10 @@ import threading
 import zlib
  
 
-def master(nrf, payload, switch_send):  # count = 5 will only transmit 5 packets
+def master(nrf, payload, switch_send,address):  # count = 5 will only transmit 5 packets
     """Transmits an incrementing integer every second"""
     print("ENTRA EN MASTER, press send again")
 
-    nrf.address_length = 3
-    
-    address = [b"snd", b"rcv"]
     nrf.open_tx_pipe(address[0])  # always uses pipe 0
 
     # set RX address of TX node into an RX pipe
@@ -76,63 +73,42 @@ def slave(nrf, switch_send):
     e_g = threading.Event()
     t_g = threading.Thread(name='non-block', target=blinkLed, args=(e_g, led_green))
     
-    nrf.address_length = 3
-    address = [b"snd", b"rcv"]
-    # set TX address of RX node into the TX pipe
-    nrf.open_tx_pipe(address[1])  # always uses pipe 0
+    address = [b"sri", b"mrm", b"rcv"]
+   
 
     # set RX address of TX node into an RX pipe
     nrf.open_rx_pipe(1, address[0])  # using pipe 1
+    nrf.open_rx_pipe(2, address[1])
     nrf.listen = True  # put radio into RX mode and power up
     msg = b""
     start = time.monotonic()
     i=0
-    print("It begins to receive information")
-    
-    #led_yellow.value = True
-    #while switch_send.value:
-    #    pass
-    #led_yellow.value = False
-    #time.sleep(0.5)
+   
     
     t_g.start()
     while switch_send.value:
         if nrf.available():
-            
             payload_size, pipe_number = (nrf.any(), nrf.pipe)
-            # fetch 1 payload from RX FIFO
-            buffer = nrf.read()  # also clears nrf.irq_dr status flag
-            # expecting a little endian float, thus the format string "<f"
-            # buff_leder[:4] truncates padded 0s if dynamic payloads are disabled
-            
+            buffer = nrf.read()
+            if pipe_number == 0:
+             nrf.open_rx_pipe(b"sri")
+             filename = "/MTP-F23-SRI-A-RX.txt"
+             msg += buffer
+            if pipe_number == 1: 
+             nrf.open_rx_pipe(b"mrm")
+             filename = "/MTP-F23-MRM-A-RX.txt"
+             msg += buffer
+         
 
-            msg += buffer
-            #.decode("utf-8")
-            #msg.extend(buffer)
-            # print details about the received packet
-            #print(
-             #   "Received {} bytes on pipe {}: {}".format(
-              #      payload_size, pipe_number, msg
-               # )
-            #)
-            start = time.monotonic()
-            
-            i +=1
-            
-   
-        
     print("Ha dejado de recibir cosas")
     e_g.set()
-    # recommended behavior is to keep in TX mode while idle
-    nrf.listen = False  # put the nRF24L01 is in TX mode
-    #to optimize, now we open and close the file every 32 BYTES
+    nrf.listen = False 
     t_y.start()
     print("length of msg:")
     print(len(msg))
     print("msg type is:")
     print(type(msg))
-    try:
-        
+    try: 
         pth = None
         while pth is None:
             pth = getUSBpath()
@@ -154,8 +130,7 @@ def slave(nrf, switch_send):
         print("decompress failed")
         pass
     try:
-        writeFile(pth+"/",msg_decompressed)
-        print("hola")
+        writeFile(pth+filename,msg_decompressed)
     except Exception as e:
         print(e)
         e_y.set()
