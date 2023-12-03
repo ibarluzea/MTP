@@ -127,10 +127,8 @@ def slave(nrf, switch_send):
     nrf.listen = False  # put the nRF24L01 is in TX mode
     #to optimize, now we open and close the file every 32 BYTES
     t_y.start()
-    print("going to decompress")
-    print("msg type is:")
-    print(type(msg))
-    print(msg)
+    print("length of msg:")
+    print(len(msg))
     print("msg type is:")
     print(type(msg))
     try:
@@ -148,6 +146,7 @@ def slave(nrf, switch_send):
         pass
     #writeFile(pth+"/",msg)
     try:
+        print("going to decompress")
         msg_decompressed = zlib.decompress(msg)
         print("Correct decompression")
     except:
