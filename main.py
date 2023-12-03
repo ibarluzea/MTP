@@ -71,9 +71,8 @@ if __name__ == "__main__":
         # Set timeout
         timeout = 10
         
-        fileSRI="/MTP-F23-SRI-A-TX.txt"
-        fileNW="/MTP-F23-NM-TX.txt"
-        fileMRM="MTP-F23-MRM-A-TX.txt"
+
+
 
         print("Choosing mode")
         
@@ -95,17 +94,14 @@ if __name__ == "__main__":
                 try:
                     print("USB path is:", pth)
                     payload_size = 31
-                    strF, isSRI= openFile(pth,fileSRI,fileNW,fileMRM)
+                    strF= openFile(pth)
                 except Exception as e:
                     payload = None
                     print(f"Not file found to fragment")
                     print(e)
                     ledError()
                 try:
-                    if isSRI:
-                        address = [b"sri", b"rcv"]
-                    else:
-                        address = [b"mrm", b"rcv"]
+                    
                     compressed_file = zlib.compress(strF)
                     print("el tipo despues del compress es: ")
                     print(type(compressed_file))
@@ -114,12 +110,12 @@ if __name__ == "__main__":
                     #print(compressed_file)
                     compressed_fragmented_zlib = fragmentFile(compressed_file, payload_size)
                     print("el tipo despues del fragmentFile es: ")
-                    print(type(compressed_fragmented_zlib))    
+                    print(type(compressed_fragmented_zlib))
                 except Exception as e:
                     print("Compression failed")
                     print(e)
                 led_blink(led_green)
-                master(nrf, compressed_fragmented_zlib, sw_send, address)
+                master(nrf, compressed_fragmented_zlib, sw_send)
             else:
                 slave(nrf, sw_send)
         else:
@@ -143,4 +139,3 @@ if __name__ == "__main__":
         nrf.power = False
         led_off([led_green, led_yellow, led_red])
         e_g.set()
-
