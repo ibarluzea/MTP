@@ -12,14 +12,17 @@ import threading
 import zlib
  
 
-def master(nrf, payload, switch_send, address):  # count = 5 will only transmit 5 packets
+def master(nrf, payload, switch_send):  # count = 5 will only transmit 5 packets
     """Transmits an incrementing integer every second"""
     print("ENTRA EN MASTER, press send again")
+
+    nrf.address_length = 3
     
+    address = [b"snd", b"rcv"]
     nrf.open_tx_pipe(address[0])  # always uses pipe 0
 
     # set RX address of TX node into an RX pipe
-    nrf.open_rx_pipe(1, address[2])  # using pipe 1
+    nrf.open_rx_pipe(1, address[1])  # using pipe 1
     nrf.listen = False  # ensures the nRF24L01 is in TX mode
     zero_timer = time.monotonic_ns()
     result = False
@@ -76,14 +79,13 @@ def slave(nrf, switch_send):
     e_g = threading.Event()
     t_g = threading.Thread(name='non-block', target=blinkLed, args=(e_g, led_green))
     
-    address = [b"sri", b"mrm",b"rcv"]
+    nrf.address_length = 3
+    address = [b"snd", b"rcv"]
     # set TX address of RX node into the TX pipe
-    # always uses pipe 0
+    nrf.open_tx_pipe(address[1])  # always uses pipe 0
 
     # set RX address of TX node into an RX pipe
-    nrf.open_rx_pipe(1, address[0])  # puc rebre a sri o mrm
-    nrf.open_rx_pipe(2, address[1])
-    nrf.open_tx_pipe(address[2]) # Envio a rcv
+    nrf.open_rx_pipe(1, address[0])  # using pipe 1
     nrf.listen = True  # put radio into RX mode and power up
     msg = b""
     start = time.monotonic()
@@ -101,24 +103,15 @@ def slave(nrf, switch_send):
     t_g.start()
     while switch_send.value:
         if nrf.available():
-            if pipe_number == 0:
-               payload_size, pipe_number = (nrf.any(), nrf.pipe)
-               buffer = nrf.read() 
-               sequence_id = buffer[0] 
-               data_chunk = buffer[1:]
-	       filename = "/MTP-F23-SRI-A-RX" # filename SRI, es suma al writeFile.
-               if sequence_id != last_sequence_id:
-                  msg += data_chunk
-                  last_sequence_id = sequence_id
-	    else:
-	       payload_size, pipe_number = (nrf.any(), nrf.pipe)
-               buffer = nrf.read() 
-               sequence_id = buffer[0] 
-               data_chunk = buffer[1:]
-	       filename = "/MTP-F23-MRM-A-RX" # filename MRM, es suma al writeFile.
-               if sequence_id != last_sequence_id:
-                  msg += data_chunk
-                  last_sequence_id = sequence_id  
+            
+            payload_size, pipe_number = (nrf.any(), nrf.pipe)
+            buffer = nrf.read() 
+            sequence_id = buffer[0] 
+            data_chunk = buffer[1:]
+            if sequence_id != last_sequence_id:
+                msg += data_chunk
+                last_sequence_id = sequence_id
+            
 
             #msg += buffer
             #.decode("utf-8")
@@ -168,13 +161,12 @@ def slave(nrf, switch_send):
         print("decompress failed")
         pass
     try:
-        writeFile(pth+filename,msg_decompressed)
+        writeFile(pth+"/",msg_decompressed)
         print("hola")
     except Exception as e:
         print(e)
         e_y.set()
     e_y.set()
         
-
 
 
