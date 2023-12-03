@@ -1,4 +1,3 @@
-
 from functions_pi import *
 from functions_nrf24 import *
 from node_nw import *
@@ -36,7 +35,7 @@ if __name__ == "__main__":
             
         
     # initialize the nRF24L01 on the spi bus object
-    # nrf = RF24(SPI_BUS, CSN_PIN, CE_PIN)
+
         nrf = None
         attempt = 0
         retry_attempts = 20
@@ -66,54 +65,43 @@ if __name__ == "__main__":
         nrf.channel = 90
         nrf.ack = False
         nrf.address_length = 3
+        payload_size = 32
         ####################
 
         # Set timeout
         timeout = 10
-        
-
-
 
         print("Choosing mode")
         
         isTransmitter, NMode = select_mode(sw_send, sw_txrx, sw_nm, led_yellow, led_green, led_red)
+
+        fileSR = "MTP-F23-SRI-A-TX"
+        fileNW = "MTP-F23-NM-TX"
+        fileLR = "MTP-F23-MRM-A-TX"
         
-        print("Chosen, is TX: {}, is NM: {}".format(isTransmitter, NMode))
-        if not NMode:
-            if isTransmitter:
-                print("Vamos a buscar path usb")
-            
-                pth = None
+
+        pth = None
+        if isTransmitter:
                 while pth is None:
                     pth = getUSBpath()
                     if pth is None:
                         led_red.value = True
-                        print("USB not found, retrying...")
                         time.sleep(0.3)  # Short delay to avoid excessive CPU usage
+
+        strF= openFile(pth)
+        
+        isSRI = "SRI" in pth
+        isLR = "MRM" in pth
+
+
+
+        print("Chosen, is TX: {}, is NM: {}".format(isTransmitter, NMode))
+        if not NMode:
+            if isTransmitter:
+                worked = False
                 led_red.value = False
-                try:
-                    print("USB path is:", pth)
-                    payload_size = 32
-                    strF= openFile(pth)
-                except Exception as e:
-                    payload = None
-                    print(f"Not file found to fragment")
-                    print(e)
-                    ledError()
-                try:
-                    
-                    compressed_file = zlib.compress(strF)
-                    print("el tipo despues del compress es: ")
-                    print(type(compressed_file))
-                    print(len(compressed_file))
-                    print("length of msg is: ")
-                    #print(compressed_file)
-                    compressed_fragmented_zlib = fragmentFile(compressed_file, payload_size)
-                    print("el tipo despues del fragmentFile es: ")
-                    print(type(compressed_fragmented_zlib))
-                except Exception as e:
-                    print("Compression failed")
-                    print(e)
+                compressed_file = zlib.compress(strF)
+                compressed_fragmented_zlib = fragmentFile(compressed_file, payload_size)
                 led_blink(led_green)
                 master(nrf, compressed_fragmented_zlib, sw_send)
             else:
@@ -129,9 +117,7 @@ if __name__ == "__main__":
                 node_NW(nrf,None,isTransmitter)
         
         led_off([led_yellow, led_green, led_red])
-        print("Transmision finalizada")
 
-        #wait_idle(sw_off)
     
     
     except KeyboardInterrupt:
