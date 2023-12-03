@@ -103,14 +103,16 @@ if __name__ == "__main__":
                 try:
                     
                     compressed_blocks = compress_in_blocks(strF, blocks=4)
-                    compressed_fragmented_zlib = fragmentFile(compressed_file, payload_size)
-                    print("el tipo despues del fragmentFile es: ")
-                    print(type(compressed_fragmented_zlib))
+                    fragmented_payloads = []
+                    for block_number, compressed_block in enumerate(compressed_blocks):
+                        fragments = fragmentFile(compressed_block, block_number, payload_size=30)
+                        fragmented_payloads.extend(fragments)
+
                 except Exception as e:
                     print("Compression failed")
                     print(e)
                 led_blink(led_green)
-                master(nrf, compressed_fragmented_zlib, sw_send)
+                master(nrf, fragmented_payloads, sw_send)
             else:
                 slave(nrf, sw_send)
         else:
