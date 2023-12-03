@@ -149,6 +149,7 @@ def slave(nrf, switch_send):
     #writeFile(pth+"/",msg)
     try:
         msg_decompressed = zlib.decompress(msg)
+        print("Correct decompression")
     except:
         led_red.value = True
         print("decompress failed")
