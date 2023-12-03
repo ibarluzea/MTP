@@ -38,28 +38,19 @@ def getUSBpath():
         print("Error: ", str(e))
 
     return None
-
-def openFile(path,f1,f2,f3):
+def openFile(path):
+    print(path)
     try:
-        file = open(path+f1,"rb")
+        file = open(glob.glob(path+"/"+'*.txt')[0],"rb")
         strF= file.read()
-        return strF, True
+        return strF
     except:
-        try:
-            file = open(path+f2,"rb")
-            strF= file.read()
-            return strF, False
-        except:
-            try:
-                file = open(path+f3,"rb")
-                strF= file.read()
-                return strF, False
-            except:
-                print("no file detected")
+        print("No file opened")
+    return strF
 
 
 def writeFile(path, buff):
-    file = open(path,"wb")
+    file = open(path+"MTP-F23-SRI-A-RX.txt","wb")
     file.write(buff)
     file.close()
     
