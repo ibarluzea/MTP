@@ -102,12 +102,7 @@ if __name__ == "__main__":
                     ledError()
                 try:
                     
-                    compressed_file = zlib.compress(strF)
-                    print("el tipo despues del compress es: ")
-                    print(type(compressed_file))
-                    print(len(compressed_file))
-                    print("length of msg is: ")
-                    #print(compressed_file)
+                    compressed_blocks = compress_in_blocks(strF, blocks=4)
                     compressed_fragmented_zlib = fragmentFile(compressed_file, payload_size)
                     print("el tipo despues del fragmentFile es: ")
                     print(type(compressed_fragmented_zlib))
