@@ -107,6 +107,7 @@ if __name__ == "__main__":
                     for block_number, compressed_block in enumerate(compressed_blocks):
                         fragments = fragmentFile(compressed_block, block_number, payload_size=30)
                         fragmented_payloads.extend(fragments)
+                    print(fragmented_payloads)
 
                 except Exception as e:
                     print("Compression failed")
