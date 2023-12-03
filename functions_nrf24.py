@@ -157,7 +157,18 @@ def slave(nrf, switch_send):
     #writeFile(pth+"/",msg)
     try:
         print("going to decompress")
-        msg_decompressed = zlib.decompress(msg)
+        decompressed_blocks = []
+        for block in blocks_data:
+            try:
+            decompressed_block = zlib.decompress(block)
+            decompressed_blocks.append(decompressed_block)
+            print(f"Block {len(decompressed_blocks)} decompressed successfully.")
+        except zlib.error as e:
+            print(f"Decompression error for a block: {e}")
+            break
+
+    # Final reassembly
+        reassembled_data = b''.join(decompressed_blocks)
         print("Correct decompression")
     except:
         led_red.value = True
