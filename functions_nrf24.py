@@ -42,14 +42,10 @@ def master(nrf, payload, switch_send):  # count = 5 will only transmit 5 packets
     print(payload[0])
     sequence_id = 0  # Initialize sequence ID
 
-    for i in range(count):
-    
-        # use struct.pack to structure your data
-        # into a usable payload
-        buffer = payload[i]
-        # Add sequence ID before the buffer we will send
-        buffer_with_id = bytes([sequence_id]) + buffer
-		
+    for block_number, data_chunk in payloads:
+        # Construct the payload with block number and sequence ID
+        buffer_with_ids = bytes([block_number, sequence_id]) + data_chunk
+
         result = False
         while not result:
             result = nrf.send(buffer_with_id)
@@ -66,7 +62,7 @@ def master(nrf, payload, switch_send):  # count = 5 will only transmit 5 packets
 
     e_g.set()
     led_blink(led_yellow)
-    print("Transmission rate: ", (((len(payload)*(32+1+3+1+2+9+3+2))*8)/((end_timer-zero_timer)/1e9)))
+    #print("Transmission rate: ", (((len(payload)*(32+1+3+1+2+9+3+2))*8)/((end_timer-zero_timer)/1e9)))
     print(nrf.print_details(True))
     
     
@@ -88,7 +84,6 @@ def slave(nrf, switch_send):
     nrf.open_rx_pipe(1, address[0])  # using pipe 1
     nrf.listen = True  # put radio into RX mode and power up
     msg = b""
-    start = time.monotonic()
     i=0
     print("It begins to receive information")
     
@@ -99,20 +94,30 @@ def slave(nrf, switch_send):
     #time.sleep(0.5)
     
     last_sequence_id = None # Initialize sequence id we will receive
-	
+    blocs_data = []
     t_g.start()
     while switch_send.value:
         if nrf.available():
             
             payload_size, pipe_number = (nrf.any(), nrf.pipe)
             buffer = nrf.read() 
-            sequence_id = buffer[0] 
-            data_chunk = buffer[1:]
+            block_number = buffer[0]
+            sequence_id = buffer[1]
+            data_chunk = buffer[2:]
             if sequence_id != last_sequence_id:
                 msg += data_chunk
                 last_sequence_id = sequence_id
-            
+                if sequence_id != last_sequence_id:  # Check sequence ID first
+                    last_sequence_id = sequence_id
+                    if block_number != current_block_number:  # Then check block number
+                        if msg:  # If there's accumulated data, save it
+                            blocks_data.append(msg)
+                            msg = b""
+                        current_block_number = block_number
 
+                    msg += data_chunk
+            
+    
             #msg += buffer
             #.decode("utf-8")
             #msg.extend(buffer)
@@ -122,12 +127,10 @@ def slave(nrf, switch_send):
               #      payload_size, pipe_number, msg
                # )
             #)
-            start = time.monotonic()
-            
-            i +=1
             
    
-        
+    if msg:  # Save the last accumulated block
+        blocks_data.append(msg)        
     print("Ha dejado de recibir cosas")
     e_g.set()
     # recommended behavior is to keep in TX mode while idle
