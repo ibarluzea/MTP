@@ -93,7 +93,7 @@ def slave(nrf, switch_send):
     #led_yellow.value = False
     #time.sleep(0.5)
     
-    last_sequence_id = None # Initialize sequence id we will receive
+    last_sequence_id = -1 # Initialize sequence id
     blocs_data = []
     t_g.start()
     while switch_send.value:
@@ -104,18 +104,15 @@ def slave(nrf, switch_send):
             block_number = buffer[0]
             sequence_id = buffer[1]
             data_chunk = buffer[2:]
-            if sequence_id != last_sequence_id:
-                msg += data_chunk
+            if sequence_id != last_sequence_id:  # Check sequence ID first
                 last_sequence_id = sequence_id
-                if sequence_id != last_sequence_id:  # Check sequence ID first
-                    last_sequence_id = sequence_id
-                    if block_number != current_block_number:  # Then check block number
-                        if msg:  # If there's accumulated data, save it
-                            blocks_data.append(msg)
-                            msg = b""
-                        current_block_number = block_number
+                if block_number != current_block_number:  # Then check block number
+                    if msg:  # If there's accumulated data, save it
+                        blocks_data.append(msg)
+                        msg = b""
+                    current_block_number = block_number
 
-                    msg += data_chunk
+                msg += data_chunk
             
     
             #msg += buffer
