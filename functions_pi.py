@@ -9,6 +9,7 @@ from digitalio import DigitalInOut
 import chardet
 import threading
 import sys
+import zlib
 
 global led_red, led_yellow, led_green, sw_send, sw_txrx, sw_nm, sw_off
 
