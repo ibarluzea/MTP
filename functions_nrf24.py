@@ -42,7 +42,11 @@ def master(nrf, payload, switch_send):  # count = 5 will only transmit 5 packets
     print(payload[0])
     sequence_id = 0  # Initialize sequence ID
 
-    for buffer in payload:
+    for i in range(count):
+    
+        # use struct.pack to structure your data
+        # into a usable payload
+        buffer = payload[i]
         # Add sequence ID before the buffer we will send
         buffer_with_id = bytes([sequence_id]) + buffer
 		
