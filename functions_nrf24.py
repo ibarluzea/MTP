@@ -101,9 +101,9 @@ def slave(nrf, switch_send):
         if nrf.available():
             
             payload_size, pipe_number = (nrf.any(), nrf.pipe)
-            # fetch 1 payload from RX FIFO
-            buffer = nrf.read()  # also clears nrf.irq_dr status flag
-			         sequence_id = buffer[0]  # This is a byte
+           
+            buffer = nrf.read() 
+	    sequence_id = buffer[0] 
             data_chunk = buffer[1:]
             if sequence_id != last_sequence_id:
                 msg += data_chunk
