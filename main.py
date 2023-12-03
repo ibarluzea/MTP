@@ -74,12 +74,6 @@ if __name__ == "__main__":
         print("Choosing mode")
         
         isTransmitter, NMode = select_mode(sw_send, sw_txrx, sw_nm, led_yellow, led_green, led_red)
-
-        fileSR = "MTP-F23-SRI-A-TX"
-        fileNW = "MTP-F23-NM-TX"
-        fileLR = "MTP-F23-MRM-A-TX"
-        
-
         pth = None
         if isTransmitter:
                 while pth is None:
@@ -89,21 +83,21 @@ if __name__ == "__main__":
                         time.sleep(0.3)  # Short delay to avoid excessive CPU usage
 
         strF= openFile(pth)
-        
-        isSRI = "SRI" in pth
-        isLR = "MRM" in pth
-
-
-
+    
+       
         print("Chosen, is TX: {}, is NM: {}".format(isTransmitter, NMode))
         if not NMode:
             if isTransmitter:
-                worked = False
+                if "SRI" in pth:
+                    address = [b"sri", b"rcv"]
+                else:
+                    address = [b"mrm", b"rcv"]
+                
                 led_red.value = False
                 compressed_file = zlib.compress(strF)
                 compressed_fragmented_zlib = fragmentFile(compressed_file, payload_size)
                 led_blink(led_green)
-                master(nrf, compressed_fragmented_zlib, sw_send)
+                master(nrf, compressed_fragmented_zlib, sw_send,address)
             else:
                 slave(nrf, sw_send)
         else:
@@ -125,4 +119,5 @@ if __name__ == "__main__":
         nrf.power = False
         led_off([led_green, led_yellow, led_red])
         e_g.set()
+
 
