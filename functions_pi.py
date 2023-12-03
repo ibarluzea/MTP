@@ -194,7 +194,21 @@ def select_mode(switch_send, switch_tx, switch_nm, led_yellow, led_green, led_re
     led_blink([led_yellow, led_green, led_red])
     led_off([led_yellow, led_green, led_red])
     return isTransmitter, NMode
-    
+
+def compress_in_blocks(file_data, blocks=4):
+    block_size = len(file_data) // blocks
+    compressed_blocks = []
+
+    for i in range(blocks):
+        print(i)
+        start = i * block_size
+        end = start + block_size if i != blocks - 1 else len(file_data)
+        block = file_data[start:end]
+        compressed_block = zlib.compress(block)
+        compressed_blocks.append(compressed_block)
+
+    return compressed_blocks
+
 led_yellow=setup_led(board.D12)
 led_red=setup_led(board.D20)
 led_green=setup_led(board.D16)
