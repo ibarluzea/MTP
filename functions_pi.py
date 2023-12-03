@@ -43,17 +43,17 @@ def openFile(path,f1,f2,f3):
     try:
         file = open(path+f1,"rb")
         strF= file.read()
-        return strF, True, False
+        return strF, True
     except:
         try:
             file = open(path+f2,"rb")
             strF= file.read()
-            return strF, False, False
+            return strF, False
         except:
             try:
                 file = open(path+f3,"rb")
                 strF= file.read()
-                return strF, False, True
+                return strF, False
             except:
                 print("no file detected")
 
