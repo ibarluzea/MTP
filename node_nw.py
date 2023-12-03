@@ -184,7 +184,7 @@ def token_handover(nrf, token, address_list, backup_list, not_priority_list, tok
 
 #### Slave ####
 
-def receive(nrf, my_address, backoff, has_file, had_token,path):
+def receive(nrf, my_address, backoff, has_file, had_token):
   keep_listening = True
   has_token = False
   msg = b""
