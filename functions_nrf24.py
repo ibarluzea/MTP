@@ -51,9 +51,11 @@ def master(nrf, payload, switch_send):  # count = 5 will only transmit 5 packets
         result = False
         
         while not result:
-            led_red.value = True
+            
             ######result = nrf.send(buffer, False, 0)
             result = nrf.send(buffer)
+            if not result:
+                led_red.value = True
      
         led_red.value = False
         
