@@ -17,6 +17,8 @@ global led_red, led_yellow, led_green, sw_send, sw_txrx, sw_nm, sw_off
 def fragmentFile(string, length):
     return list(string[0+i: length+i] for i in range(0, len(string), length))
 
+def fragmentBlocks(block_data, block_number, payload_size=30):
+    return [(block_number, block_data[i:i + payload_size]) for i in range(0, len(block_data), payload_size)]
 
 def getUSBpath():
     rpistr = "/media/mtp/"
