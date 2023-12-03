@@ -94,7 +94,7 @@ def slave(nrf, switch_send):
     #led_yellow.value = False
     #time.sleep(0.5)
     
-	last_sequence_id = None # Initialize sequence id we will receive
+    last_sequence_id = None # Initialize sequence id we will receive
 	
     t_g.start()
     while switch_send.value:
