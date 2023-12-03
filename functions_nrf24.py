@@ -163,9 +163,9 @@ def slave(nrf, switch_send):
             decompressed_block = zlib.decompress(block)
             decompressed_blocks.append(decompressed_block)
             print(f"Block {len(decompressed_blocks)} decompressed successfully.")
-        except zlib.error as e:
-            print(f"Decompression error for a block: {e}")
-            break
+            except zlib.error as e:
+                print(f"Decompression error for a block: {e}")
+                break
 
     # Final reassembly
         reassembled_data = b''.join(decompressed_blocks)
