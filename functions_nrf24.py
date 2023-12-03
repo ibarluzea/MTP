@@ -106,7 +106,7 @@ def slave(nrf, switch_send):
                buffer = nrf.read() 
                sequence_id = buffer[0] 
                data_chunk = buffer[1:]
-	       filename = "/MTP-F23-SRI-A-RX" # filename SRI, es suma al writeFile.
+	       filename = "MTP-F23-SRI-A-RX" # filename SRI, es suma al writeFile.
                if sequence_id != last_sequence_id:
                   msg += data_chunk
                   last_sequence_id = sequence_id
@@ -115,7 +115,7 @@ def slave(nrf, switch_send):
                buffer = nrf.read() 
                sequence_id = buffer[0] 
                data_chunk = buffer[1:]
-	       filename = "/MTP-F23-MRM-A-RX" # filename MRM, es suma al writeFile.
+	       filename = "MTP-F23-MRM-A-RX" # filename MRM, es suma al writeFile.
                if sequence_id != last_sequence_id:
                   msg += data_chunk
                   last_sequence_id = sequence_id  
