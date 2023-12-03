@@ -42,7 +42,7 @@ def master(nrf, payload, switch_send):  # count = 5 will only transmit 5 packets
     print(payload[0])
     sequence_id = 0  # Initialize sequence ID
 
-    for block_number, data_chunk in payloads:
+    for block_number, data_chunk in payload:
         # Construct the payload with block number and sequence ID
         buffer_with_ids = bytes([block_number, sequence_id]) + data_chunk
 
