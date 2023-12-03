@@ -103,6 +103,7 @@ if __name__ == "__main__":
                 try:
                     
                     compressed_blocks = compress_in_blocks(strF, blocks=4)
+                    print("compress_in_blocks worked")
                     fragmented_payloads = []
                     for block_number, compressed_block in enumerate(compressed_blocks):
                         fragments = fragmentFile(compressed_block, block_number, payload_size=30)
