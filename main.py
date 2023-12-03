@@ -104,11 +104,11 @@ if __name__ == "__main__":
             if isTransmitter:
                 try:
                     strF= openFile(pth)
-                    node_NW(nrf,strF,isTransmitter)
+                    node_NW(nrf,strF,isTransmitter,pth)
                 except Exception as e:
                     ledError()
             else:
-                node_NW(nrf,None,isTransmitter)
+                node_NW(nrf,None,isTransmitter,pth)
         
         led_off([led_yellow, led_green, led_red])
 
