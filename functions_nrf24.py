@@ -47,13 +47,14 @@ def master(nrf, payload, switch_send):  # count = 5 will only transmit 5 packets
         # into a usable payload
         buffer = payload[i]
         start_timer = time.monotonic_ns()  # start timer
-        result = nrf.send(buffer, False, 10)
+        #########result = nrf.send(buffer, False, 10)
      
         
         while not result:
             led_red.value = True
-            result = nrf.send(buffer, False, 0)
-            time.sleep(0.01)
+            ######result = nrf.send(buffer, False, 0)
+            result = nrf.send(buffer)
+     
         led_red.value = False
         
         end_timer = time.monotonic_ns()  # end timer
