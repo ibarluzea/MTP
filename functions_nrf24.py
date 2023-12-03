@@ -113,7 +113,7 @@ def slave(nrf, switch_send):
                 last_sequence_id = sequence_id
             
 
-            msg += buffer
+            #msg += buffer
             #.decode("utf-8")
             #msg.extend(buffer)
             # print details about the received packet
