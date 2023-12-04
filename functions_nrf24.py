@@ -100,7 +100,8 @@ def slave(nrf, switch_send):
     while switch_send.value:
         if nrf.available():
             payload_size, pipe_number = (nrf.any(), nrf.pipe)
-            if pipe_number == 0:    
+            if pipe_number == 0:  
+                print("YES")
                 buffer = nrf.read() 
                 if buffer:
                     print(buffer)
