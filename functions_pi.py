@@ -64,7 +64,7 @@ def openFile(path,f1,f2,f3):
 
 
 def writeFile(path, buff):
-    file = open(path+"MTP-F23-SRI-A-RX.txt","wb")
+    file = open(path,"wb")
     file.write(buff)
     file.close()
     
