@@ -43,6 +43,8 @@ def getUSBpath():
     return None
 
 def openFile(path,f1,f2,f3):
+    print(path)
+    print(f3)
     try:
         file = open(path+f1,"rb")
         strF= file.read()
