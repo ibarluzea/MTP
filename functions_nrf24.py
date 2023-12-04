@@ -16,7 +16,6 @@ def master(nrf, payload, switch_send, address):  # count = 5 will only transmit 
     """Transmits an incrementing integer every second"""
     print("ENTRA EN MASTER, press send again")
     
-    address = [b"snd", b"rcv"]
     nrf.open_tx_pipe(address[0])  # always uses pipe 0
 
     # set RX address of TX node into an RX pipe
