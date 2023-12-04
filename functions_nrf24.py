@@ -15,8 +15,6 @@ import zlib
 def master(nrf, payload, switch_send):  # count = 5 will only transmit 5 packets
     """Transmits an incrementing integer every second"""
     print("ENTRA EN MASTER, press send again")
-
-    nrf.address_length = 3
     
     address = [b"snd", b"rcv"]
     nrf.open_tx_pipe(address[0])  # always uses pipe 0
@@ -75,7 +73,7 @@ def slave(nrf, switch_send):
     e_g = threading.Event()
     t_g = threading.Thread(name='non-block', target=blinkLed, args=(e_g, led_green))
     
-    nrf.address_length = 3
+
     address = [b"snd", b"rcv"]
     # set TX address of RX node into the TX pipe
     nrf.open_tx_pipe(address[1])  # always uses pipe 0
