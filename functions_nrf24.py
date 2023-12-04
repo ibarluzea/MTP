@@ -77,8 +77,8 @@ def slave(nrf, switch_send):
     address = [b"sri",b"mrm",b"rcv"]
     # set TX address of RX node into the TX pipe
     print(address[1])
-    nrf.open_rx_pipe(1, address[0])  # puc rebre a sri o mrm
-    nrf.open_rx_pipe(2, address[1])
+    nrf.open_rx_pipe(0, address[0])  # puc rebre a sri o mrm
+    nrf.open_rx_pipe(1, address[1])
     nrf.open_tx_pipe(address[2]) # Envio a rcv
  
     nrf.listen = True  # put radio into RX mode and power up
@@ -103,7 +103,7 @@ def slave(nrf, switch_send):
             print("Enters nrf.available()")
             payload_size, pipe_number = (nrf.any(), nrf.pipe)
             print(pipe_number)
-            if pipe_number == 1:  
+            if pipe_number == 0:  
                 print("SRM")
                 buffer = nrf.read() 
                 if buffer:
@@ -121,7 +121,7 @@ def slave(nrf, switch_send):
                         current_block_number = block_number
 
                     msg += data_chunk
-            else: 
+            if pipe_number == 1: 
                 print("MRM")
                 buffer = nrf.read() 
                 print(f"Buffer: {buffer}")
