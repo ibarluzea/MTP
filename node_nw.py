@@ -39,14 +39,16 @@ def node_NW(nrf,strF,isTransmitter): # FOR EACH GROUP MAIN: strF is the text fil
     while True: # Fotre timeout voluntari
         if has_token: # Es Master
             had_token = True
-            print("I'm MASTER")
+            timestamp = time.time()
+            print(f"I'm MASTER, timestamp: {timestamp}")
             address_list,backup_list,not_priority_list,token = neighbor_discovery(nrf, discovery_payload, address[1], address[0],token, discovery_timeout) 
             success_nodes, success = unicast_tx(nrf, strF,data_payload,ef_payload,address[1], address_list)
             print(f"Unicast TX: {success}")
             token,has_token = token_handover(nrf, token, success_nodes, backup_list, not_priority_list, token_payload, my_address)
         else: # Es Slave
             nrf.open_rx_pipe(0, address[0])  # using RX pipe 0 for broadcast
-            print("I'm SLAVE")
+            timestamp = time.time()
+            print(f"I'm SLAVE, timestamp: {timestamp}")
             has_file, has_token, token, tmp_strF = receive(nrf, address[1], backoff, has_file, had_token)
             strF = tmp_strF if tmp_strF is not None else strF
             nrf.close_rx_pipe(0)
