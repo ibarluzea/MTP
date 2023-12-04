@@ -124,7 +124,7 @@ if __name__ == "__main__":
         else:
             if isTransmitter:
                 try:
-                    strF= openFile(pth,f1,f2,f3)
+                    strF, aa= openFile(pth,fileSRI,fileNW,fileMRM)
                     node_NW(nrf,strF,isTransmitter)
                 except Exception as e:
                     ledError()
