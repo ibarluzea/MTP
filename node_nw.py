@@ -7,7 +7,7 @@ from functions_pi import *
 # Al main definir la length de la address.
 
 def node_NW(nrf,strF,isTransmitter): # FOR EACH GROUP MAIN: strF is the text file to transmit. It's the outcome of the openFile with rb such as: b'\x00\x01\x02...'
-
+    print("NW 1")
     has_token = isTransmitter # FOR EACH GROUP: isTransmiter is a boolean that is true if and only if: I have usb + file.
     had_token = isTransmitter
     has_file = isTransmitter
