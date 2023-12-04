@@ -224,7 +224,8 @@ def receive(nrf, my_address, backoff, has_file, had_token,path):
                         pth = getUSBpath()
                         if pth is None:
                             time.sleep(0.3)  # Short delay to avoid excessive CPU usage
-                
+                except:
+                    print("ª")
                 writeFile(pth+"/MTP-F23-NM-A-RX.txt", msg)
                     
                 print(f"EOF received. Writing file to USB...")
