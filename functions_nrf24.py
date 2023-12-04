@@ -174,7 +174,7 @@ def slave(nrf, switch_send):
         print("decompress failed")
         pass
     try:
-        writeFile(pth+"/",msg_decompressed)
+        writeFile(pth+"/",reassembled_data)
         print("hola")
     except Exception as e:
         print(e)
