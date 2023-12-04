@@ -252,17 +252,11 @@ def send_address(nrf, address, has_file, had_token):
     result = nrf.send(data_to_send, True) # Enviem adreça i control byte, i posem True el no ack
     nrf.listen = True 
         
-    def interpretarToken(data_token): # Chat GPT
-        # Convierte los bytes a una lista de enteros
-        received_int_list = list(data_token)
-    
-        # Agrupa la lista de enteros en sublistas de tamaño 2
-        received_token = [received_int_list[i:i+2] for i in range(0, len(received_int_list), 2)]
-    
-        # Convierte la lista de enteros en una lista de listas de booleanos
-        token = [[bool(x) for x in sublist] for sublist in received_token]
-    
-        return token
+def interpretarToken(data_token): # Chat GPT
+    received_int_list = list(data_token)
+    received_token = [received_int_list[i:i+2] for i in range(0, len(received_int_list), 2)]
+    token = [[bool(x) for x in sublist] for sublist in received_token]
+    return token
         
 
 def fragmentFile(string, length):
