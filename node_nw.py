@@ -217,24 +217,24 @@ def receive(nrf, my_address, backoff, has_file, had_token):
                     print(f"Token received: {token}")
                     print(f"I'm master {has_token}")
 
-            elif type_byte == 14:
-                try:
-                    pth = None
-                    while pth is None:
-                        pth = getUSBpath()
-                        if pth is None:
-                            time.sleep(0.3)  # Short delay to avoid excessive CPU usage
-                except:
-                    print("ª")
-                writeFile(pth+"/MTP-F23-NM-A-RX.txt", msg)
+                elif type_byte == 14:
+                    try:
+                        pth = None
+                        while pth is None:
+                            pth = getUSBpath()
+                            if pth is None:
+                                time.sleep(0.3)  # Short delay to avoid excessive CPU usage
+                    except:
+                        print("ª")
+                    writeFile(pth+"/MTP-F23-NM-A-RX.txt", msg)
                     
-                print(f"EOF received. Writing file to USB...")
-                strF = msg
-                msg = b""
-                has_file = True
-            elif type_byte == 12:
-                msg += buffer_rx[1:] # Què és aqui "rx"?
-                print(f"Adding payload to message...")
+                    print(f"EOF received. Writing file to USB...")
+                    strF = msg
+                    msg = b""
+                    has_file = True
+                elif type_byte == 12:
+                    msg += buffer_rx[1:] # Què és aqui "rx"?
+                    print(f"Adding payload to message...")
             
     return has_file, has_token, token, strF
                         
