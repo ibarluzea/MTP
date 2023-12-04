@@ -100,7 +100,7 @@ def neighbor_discovery(nrf, discovery_payload,my_address,dst_address,token, disc
             nrf.listen = False 
             no_received = False # Stop the neighbor discovery process 
     
-        return address_list, backup_list, not_priority_list, token
+    return address_list, backup_list, not_priority_list, token
 
     #### Unicast transmission function ####
 
