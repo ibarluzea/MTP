@@ -85,6 +85,7 @@ def slave(nrf, switch_send):
     msg = b""
     i=0
     
+    print("It begins to receive information")
     
     #led_yellow.value = True
     #while switch_send.value:
@@ -98,7 +99,6 @@ def slave(nrf, switch_send):
     t_g.start()
  
     while switch_send.value:
-        print("It begins to receive information")
         if nrf.available():
             print("Enters nrf.available()")
             payload_size, pipe_number = (nrf.any(), nrf.pipe)
