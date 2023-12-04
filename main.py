@@ -1,7 +1,7 @@
 
 from functions_pi import *
 from functions_nrf24 import *
-#from node_nw import *
+from node_nw import *
 #from lzw import *
 import spidev
 import zlib
@@ -71,8 +71,9 @@ if __name__ == "__main__":
         # Set timeout
         timeout = 10
         
-
-
+        fileSRI="/MTP-F23-SRI-A-TX.txt"
+        fileNW="/MTP-F23-NM-TX.txt"
+        fileMRM="MTP-F23-MRM-A-TX.txt"
 
         print("Choosing mode")
         
@@ -94,14 +95,17 @@ if __name__ == "__main__":
                 try:
                     print("USB path is:", pth)
                     payload_size = 30
-                    strF= openFile(pth)
+                    strF, isSRI= openFile(pth,fileSRI,fileNW,fileMRM)
                 except Exception as e:
                     payload = None
                     print(f"Not file found to fragment")
                     print(e)
                     ledError()
                 try:
-                    
+                    if isSRI:
+                        address = [b"sri", b"rcv"]
+                    else:
+                        address = [b"mrm", b"rcv"]
                     compressed_blocks = compress_in_blocks(strF, blocks=4)
                     print("compress_in_blocks worked")
                     fragmented_payloads = []
@@ -114,7 +118,7 @@ if __name__ == "__main__":
                     print("Compression failed")
                     print(e)
                 led_blink(led_green)
-                master(nrf, fragmented_payloads, sw_send)
+                master(nrf, fragmented_payloads, sw_send,address)
             else:
                 slave(nrf, sw_send)
         else:
