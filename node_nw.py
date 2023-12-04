@@ -6,7 +6,7 @@ import os, glob, getpass, math
 from functions_pi import *
 # Al main definir la length de la address.
 
-def node_NW(nrf,strF,isTransmitter,pth): # FOR EACH GROUP MAIN: strF is the text file to transmit. It's the outcome of the openFile with rb such as: b'\x00\x01\x02...'
+def node_NW(nrf,strF,isTransmitter): # FOR EACH GROUP MAIN: strF is the text file to transmit. It's the outcome of the openFile with rb such as: b'\x00\x01\x02...'
 
     has_token = isTransmitter # FOR EACH GROUP: isTransmiter is a boolean that is true if and only if: I have usb + file.
     had_token = isTransmitter
@@ -47,7 +47,7 @@ def node_NW(nrf,strF,isTransmitter,pth): # FOR EACH GROUP MAIN: strF is the text
         else: # Es Slave
             nrf.open_rx_pipe(0, address[0])  # using RX pipe 0 for broadcast
             print("I'm SLAVE")
-            has_file, has_token, token, tmp_strF = receive(nrf, address[1], backoff, has_file, had_token,pth)
+            has_file, has_token, token, tmp_strF = receive(nrf, address[1], backoff, has_file, had_token)
             strF = tmp_strF if tmp_strF is not None else strF
             nrf.close_rx_pipe(0)
 
@@ -154,7 +154,7 @@ def unicast_tx(nrf, strF,data_payload,ef_payload,my_address,address_list):
 
 
     # This function does the token handshake and returns a token in a list format
-def token_handover(nrf, token, address_list, backup_list, not_priority_list, token_payload, my_address,path):
+def token_handover(nrf, token, address_list, backup_list, not_priority_list, token_payload, my_address):
     priority = []
     token[int(my_address)][:] = [True,True] # I have the file and token.
     for i in address_list:
@@ -186,7 +186,7 @@ def token_handover(nrf, token, address_list, backup_list, not_priority_list, tok
 
     #### Slave ####
 
-def receive(nrf, my_address, backoff, has_file, had_token,path):
+def receive(nrf, my_address, backoff, has_file, had_token):
     keep_listening = True
     has_token = False
     msg = b""
