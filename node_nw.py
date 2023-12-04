@@ -34,7 +34,7 @@ def node_NW(nrf,strF,isTransmitter,pth): # FOR EACH GROUP MAIN: strF is the text
     ef_payload = b'\x0E'
 
     nrf.open_rx_pipe(1, address[1]) # Open the RX pipe 1 to receive packets to unicast b"0RC" RX address
-
+    print("NW starts")
     # "Main loop" of the program
     while True: # Fotre timeout voluntari
         if has_token: # Es Master
