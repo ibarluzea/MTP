@@ -38,23 +38,23 @@ def node_NW(nrf,strF,isTransmitter,pth): # FOR EACH GROUP MAIN: strF is the text
     # "Main loop" of the program
     while True: # Fotre timeout voluntari
         if has_token: # Es Master
-        had_token = True
-        print("I'm MASTER")
-        address_list,backup_list,not_priority_list,token = neighbor_discovery(nrf, discovery_payload, address[1], address[0],token, discovery_timeout) 
-        success_nodes, success = unicast_tx(nrf, strF,data_payload,ef_payload,address[1], address_list)
-        print(f"Unicast TX: {success}")
-        token,has_token = token_handover(nrf, token, success_nodes, backup_list, not_priority_list, token_payload, my_address)
+            had_token = True
+            print("I'm MASTER")
+            address_list,backup_list,not_priority_list,token = neighbor_discovery(nrf, discovery_payload, address[1], address[0],token, discovery_timeout) 
+            success_nodes, success = unicast_tx(nrf, strF,data_payload,ef_payload,address[1], address_list)
+            print(f"Unicast TX: {success}")
+            token,has_token = token_handover(nrf, token, success_nodes, backup_list, not_priority_list, token_payload, my_address)
         else: # Es Slave
-        nrf.open_rx_pipe(0, address[0])  # using RX pipe 0 for broadcast
-        print("I'm SLAVE")
-        has_file, has_token, token, tmp_strF = receive(nrf, address[1], backoff, has_file, had_token,pth)
-        strF = tmp_strF if tmp_strF is not None else strF
-        nrf.close_rx_pipe(0)
+            nrf.open_rx_pipe(0, address[0])  # using RX pipe 0 for broadcast
+            print("I'm SLAVE")
+            has_file, has_token, token, tmp_strF = receive(nrf, address[1], backoff, has_file, had_token,pth)
+            strF = tmp_strF if tmp_strF is not None else strF
+            nrf.close_rx_pipe(0)
 
 #### Master #####
 
 
-    def neighbor_discovery(nrf, discovery_payload,my_address,dst_address,token, discovery_timeout):
+def neighbor_discovery(nrf, discovery_payload,my_address,dst_address,token, discovery_timeout):
     
     # This function does the neighbor discovery process and returns a list with the numerical "IDs"
     #  of the responders (1,2,...)
@@ -77,31 +77,32 @@ def node_NW(nrf,strF,isTransmitter,pth): # FOR EACH GROUP MAIN: strF is the text
         # Start the timer to check if its expired before having responses 
         start_time = time.time_ns()
         while (time.time_ns() - start_time) < discovery_timeout: # Wait for responses
-        if nrf.available():
-            neighbors.append(nrf.read()) # Read any available data we are receiving
+            if nrf.available():
+                neighbors.append(nrf.read()) # Read any available data we are receiving
         
         # If we received something, we add the received address of the responding nodes
         if neighbors: 
-        for i in neighbors:
-            address_n = i[0:3]
-            info_byte = i[-1]
-            num_address_n = [int(char) for char in address_n.decode() if char.isdigit()][0] 
-            if info_byte == 0:
-            address_list.append(num_address_n) # Store the addresses of the neighbor responses with numerical IDs 
-            elif info_byte == 1:
-            token[num_address_n][:] = [True, False]
-            backup_list.append(num_address_n)
-            else:
-            token[num_address_n][:] = [True, True]
-            not_priority_list.append(num_address_n)
+            for i in neighbors:
+                address_n = i[0:3]
+                info_byte = i[-1]
+                num_address_n = [int(char) for char in address_n.decode() if char.isdigit()][0] 
+                if info_byte == 0:
+                    address_list.append(num_address_n) # Store the addresses of the neighbor responses with numerical IDs 
+                elif info_byte == 1:
+                    token[num_address_n][:] = [True, False]
+                    backup_list.append(num_address_n)
+                else:
+                    token[num_address_n][:] = [True, True]
+                    not_priority_list.append(num_address_n)
 
-        nrf.listen = False 
-        no_received = False # Stop the neighbor discovery process 
+            nrf.listen = False 
+            no_received = False # Stop the neighbor discovery process 
     
-    return address_list, backup_list, not_priority_list, token
+        return address_list, backup_list, not_priority_list, token
 
     #### Unicast transmission function ####
-    def unicast_tx(nrf, strF,data_payload,ef_payload,my_address,address_list):
+
+def unicast_tx(nrf, strF,data_payload,ef_payload,my_address,address_list):
 
     # This function performs a unicast transmission of the file in chunks of 31 or less bits
 
@@ -114,6 +115,7 @@ def node_NW(nrf,strF,isTransmitter,pth): # FOR EACH GROUP MAIN: strF is the text
     
     # Send the file to every neighbor responder in a sequential manner with unicast transmission 
     print(f"Address list is {address_list}")
+    
     for i in address_list:
         dst_address = bytes(str(i), 'utf-8')+b"RC"
         print(f"Sending file to node {i} with address {dst_address}")
@@ -121,17 +123,17 @@ def node_NW(nrf,strF,isTransmitter,pth): # FOR EACH GROUP MAIN: strF is the text
         result = False
 
         for j in range(count):
-        limitRetransmitions = 10
-        buffer = data_payload + payload[j]
-        result = nrf.send(buffer)
-        while not result and limitRetransmitions:      
+            limitRetransmitions = 10
+            buffer = data_payload + payload[j]
             result = nrf.send(buffer)
-            limitRetransmitions -= 1
-        if limitRetransmitions == 0:
-            break
+            while not result and limitRetransmitions:      
+                result = nrf.send(buffer)
+                limitRetransmitions -= 1
+            if limitRetransmitions == 0:
+                break
         
         if limitRetransmitions == 0:
-        continue
+            continue
         
         print(f"File sent successfully to node {i}. Sending EOF...")
         # nrf.listen = False
@@ -139,26 +141,26 @@ def node_NW(nrf,strF,isTransmitter,pth): # FOR EACH GROUP MAIN: strF is the text
         limitRetransmitions = 10
         result = nrf.send(buffer_ef)
         while not result and limitRetransmitions:      
-        result = nrf.send(buffer_ef)
-        limitRetransmitions -= 1
+            result = nrf.send(buffer_ef)
+            limitRetransmitions -= 1
 
         
         if limitRetransmitions > 0:
-        success_nodes.append(i)
-        success = True
-        print("EOF sent successfully to node {i}")
+            success_nodes.append(i)
+            success = True
+            print("EOF sent successfully to node {i}")
         
     return success_nodes, success
 
 
     # This function does the token handshake and returns a token in a list format
-    def token_handover(nrf, token, address_list, backup_list, not_priority_list, token_payload, my_address,path):
+def token_handover(nrf, token, address_list, backup_list, not_priority_list, token_payload, my_address,path):
     priority = []
     token[int(my_address)][:] = [True,True] # I have the file and token.
     for i in address_list:
         # NOTA: Falta acabar de fer les condicions
         if (token[i][1]) == False: # Never had the token. (If true, it must have the file)
-        priority.append(i)
+            priority.append(i)
 
     priority.extend(backup_list)
     priority.extend(not_priority_list)
@@ -178,13 +180,13 @@ def node_NW(nrf,strF,isTransmitter,pth): # FOR EACH GROUP MAIN: strF is the text
         buffer_tx = token_payload+token_bytes
         result = nrf.send(buffer_tx, False, 5)
         if result:
-        print(f"Token sent successfully to node {i}")
-        break
+            print(f"Token sent successfully to node {i}")
+            break
     return token, not result
 
     #### Slave ####
 
-    def receive(nrf, my_address, backoff, has_file, had_token,path):
+def receive(nrf, my_address, backoff, has_file, had_token,path):
     keep_listening = True
     has_token = False
     msg = b""
@@ -193,49 +195,49 @@ def node_NW(nrf,strF,isTransmitter,pth): # FOR EACH GROUP MAIN: strF is the text
     while keep_listening:
         nrf.listen = True  # put radio into RX mode and power up
         if nrf.available():
-        # grab information about the received payload
-        payload_size, pipe_number = (nrf.any(), nrf.pipe)
-        buffer_rx = nrf.read() #Clears flags & empties RX FIFO, saves bytes in rx
-        print(f"Received {payload_size} bytes on pipe {pipe_number}: {buffer_rx}")
-        if pipe_number == 0: # S'ha rebut a la pipe de broadcast -> Neighbour Discovery
-            msg = b""
-            address_received = buffer_rx[1:4] 
-            print(f"Received neighbour discovery from address {address_received}")
-            nrf.open_tx_pipe(address_received)
-            time.sleep(backoff)
-            send_address(nrf, my_address, has_file, had_token)
-            # 3) Rebo algo unicast, mirar quin tipo de paquet arriba
-        if pipe_number == 1: # S'ha rebut a la pipe de unicast -> O fitxer o Token
-            type_byte = buffer_rx[0] # Agafar el primer byte que indica tipus de paquet
-            print(f"Packet type: {type_byte}")
-            if type_byte == 13: # Token
-            has_token = True
-            keep_listening = False
-            token = interpretarToken(buffer_rx[1:])
-            print(f"Token received: {token}")
-            print(f"I'm master {has_token}")
+            # grab information about the received payload
+            payload_size, pipe_number = (nrf.any(), nrf.pipe)
+            buffer_rx = nrf.read() #Clears flags & empties RX FIFO, saves bytes in rx
+            print(f"Received {payload_size} bytes on pipe {pipe_number}: {buffer_rx}")
+            if pipe_number == 0: # S'ha rebut a la pipe de broadcast -> Neighbour Discovery
+                msg = b""
+                address_received = buffer_rx[1:4] 
+                print(f"Received neighbour discovery from address {address_received}")
+                nrf.open_tx_pipe(address_received)
+                time.sleep(backoff)
+                send_address(nrf, my_address, has_file, had_token)
+                # 3) Rebo algo unicast, mirar quin tipo de paquet arriba
+            if pipe_number == 1: # S'ha rebut a la pipe de unicast -> O fitxer o Token
+                type_byte = buffer_rx[0] # Agafar el primer byte que indica tipus de paquet
+                print(f"Packet type: {type_byte}")
+                if type_byte == 13: # Token
+                    has_token = True
+                    keep_listening = False
+                    token = interpretarToken(buffer_rx[1:])
+                    print(f"Token received: {token}")
+                    print(f"I'm master {has_token}")
 
             elif type_byte == 14:
-        try:
-                pth = None
-                while pth is None:
-                pth = getUSBpath()
+                try:
+                    pth = None
+                    while pth is None:
+                    pth = getUSBpath()
                     if pth is None:
-                time.sleep(0.3)  # Short delay to avoid excessive CPU usage
-        
+                        time.sleep(0.3)  # Short delay to avoid excessive CPU usage
+                
                 writeFile(pth+"/MTP-F23-NM-A-RX.txt", msg)
-            
-            print(f"EOF received. Writing file to USB...")
-        strF = msg
-            msg = b""
-            has_file = True
+                    
+                print(f"EOF received. Writing file to USB...")
+                strF = msg
+                msg = b""
+                has_file = True
             elif type_byte == 12:
-            msg += buffer_rx[1:] # Què és aqui "rx"?
-            print(f"Adding payload to message...")
+                msg += buffer_rx[1:] # Què és aqui "rx"?
+                print(f"Adding payload to message...")
             
     return has_file, has_token, token, strF
                         
-    def send_address(nrf, address, has_file, had_token):
+def send_address(nrf, address, has_file, had_token):
     data_to_send = address    
     if has_file and had_token: # has token és si és master o no, s'ha d'usar una altra var
         data_to_send += b'\x02'
@@ -250,18 +252,17 @@ def node_NW(nrf,strF,isTransmitter,pth): # FOR EACH GROUP MAIN: strF is the text
     nrf.listen = True 
         
     def interpretarToken(data_token): # Chat GPT
-    # Convierte los bytes a una lista de enteros
-    received_int_list = list(data_token)
-
-    # Agrupa la lista de enteros en sublistas de tamaño 2
-    received_token = [received_int_list[i:i+2] for i in range(0, len(received_int_list), 2)]
-
-    # Convierte la lista de enteros en una lista de listas de booleanos
-    token = [[bool(x) for x in sublist] for sublist in received_token]
-
-    return token
+        # Convierte los bytes a una lista de enteros
+        received_int_list = list(data_token)
+    
+        # Agrupa la lista de enteros en sublistas de tamaño 2
+        received_token = [received_int_list[i:i+2] for i in range(0, len(received_int_list), 2)]
+    
+        # Convierte la lista de enteros en una lista de listas de booleanos
+        token = [[bool(x) for x in sublist] for sublist in received_token]
+    
+        return token
         
 
-            
-    def fragmentFile(string, length):
-        return list(string[0+i: length+i] for i in range(0, len(string), length))
+def fragmentFile(string, length):
+    return list(string[0+i: length+i] for i in range(0, len(string), length))
