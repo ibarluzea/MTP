@@ -101,6 +101,7 @@ def slave(nrf, switch_send):
         if nrf.available():
             print("Enters nrf.available()")
             payload_size, pipe_number = (nrf.any(), nrf.pipe)
+            print(pipe_number)
             if pipe_number == 1:  
                 print("SRM")
                 buffer = nrf.read() 
