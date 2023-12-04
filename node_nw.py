@@ -171,19 +171,19 @@ def token_handover(nrf, token, address_list, backup_list, not_priority_list, tok
     print(f"Priority list: {priority}")
     
     result = False
-
-    for i in priority:
-        dst_address = bytes(str(i), 'utf-8')+b"RC"
-        print(f"Trying to send token to node {i} with address {dst_address}")
-        nrf.open_tx_pipe(dst_address)
-        flat_list = [item for sublist in token for item in sublist]
-        int_list = [int(x) for x in flat_list]
-        token_bytes = bytes(int_list)
-        buffer_tx = token_payload+token_bytes
-        result = nrf.send(buffer_tx, False, 5)
-        if result:
-            print(f"Token sent successfully to node {i}")
-            break
+    while not result:
+        for i in priority:
+            dst_address = bytes(str(i), 'utf-8')+b"RC"
+            print(f"Trying to send token to node {i} with address {dst_address}")
+            nrf.open_tx_pipe(dst_address)
+            flat_list = [item for sublist in token for item in sublist]
+            int_list = [int(x) for x in flat_list]
+            token_bytes = bytes(int_list)
+            buffer_tx = token_payload+token_bytes
+            result = nrf.send(buffer_tx, False, 5)
+            if result:
+                print(f"Token sent successfully to node {i}")
+                break
     return token, not result
 
     #### Slave ####
