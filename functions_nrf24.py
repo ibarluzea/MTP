@@ -74,7 +74,7 @@ def slave(nrf, switch_send):
     t_g = threading.Thread(name='non-block', target=blinkLed, args=(e_g, led_green))
     
 
-    address = [b"sri", b"mrm",b"rcv"]
+    address = [b"sri",b"mrm",b"rcv"]
     # set TX address of RX node into the TX pipe
     print(address[1])
     nrf.open_rx_pipe(1, address[0])  # puc rebre a sri o mrm
