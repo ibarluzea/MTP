@@ -221,6 +221,7 @@ def receive(nrf, my_address, backoff, has_file, had_token):
                 type_byte = buffer_rx[0] # Agafar el primer byte que indica tipus de paquet
                 print(f"Packet type: {type_byte}")
                 if type_byte == 13: # Token
+                    led_green.value=True
                     has_token = True
                     keep_listening = False
                     token = interpretarToken(buffer_rx[1:])
