@@ -46,6 +46,7 @@ def node_NW(nrf,strF,isTransmitter): # FOR EACH GROUP MAIN: strF is the text fil
             success_nodes, success = unicast_tx(nrf, strF,data_payload,ef_payload,address[1], address_list)
             print(f"Unicast TX: {success}")
             token,has_token = token_handover(nrf, token, success_nodes, backup_list, not_priority_list, token_payload, my_address)
+            time.sleep(2)
         else: # Es Slave
             nrf.open_rx_pipe(0, address[0])  # using RX pipe 0 for broadcast
             timestamp = time.time()
