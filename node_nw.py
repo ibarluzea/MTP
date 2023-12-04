@@ -14,6 +14,7 @@ def node_NW(nrf,strF,isTransmitter): # FOR EACH GROUP MAIN: strF is the text fil
 
     # Broadcast b"BRD" for either TX or RX, and b"0RC" for RX pipes (for the first node)
     address = [b"BRD",b"0RC"] # FOR EACH GROUP: Change the unicast address xRC. --> 0 to 7
+    print("my address", address)
     my_address = [int(char) for char in address[1].decode() if char.isdigit()][0] # Extract the numeric digit from the address -> '0'
 
     # Token list initialization
@@ -81,7 +82,7 @@ def neighbor_discovery(nrf, discovery_payload,my_address,dst_address,token, disc
         while (time.time_ns() - start_time) < discovery_timeout: # Wait for responses
             if nrf.available():
                 neighbors.append(nrf.read()) # Read any available data we are receiving
-        
+        print("Discovery: ",neighbors)
         # If we received something, we add the received address of the responding nodes
         if neighbors: 
             for i in neighbors:
@@ -99,7 +100,7 @@ def neighbor_discovery(nrf, discovery_payload,my_address,dst_address,token, disc
 
             nrf.listen = False 
             no_received = False # Stop the neighbor discovery process 
-    
+        print("Discovery address:", address_list, backup_list, not_priority_list)
     return address_list, backup_list, not_priority_list, token
 
     #### Unicast transmission function ####
