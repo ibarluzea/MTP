@@ -94,8 +94,10 @@ def slave(nrf, switch_send):
     #time.sleep(0.5)
     
     last_sequence_id = -1 # Initialize sequence id
+    current_block_number = 0
     blocks_data = []
     t_g.start()
+ 
     while switch_send.value:
         if nrf.available():
             
