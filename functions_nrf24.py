@@ -121,7 +121,7 @@ def slave(nrf, switch_send):
             else: 
                 print("MRM")
                 buffer = nrf.read() 
-                print("MRM post buffer")
+                print(buffer)
                 block_number = buffer[0]
                 sequence_id = buffer[1]
                 data_chunk = buffer[2:]
