@@ -15,7 +15,8 @@ import zlib
 def master(nrf, payload, switch_send, address):  # count = 5 will only transmit 5 packets
     """Transmits an incrementing integer every second"""
     print("ENTRA EN MASTER, press send again")
-    
+
+    print(address[0])
     nrf.open_tx_pipe(address[0])  # always uses pipe 0
 
     # set RX address of TX node into an RX pipe
@@ -75,6 +76,7 @@ def slave(nrf, switch_send):
 
     address = [b"sri", b"mrm",b"rcv"]
     # set TX address of RX node into the TX pipe
+    print(address[1])
     nrf.open_rx_pipe(1, address[0])  # puc rebre a sri o mrm
     nrf.open_rx_pipe(2, address[1])
     nrf.open_tx_pipe(address[2]) # Envio a rcv
@@ -99,7 +101,6 @@ def slave(nrf, switch_send):
         if nrf.available():
             payload_size, pipe_number = (nrf.any(), nrf.pipe)
             if pipe_number == 0:    
-                payload_size, pipe_number = (nrf.any(), nrf.pipe)
                 buffer = nrf.read() 
                 if buffer:
                     print(buffer)
