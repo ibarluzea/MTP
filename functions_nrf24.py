@@ -97,6 +97,7 @@ def slave(nrf, switch_send):
  
     while switch_send.value:
         if nrf.available():
+            payload_size, pipe_number = (nrf.any(), nrf.pipe)
             if pipe_number == 0:    
                 payload_size, pipe_number = (nrf.any(), nrf.pipe)
                 buffer = nrf.read() 
@@ -113,8 +114,7 @@ def slave(nrf, switch_send):
                         current_block_number = block_number
 
                     msg += data_chunk
-            else:    
-                payload_size, pipe_number = (nrf.any(), nrf.pipe)
+            else: 
                 buffer = nrf.read() 
                 block_number = buffer[0]
                 sequence_id = buffer[1]
