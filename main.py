@@ -73,7 +73,7 @@ if __name__ == "__main__":
         
         fileSRI="/MTP-F23-SRI-A-TX.txt"
         fileNW="/MTP-F23-NM-TX.txt"
-        fileMRM="MTP-F23-MRM-A-TX.txt"
+        fileMRM="/MTP-F23-MRM-A-TX.txt"
 
         print("Choosing mode")
         
