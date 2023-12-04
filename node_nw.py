@@ -184,7 +184,7 @@ def token_handover(nrf, token, address_list, backup_list, not_priority_list, tok
             if result:
                 print(f"Token sent successfully to node {i}")
                 break
-    print("not result")
+    print(not result)
     return token, not result
 
     #### Slave ####
