@@ -19,7 +19,7 @@ def master(nrf, payload, switch_send, address):  # count = 5 will only transmit 
     nrf.open_tx_pipe(address[0])  # always uses pipe 0
 
     # set RX address of TX node into an RX pipe
-    nrf.open_rx_pipe(1, address[2])  # using pipe 1
+    nrf.open_rx_pipe(1, address[1])  # using pipe 1
     nrf.listen = False  # ensures the nRF24L01 is in TX mode
     zero_timer = time.monotonic_ns()
     result = False
