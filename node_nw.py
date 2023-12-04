@@ -163,10 +163,12 @@ def token_handover(nrf, token, address_list, backup_list, not_priority_list, tok
         # NOTA: Falta acabar de fer les condicions
         if (token[i][1]) == False: # Never had the token. (If true, it must have the file)
             priority.append(i)
-
+    print("To Send File: ", priority)
     priority.extend(backup_list)
+    print("BackupList: ", priority)
     priority.extend(not_priority_list)
-
+    
+    
     print(f"Token: {token}")
     print(f"Priority list: {priority}")
     
