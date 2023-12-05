@@ -200,6 +200,7 @@ def slave(nrf, switch_send):
     except:
         led_red.value = True
         print("decompress failed")
+        time.sleep(2)
         pass
     try:
         writeFile(pth+filename,reassembled_data)
