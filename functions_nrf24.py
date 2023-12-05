@@ -199,6 +199,9 @@ def slave(nrf, switch_send):
         pass
     try:
         writeFile(pth+filename,reassembled_data)
+        time.sleep(2)
+        led_yellow.value = False
+        green_yellow.value = False
         print("hola")
     except Exception as e:
         print(e)
