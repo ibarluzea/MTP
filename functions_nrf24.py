@@ -183,6 +183,7 @@ def slave(nrf, switch_send):
             try:
                 decompressed_block = zlib.decompress(block)
                 decompressed_blocks.append(decompressed_block)
+                led_yellow.value = True
                 print(f"Block {len(decompressed_blocks)} decompressed successfully.")
             except zlib.error as e:
                 print(f"Decompression error for a block: {e}")
@@ -190,6 +191,7 @@ def slave(nrf, switch_send):
 
     # Final reassembly
         reassembled_data = b''.join(decompressed_blocks)
+        green_yellow.value = True
         print("Correct decompression")
     except:
         led_red.value = True
