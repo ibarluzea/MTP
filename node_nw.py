@@ -13,7 +13,7 @@ def node_NW(nrf,strF,isTransmitter): # FOR EACH GROUP MAIN: strF is the text fil
     has_file = isTransmitter
 
     # Broadcast b"BRD" for either TX or RX, and b"0RC" for RX pipes (for the first node)
-    address = [b"BRD",b"0RC"] # FOR EACH GROUP: Change the unicast address xRC. --> 0 to 7
+    address = [b"BRD",b"1RC"] # FOR EACH GROUP: Change the unicast address xRC. --> 0 to 7
     
     my_address = [int(char) for char in address[1].decode() if char.isdigit()][0] # Extract the numeric digit from the address -> '0'
 
