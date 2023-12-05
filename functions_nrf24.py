@@ -179,19 +179,23 @@ def slave(nrf, switch_send):
     try:
         print("going to decompress")
         decompressed_blocks = []
+        num_blocs = 0
         for block in blocks_data:
             try:
                 decompressed_block = zlib.decompress(block)
                 decompressed_blocks.append(decompressed_block)
+                num_blocs = numb_blocs +1
                 led_yellow.value = True
                 print(f"Block {len(decompressed_blocks)} decompressed successfully.")
             except zlib.error as e:
                 print(f"Decompression error for a block: {e}")
                 break
-
+            if num_blocs = 4:
+                led_green.value = True
+        time.sleep(2)      
+         
     # Final reassembly
         reassembled_data = b''.join(decompressed_blocks)
-        green_yellow.value = True
         print("Correct decompression")
     except:
         led_red.value = True
@@ -201,11 +205,13 @@ def slave(nrf, switch_send):
         writeFile(pth+filename,reassembled_data)
         time.sleep(2)
         led_yellow.value = False
-        green_yellow.value = False
+        led_green.value = False
         print("hola")
     except Exception as e:
+        led_red.value = True
         print(e)
         e_y.set()
+        time.sleep(2)
     e_y.set()
         
 
