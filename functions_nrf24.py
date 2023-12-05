@@ -111,7 +111,7 @@ def slave(nrf, switch_send):
                 block_number = buffer[0]
                 sequence_id = buffer[1]
                 data_chunk = buffer[2:]
-                filename = "/MTP-F23-SRI-A-RX"
+                filename = "/MTP-F23-SRI-A-RX.txt"
                 if sequence_id != last_sequence_id:  # Check sequence ID first
                     last_sequence_id = sequence_id
                     if block_number != current_block_number:  # Then check block number
@@ -128,7 +128,7 @@ def slave(nrf, switch_send):
                 block_number = buffer[0]
                 sequence_id = buffer[1]
                 data_chunk = buffer[2:]
-                filename = "/MTP-F23-MRM-A-RX"
+                filename = "/MTP-F23-MRM-A-RX.txt"
                 if sequence_id != last_sequence_id:  # Check sequence ID first
                     last_sequence_id = sequence_id
                     if block_number != current_block_number:  # Then check block number
