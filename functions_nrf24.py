@@ -190,7 +190,7 @@ def slave(nrf, switch_send):
             except zlib.error as e:
                 print(f"Decompression error for a block: {e}")
                 break
-            if num_blocs = 4:
+            if num_blocs == 4:
                 led_green.value = True
         time.sleep(2)      
          
