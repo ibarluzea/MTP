@@ -1,1 +1,1 @@
-![text](/assets/Main.png)
+![Main flowchart](/docs/assets/Main.png)
