@@ -14,9 +14,9 @@ import zlib
 global led_red, led_yellow, led_green, sw_send, sw_txrx, sw_nm, sw_off
 
     
-
-def fragmentFile(string, length):
-    return list(string[0+i: length+i] for i in range(0, len(string), length))
+# this function was deprecated by the next one when zlib was the final compression method.
+# def fragmentFile(string, length):
+#     return list(string[0+i: length+i] for i in range(0, len(string), length))
 
 def fragmentBlocks(block_data, block_number, payload_size=30):
     return [(block_number, block_data[i:i + payload_size]) for i in range(0, len(block_data), payload_size)]
@@ -74,23 +74,22 @@ def checkSwitch(pin):
     switch.pull
     return switch
 
-
-    
-def check_codec(path):
-    try:
-        file = open(glob.glob(path+'*.txt')[0],"rb")
-        strF= file.read(64)
-        
-        result = chardet.detect(strF)
-        encoding = result['encoding']
-
-    except UnicodeDecodeError:
-        print("Failed with encoding: {}".format(encoding))
-        return 
-    except Exception as e:
-        print(f"An unexpected error occurred: {e}")
-        return 
-    return encoding
+# Deprecated : It checks the file to be able to know the UTF encoding
+# def check_codec(path):
+#     try:
+#         file = open(glob.glob(path+'*.txt')[0],"rb")
+#         strF= file.read(64)
+#         
+#         result = chardet.detect(strF)
+#         encoding = result['encoding']
+# 
+#     except UnicodeDecodeError:
+#         print("Failed with encoding: {}".format(encoding))
+#         return 
+#     except Exception as e:
+#         print(f"An unexpected error occurred: {e}")
+#         return 
+#     return encoding
 
 def setup_switch(pin):
     # sw_send D5, sw_txrx D6, sw_nm D26, sw_off D23
@@ -104,7 +103,8 @@ def setup_led(pin):
     signal = digitalio.DigitalInOut(pin) #yellow LED for USB signalling 
     signal.direction = digitalio.Direction.OUTPUT
     return signal
-    
+ 
+# It can switch on several leds at once
 def led_on(signal, t=1.5):
     if isinstance(signal, list) :
         for i in signal:
@@ -181,7 +181,8 @@ def wait_idle(sw_off):
 
 def pi_shutdown():
     os.system("sudo poweroff")
-    
+
+# Initially we saved the received file under this name, so we had to remove it everytime
 def remove_result(path):
     os.system("rm "+path+"result.txt")
       
@@ -222,6 +223,8 @@ def compress_in_blocks(file_data, blocks=4):
         compressed_blocks.append(compressed_block)
 
     return compressed_blocks
+
+# SETUP of leds and switches
 
 led_yellow=setup_led(board.D12)
 led_red=setup_led(board.D20)

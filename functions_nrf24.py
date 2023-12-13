@@ -34,6 +34,8 @@ def master(nrf, payload, switch_send, address):  # count = 5 will only transmit 
     led_yellow.value = False
     led_green.value = False
     print("It begins to send")
+    
+    #It creates a thread to allowd the green led to asyncrounsly blinks while it is transmitting.
     e_g = threading.Event()
     t_g = threading.Thread(name='non-block', target=blinkLed, args=(e_g, led_green))
     t_g.start()
@@ -64,8 +66,6 @@ def master(nrf, payload, switch_send, address):  # count = 5 will only transmit 
     print(nrf.print_details(True))
     
     
-    
-    
 def slave(nrf, switch_send):
         
     e_y = threading.Event()
@@ -77,7 +77,7 @@ def slave(nrf, switch_send):
     address = [b"sri",b"mrm",b"rcv"]
     # set TX address of RX node into the TX pipe
     print(address[1])
-    nrf.open_rx_pipe(0, address[0])  # puc rebre a sri o mrm
+    nrf.open_rx_pipe(0, address[0])  # Addresses for SRI or MRM
     nrf.open_rx_pipe(1, address[1])
     nrf.open_tx_pipe(address[2]) # Envio a rcv
  
@@ -87,11 +87,6 @@ def slave(nrf, switch_send):
     
     print("It begins to receive information")
     
-    #led_yellow.value = True
-    #while switch_send.value:
-    #    pass
-    #led_yellow.value = False
-    #time.sleep(0.5)
     
     last_sequence_id = -1 # Initialize sequence id
     current_block_number = 0
@@ -139,15 +134,6 @@ def slave(nrf, switch_send):
 
                     msg += data_chunk
     
-            #msg += buffer
-            #.decode("utf-8")
-            #msg.extend(buffer)
-            # print details about the received packet
-            #print(
-             #   "Received {} bytes on pipe {}: {}".format(
-              #      payload_size, pipe_number, msg
-               # )
-            #)
             
    
     if msg:  # Save the last accumulated block
@@ -156,8 +142,8 @@ def slave(nrf, switch_send):
     e_g.set()
     # recommended behavior is to keep in TX mode while idle
     nrf.listen = False  # put the nRF24L01 is in TX mode
-    #to optimize, now we open and close the file every 32 BYTES
-    t_y.start()
+    
+    t_y.start() # Yellow leds blinks when decompressing and file managing.
     print("length of msg:")
     print(len(msg))
     print("msg type is:")
@@ -167,6 +153,7 @@ def slave(nrf, switch_send):
         pth = None
         while pth is None:
             pth = getUSBpath()
+            # It ensures the file is written on the correct path (the USB drive)
             if pth is None:
                 led_red.value = True
                 print("USB not found, retrying...")
@@ -197,7 +184,7 @@ def slave(nrf, switch_send):
         pass
     try:
         writeFile(pth+filename,reassembled_data)
-        print("hola")
+        print("success in writing")
     except Exception as e:
         print(e)
         e_y.set()
