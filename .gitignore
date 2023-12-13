@@ -1,2 +1,6 @@
+<<<<<<< HEAD
 *.pyc
 __pycache__/
+=======
+*pyc
+>>>>>>> main
